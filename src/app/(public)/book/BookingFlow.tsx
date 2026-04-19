@@ -372,7 +372,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
         {/* Step controls */}
         <div className="mt-8 flex items-center justify-between">
           <button
-            onClick={() => setStep((s) => Math.max(0, (s - 1) as Step))}
+            onClick={() => setStep((s) => Math.max(0, s - 1) as Step)}
             className="btn-ghost"
             disabled={step === 0}
           >
@@ -380,7 +380,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
           </button>
           {step < 5 ? (
             <button
-              onClick={() => setStep((s) => Math.min(5, (s + 1) as Step))}
+              onClick={() => setStep((s) => Math.min(5, s + 1) as Step)}
               className="btn-glitch"
               disabled={!canContinue[step]}
             >
