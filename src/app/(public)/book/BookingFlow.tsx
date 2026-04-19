@@ -2,7 +2,8 @@
 
 import { useState, useMemo, useTransition, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { zipLookupAction, quoteAction, submitBookingAction } from './actions';
+import { zipLookupAction, quoteAction } from './actions';
+import { startStripeCheckoutAction } from './stripe-actions';
 import type { Quote } from '@/lib/pricing';
 import type { ResolvedService } from '@/services/catalog';
 import type { City } from '@/types';
@@ -131,7 +132,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
 
   const submit = () => {
     startTransition(async () => {
-      await submitBookingAction({
+      await startStripeCheckoutAction({
         cityId,
         serviceAreaId,
         fulfillmentMethod,
@@ -388,7 +389,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
             </button>
           ) : (
             <button onClick={submit} disabled={isPending || !q || q.errors.length > 0} className="btn-glitch">
-              {isPending ? 'Confirming…' : `Confirm · $${q?.total ?? 0}`}
+              {isPending ? 'Redirecting…' : `Pay $${q?.total ?? 0} →`}
             </button>
           )}
         </div>

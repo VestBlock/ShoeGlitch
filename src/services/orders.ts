@@ -45,7 +45,7 @@ export async function createOrder(input: CreateOrderInput): Promise<Order> {
     pairCount: Math.max(1, input.pairCount || 1),
     items: q.items,
     status: initialStatus,
-    paymentStatus: 'paid', // TODO: wire PayPal here
+    paymentStatus: 'unpaid',
     notes: input.notes,
     conditionIssues: input.conditionIssues,
     beforeImages: input.beforeImages ?? [],
