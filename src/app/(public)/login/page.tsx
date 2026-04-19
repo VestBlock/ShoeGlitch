@@ -1,5 +1,5 @@
 import { Badge, Card } from '@/components/ui';
-import { loginAction, loginAsAction } from './actions';
+import { loginAction, loginAsAction, googleSignInAction } from './actions';
 import { db } from '@/lib/db';
 
 const DEMO_ROLES: Array<{ email: string; label: string; role: string; desc: string }> = [
@@ -26,6 +26,15 @@ export default async function LoginPage() {
             </div>
             <button type="submit" className="btn-glitch w-full">Continue →</button>
           </form>
+
+          <div className="mt-6 pt-6 border-t border-ink/10">
+            <form action={googleSignInAction}>
+              <button type="submit" className="btn-outline w-full">
+                Continue with Google
+              </button>
+            </form>
+          </div>
+
           <p className="mt-6 text-xs text-ink/50">
             Demo mode uses password <code className="font-mono">shoeglitch-demo</code> for seeded accounts.
           </p>

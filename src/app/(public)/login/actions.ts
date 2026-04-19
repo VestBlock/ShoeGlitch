@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { signInWithDemoEmail, signOut } from '@/lib/session';
+import { signInWithDemoEmail, signOut, signInWithGoogle } from '@/lib/session';
 import { ROLE_HOME } from '@/lib/rbac';
 
 export async function loginAction(formData: FormData) {
@@ -22,4 +22,9 @@ export async function loginAsAction(email: string) {
 export async function logoutAction() {
   await signOut();
   redirect('/');
+}
+
+export async function googleSignInAction() {
+  const url = await signInWithGoogle();
+  redirect(url);
 }

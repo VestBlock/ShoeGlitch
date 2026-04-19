@@ -17,14 +17,16 @@ import type { Session, Role } from '@/types';
 export async function getSession(): Promise<Session | null> {
   const supabase = createServerSupabaseClient();
   const { data: { user }, error } = await supabase.auth.getUser();
-  if (error || !user?.email) return null;
+  if (error || !user?.id) return null;
 
   const admin = createAdminSupabaseClient();
 
+  // Link via authUserId (the auth.users UUID), not email.
+  // This is stable across email changes and matches the schema's FK link.
   const { data: userRow } = await admin
     .from('users')
     .select('id, email, name, role')
-    .ilike('email', user.email)
+    .eq('authUserId', user.id)
     .maybeSingle();
 
   if (!userRow) return null;
@@ -87,4 +89,18 @@ export async function signInWithMagicLink(email: string): Promise<{ ok: boolean;
   });
   if (error) return { ok: false, error: error.message };
   return { ok: true };
+}
+
+export async function signInWithGoogle(): Promise<string> {
+  const supabase = createServerSupabaseClient();
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${baseUrl}/auth/callback`,
+    },
+  });
+  if (error) throw error;
+  if (!data.url) throw new Error('No OAuth URL returned from Supabase');
+  return data.url;
 }
