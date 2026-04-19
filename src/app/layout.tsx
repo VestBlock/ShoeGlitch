@@ -1,6 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
 
+// Force every page to render at request time, not build time.
+// The app uses cookies (Supabase auth session) everywhere — static
+// pre-rendering doesn't make sense here.
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'Shoe Glitch — Sneaker cleaning, restoration & sole color',
   description:
