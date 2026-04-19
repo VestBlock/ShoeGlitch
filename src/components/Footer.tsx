@@ -42,7 +42,12 @@ export default function Footer() {
           </Col>
         </div>
         <div className="mt-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-t border-bone/10 pt-8">
-          <span className="text-xs text-bone/40 tracking-widest uppercase">© {new Date().getFullYear()} Shoe Glitch, Inc.</span>
+          <span className="text-xs text-bone/40 tracking-widest uppercase">© {new Date().getFullYear()} Shoe Glitch LLC.</span>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
+            <Link href="/terms" className="text-bone/60 hover:text-cyan">Terms</Link>
+            <Link href="/privacy" className="text-bone/60 hover:text-cyan">Privacy</Link>
+            <Link href="/refund-policy" className="text-bone/60 hover:text-cyan">Refund &amp; Damage</Link>
+          </div>
           <span className="font-mono text-xs text-bone/40">SG/v0.2.0 · Milwaukee → everywhere</span>
         </div>
       </div>
