@@ -3,16 +3,11 @@ import { db } from '@/lib/db';
 import { Badge, Card, ProgressBar, StatusDot } from '@/components/ui';
 
 export default async function HomePage() {
-  let cities: Awaited<ReturnType<typeof db.cities.all>> = [];
-  let services: Awaited<ReturnType<typeof db.services.primary>> = [];
-  try {
-    cities = await db.cities.all();
-    const allServices = await db.services.primary();
-    services = allServices.filter(s => s.category !== 'luxury').slice(0, 6);
-  } catch (err: any) {
-    console.error('[HomePage] data fetch error:', err?.message, err?.code, err?.details);
-    // Render with empty arrays instead of crashing to _not-found
-  }
+  const [cities, allServices] = await Promise.all([
+    db.cities.all().catch(() => []),
+    db.services.primary().catch(() => []),
+  ]);
+  const services = allServices.filter(s => s.category !== 'luxury').slice(0, 6);
 
   return (
     <>

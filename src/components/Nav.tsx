@@ -5,12 +5,7 @@ import { cn } from '@/lib/utils';
 import { StatusDot } from '@/components/ui';
 
 export default async function Nav({ theme = 'light' }: { theme?: 'light' | 'dark' }) {
-  let session: Awaited<ReturnType<typeof getSession>> = null;
-  try {
-    session = await getSession();
-  } catch (err: any) {
-    console.error('[Nav] getSession error:', err?.message);
-  }
+  const session = await getSession().catch(() => null);
   const dark = theme === 'dark';
   return (
     <header className={cn('relative z-40 w-full', dark ? 'bg-ink text-bone' : 'bg-bone text-ink')}>
