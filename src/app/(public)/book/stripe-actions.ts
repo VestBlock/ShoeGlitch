@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import { getStripe } from '@/lib/stripe';
 import { quote } from '@/lib/pricing';
 import { createOrder } from '@/services/orders';
@@ -125,7 +126,12 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
   }
 
   // 3. Create the Stripe Checkout Session
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  // Derive origin from request headers, NOT env var — env var may be missing
+  // or wrong in production, causing Stripe to fall back to the homepage.
+  const h = headers();
+  const host = h.get('x-forwarded-host') || h.get('host') || 'shoeglitch.com';
+  const proto = h.get('x-forwarded-proto') || 'https';
+  const origin = `${proto}://${host}`;
   const stripe = getStripe();
   const stripeSession = await stripe.checkout.sessions.create({
     mode: 'payment',

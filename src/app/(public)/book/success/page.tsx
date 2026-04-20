@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { db } from '@/lib/db';
+import { createAdminSupabaseClient } from '@/lib/supabase/admin';
 import { Badge, Card } from '@/components/ui';
+import type { Order } from '@/types';
 
 /**
  * Stripe redirects here after a successful payment.
@@ -9,6 +10,10 @@ import { Badge, Card } from '@/components/ui';
  *
  * Note: the webhook already marks the order paid — this page is just UX.
  * If the webhook is delayed (rare), the customer still sees confirmation.
+ *
+ * Uses admin client to bypass RLS — the user just completed checkout,
+ * we want them to see their order even if their session cookie hasn't
+ * fully propagated yet.
  */
 export default async function BookSuccessPage({
   searchParams,
@@ -18,7 +23,13 @@ export default async function BookSuccessPage({
   const orderId = searchParams.order;
   if (!orderId) redirect('/');
 
-  const order = await db.orders.byId(orderId);
+  const admin = createAdminSupabaseClient();
+  const { data: order } = await admin
+    .from('orders')
+    .select('*')
+    .eq('id', orderId)
+    .maybeSingle<Order>();
+
   if (!order) redirect('/');
 
   return (
