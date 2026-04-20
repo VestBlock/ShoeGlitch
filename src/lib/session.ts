@@ -79,25 +79,27 @@ export async function signInWithDemoEmail(email: string): Promise<Session | null
 }
 
 /** Magic-link sign-in for real users. */
-export async function signInWithMagicLink(email: string): Promise<{ ok: boolean; error?: string }> {
+export async function signInWithMagicLink(
+  email: string,
+  origin: string,
+): Promise<{ ok: boolean; error?: string }> {
   const supabase = createServerSupabaseClient();
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/auth/callback`,
+      emailRedirectTo: `${origin}/auth/callback`,
     },
   });
   if (error) return { ok: false, error: error.message };
   return { ok: true };
 }
 
-export async function signInWithGoogle(): Promise<string> {
+export async function signInWithGoogle(origin: string): Promise<string> {
   const supabase = createServerSupabaseClient();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${baseUrl}/auth/callback`,
+      redirectTo: `${origin}/auth/callback`,
     },
   });
   if (error) throw error;
