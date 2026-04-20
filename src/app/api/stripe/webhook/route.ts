@@ -11,6 +11,7 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
 import { db } from '@/lib/db';
+import { sendOrderConfirmation, sendRefundConfirmation } from '@/lib/email';
 import { appendEvent } from '@/services/orders';
 import type { Order } from '@/types';
 
@@ -67,6 +68,24 @@ export async function POST(req: Request) {
           `Payment received — Stripe session ${session.id}`,
         );
         console.log(`Order ${orderId} marked as paid`);
+
+        // Fire order confirmation email. Non-blocking: errors are logged,
+        // not thrown, so a mail failure never NACKs the webhook.
+        try {
+          const [customer, cities] = await Promise.all([
+            db.customers.byId(order.customerId),
+            db.cities.all(),
+          ]);
+          const city = cities.find((c) => c.id === order.cityId) ?? null;
+          if (customer) {
+            await sendOrderConfirmation({ order: updated, customer, city });
+          } else {
+            console.warn(`[email] customer ${order.customerId} not found for order ${order.code}`);
+          }
+        } catch (emailErr: any) {
+          console.error('[email] order confirmation failed:', emailErr?.message ?? emailErr);
+        }
+
         break;
       }
 
@@ -99,13 +118,25 @@ export async function POST(req: Request) {
           updatedAt: new Date().toISOString(),
         };
         await db.orders.upsert(updated);
+        const refundAmount = Number((charge.amount_refunded / 100).toFixed(2));
         await appendEvent(
           order.id,
           order.status,
           'system',
           undefined,
-          `Refund issued for $${(charge.amount_refunded / 100).toFixed(2)}`,
+          `Refund issued for $${refundAmount.toFixed(2)}`,
         );
+
+        // Fire refund confirmation email (non-blocking).
+        try {
+          const customer = await db.customers.byId(order.customerId);
+          if (customer) {
+            await sendRefundConfirmation({ order: updated, customer, refundAmount });
+          }
+        } catch (emailErr: any) {
+          console.error('[email] refund confirmation failed:', emailErr?.message ?? emailErr);
+        }
+
         break;
       }
 

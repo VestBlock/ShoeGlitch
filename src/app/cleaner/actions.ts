@@ -6,6 +6,7 @@ import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import { updateOrderStatus, addAfterImage, appendEvent } from '@/services/orders';
 import { requireRole } from '@/lib/rbac';
+import { sendStatusUpdate, sendOrderCompleted } from '@/lib/email';
 import type { OrderStatus } from '@/types';
 
 const StatusUpdateSchema = z.object({
@@ -41,6 +42,23 @@ export async function updateStatusAction(formData: FormData) {
     actorId: session!.userId,
     note: parsed.note,
   });
+
+  // Fire the right status-update email (non-blocking — failures don't break the UX).
+  try {
+    const fresh = await db.orders.byId(parsed.orderId);
+    if (fresh) {
+      const customer = await db.customers.byId(fresh.customerId);
+      if (customer) {
+        if (fresh.status === 'completed') {
+          await sendOrderCompleted({ order: fresh, customer });
+        } else {
+          await sendStatusUpdate({ order: fresh, customer });
+        }
+      }
+    }
+  } catch (emailErr: any) {
+    console.error('[email] status-update email failed:', emailErr?.message ?? emailErr);
+  }
 
   revalidatePath(`/cleaner/orders/${parsed.orderId}`);
   revalidatePath('/cleaner');
