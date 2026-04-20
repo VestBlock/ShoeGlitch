@@ -42,15 +42,20 @@ const BookingSchema = z.object({
 export async function startStripeCheckoutAction(data: z.input<typeof BookingSchema>) {
   const parsed = BookingSchema.parse(data);
 
-  // Resolve customerId
+  // Resolve customerId — must be a signed-in customer.
+  // In production (no demo fallback): a customer row must exist for this user.
   const session = await getSession();
-  let customerId: string;
-  if (session?.role === 'customer') {
-    const customer = await db.customers.byUserId(session.userId);
-    customerId = customer?.id ?? 'cust_ava';
-  } else {
-    customerId = 'cust_ava';
+  if (!session) {
+    throw new Error('Please sign in to book a clean.');
   }
+  if (session.role !== 'customer') {
+    throw new Error('Only customer accounts can book. Sign in with a customer account.');
+  }
+  const customer = await db.customers.byUserId(session.userId);
+  if (!customer) {
+    throw new Error('Customer profile not found. Please contact support at shoeglitch@gmail.com.');
+  }
+  const customerId = customer.id;
 
   const pickupAddress =
     parsed.fulfillmentMethod === 'pickup' && parsed.addressLine1
