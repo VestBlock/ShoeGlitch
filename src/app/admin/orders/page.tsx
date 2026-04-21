@@ -17,40 +17,11 @@ export default async function AdminOrders() {
 
   return (
     <DashboardShell currentPath="/admin/orders" pageTitle="All orders">
-      <AdminOrdersClient 
-        initialOrders={orders} 
-        cities={cities} 
-        customers={customers} 
+      <AdminOrdersClient
+        initialOrders={orders}
+        cities={cities}
+        customers={customers}
       />
     </DashboardShell>
-  );
-}          All cities
-        </Link>
-        {cities.map((c) => (
-          <Link key={c.id} href={`/admin/orders?filter=${filter}&city=${c.id}`}
-            className={cn('chip', cityFilter === c.id && 'chip-on')}>
-            {c.name}
-          </Link>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <Stat label="Showing" value={orders.length} />
-        <Stat label="Revenue" value={`$${orders.filter(o => o.paymentStatus === 'paid').reduce((s, o) => s + o.total, 0)}`} />
-        <Stat label="Avg ticket" value={`$${orders.length ? Math.round(orders.reduce((s, o) => s + o.total, 0) / orders.length) : 0}`} />
-        <Stat label="Rush %" value={`${orders.length ? Math.round((orders.filter(o => o.isRush).length / orders.length) * 100) : 0}%`} />
-      </div>
-
-      <OrdersTable orders={orders} hrefBase="/admin/orders" showCustomer lookups={lookups} />
-    </DashboardShell>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <Card>
-      <div className="font-mono text-xs text-ink/40 mb-1">{label}</div>
-      <div className="h-display text-3xl">{value}</div>
-    </Card>
   );
 }
