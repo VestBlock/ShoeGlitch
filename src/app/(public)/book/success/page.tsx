@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createAdminSupabaseClient } from '@/lib/supabase/admin';
 import { Badge, Card } from '@/components/ui';
+import { PhotoUploadSection } from './PhotoUploadSection';
 import type { Order } from '@/types';
 
 /**
@@ -66,7 +67,9 @@ export default async function BookSuccessPage({
         </div>
       </Card>
 
-      <div className="flex justify-center gap-3 flex-wrap">
+      <PhotoUploadSection orderId={order.id} />
+
+      <div className="flex justify-center gap-3 flex-wrap mt-8">
         <Link href={`/book/confirmation/${order.id}`} className="btn-glitch">
           View order →
         </Link>
