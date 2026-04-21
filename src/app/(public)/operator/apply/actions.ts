@@ -2,7 +2,9 @@
 
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { db } from '@/lib/db';
+import { headers } from 'next/headers';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { getStripe } from '@/lib/stripe';
 
 const ApplicationSchema = z.object({
   name: z.string().min(2),
@@ -13,6 +15,12 @@ const ApplicationSchema = z.object({
   experience: z.string().optional(),
   whyJoin: z.string().optional(),
 });
+
+const TIER_PRICES = {
+  starter: 349,
+  pro: 599,
+  luxury: 899,
+} as const;
 
 export async function submitApplicationAction(formData: FormData) {
   const parsed = ApplicationSchema.parse({
@@ -25,9 +33,63 @@ export async function submitApplicationAction(formData: FormData) {
     whyJoin: formData.get('whyJoin') || undefined,
   });
 
-  // TODO: insert into operator_applications table when migrated
-  const city = await db.cities.byId(parsed.cityId);
-  const ref = `OP-${Math.random().toString(36).toUpperCase().slice(2, 8)}`;
+  const supabase = createServerSupabaseClient();
+  
+  // Insert application
+  const { data: app, error } = await supabase
+    .from('operator_applications')
+    .insert({
+      name: parsed.name,
+      email: parsed.email,
+      phone: parsed.phone,
+      cityId: parsed.cityId,
+      tier: parsed.tier,
+      experience: parsed.experience,
+      whyJoin: parsed.whyJoin,
+      status: 'pending',
+      kitPaymentStatus: 'unpaid',
+    })
+    .select('id')
+    .single();
 
-  redirect(`/operator/applied?ref=${ref}&tier=${parsed.tier}&city=${city?.slug ?? ''}`);
+  if (error) throw error;
+
+  // Create Stripe checkout for kit payment
+  const stripe = getStripe();
+  const headersList = headers();
+  const proto = headersList.get('x-forwarded-proto') || 'https';
+  const host = headersList.get('x-forwarded-host') || headersList.get('host') || 'shoeglitch.com';
+  const origin = `${proto}://${host}`;
+
+  const session = await stripe.checkout.sessions.create({
+    mode: 'payment',
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: `${parsed.tier.charAt(0).toUpperCase() + parsed.tier.slice(1)} Operator Kit`,
+            description: `One-time kit fee for ${parsed.tier} tier operator`,
+          },
+          unit_amount: TIER_PRICES[parsed.tier] * 100,
+        },
+        quantity: 1,
+      },
+    ],
+    success_url: `${origin}/operator/applied?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}/operator/apply?tier=${parsed.tier}`,
+    customer_email: parsed.email,
+    metadata: {
+      applicationId: app.id,
+      tier: parsed.tier,
+    },
+  });
+
+  // Update application with session ID
+  await supabase
+    .from('operator_applications')
+    .update({ stripeCheckoutSessionId: session.id })
+    .eq('id', app.id);
+
+  redirect(session.url!);
 }

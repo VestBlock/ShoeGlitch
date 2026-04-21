@@ -44,46 +44,64 @@ export async function POST(req: Request) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
+        
+        // Check if order payment or kit payment
         const orderId = session.metadata?.orderId;
-        if (!orderId) {
-          console.warn('Webhook received checkout.session.completed with no orderId');
-          break;
-        }
-        const order = await db.orders.byId(orderId);
-        if (!order) {
-          console.warn('Webhook: order not found:', orderId);
-          break;
-        }
-        const updated: Order = {
-          ...order,
-          paymentStatus: 'paid',
-          updatedAt: new Date().toISOString(),
-        };
-        await db.orders.upsert(updated);
-        await appendEvent(
-          order.id,
-          order.status,
-          'system',
-          undefined,
-          `Payment received — Stripe session ${session.id}`,
-        );
-        console.log(`Order ${orderId} marked as paid`);
+        const applicationId = session.metadata?.applicationId;
+        
+        if (orderId) {
+          // Order payment flow
+          const order = await db.orders.byId(orderId);
+          if (!order) {
+            console.warn('Webhook: order not found:', orderId);
+            break;
+          }
+          const updated: Order = {
+            ...order,
+            paymentStatus: 'paid',
+            updatedAt: new Date().toISOString(),
+          };
+          await db.orders.upsert(updated);
+          await appendEvent(
+            order.id,
+            order.status,
+            'system',
+            undefined,
+            `Payment received — Stripe session ${session.id}`,
+          );
+          console.log(`Order ${orderId} marked as paid`);
 
-        // Fire order confirmation email. Non-blocking: errors are logged,
-        // not thrown, so a mail failure never NACKs the webhook.
-        try {
-          const [customer, cities] = await Promise.all([
-            db.customers.byId(order.customerId),
-            db.cities.all(),
-          ]);
-          const city = cities.find((c) => c.id === order.cityId) ?? null;
-          if (customer) {
+          // Fire order confirmation email
+          try {
+            const [customer, cities] = await Promise.all([
+              db.customers.byId(order.customerId),
+              db.cities.all(),
+            ]);
+            const city = cities.find((c) => c.id === order.cityId) ?? null;
+            if (customer) {
             await sendOrderConfirmation({ order: updated, customer, city });
           } else {
             console.warn(`[email] customer ${order.customerId} not found for order ${order.code}`);
           }
         } catch (emailErr: any) {
           console.error('[email] order confirmation failed:', emailErr?.message ?? emailErr);
+        }
+        } else if (applicationId) {
+          // Kit payment flow
+          const supabase = (await import('@/lib/supabase/server')).createServerSupabaseClient();
+          const { error } = await supabase
+            .from('operator_applications')
+            .update({
+              kitPaymentStatus: 'paid',
+              kitPaidAt: new Date().toISOString(),
+            })
+            .eq('id', applicationId);
+          
+          if (error) {
+            console.error('Failed to update kit payment:', error);
+          } else {
+            console.log(`Application ${applicationId} kit payment confirmed`);
+          }
         }
 
         break;
