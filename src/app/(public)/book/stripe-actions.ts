@@ -46,7 +46,7 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
   // In production (no demo fallback): a customer row must exist for this user.
   const session = await getSession();
   if (!session) {
-    throw new Error('Please sign in to book a clean.');
+    redirect('/login?redirect=/book');
   }
   if (session.role !== 'customer') {
     throw new Error('Only customer accounts can book. Sign in with a customer account.');

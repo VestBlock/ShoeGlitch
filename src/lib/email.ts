@@ -12,8 +12,8 @@
 import { Resend } from 'resend';
 import type { Order, Customer, City } from '@/types';
 
-const FROM = 'Shoe Glitch <hello@shoeglitch.com>';
-const REPLY_TO = 'shoeglitch@gmail.com';
+const FROM = 'Shoe Glitch <contact@shoeglitch.com>';
+const REPLY_TO = 'contact@shoeglitch.com';
 const SITE_URL = 'https://shoeglitch.com';
 
 let _resend: Resend | null = null;
