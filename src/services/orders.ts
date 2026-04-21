@@ -21,6 +21,7 @@ import { AuthError, canAccessCity } from '@/lib/rbac';
 export interface CreateOrderInput extends QuoteInput {
   customerId: string;
   serviceAreaId?: string;
+  customShoeType?: string;
   notes?: string;
   conditionIssues?: string;
   pickupAddress?: Address;
@@ -42,6 +43,7 @@ export async function createOrder(input: CreateOrderInput): Promise<Order> {
     serviceAreaId: input.serviceAreaId,
     fulfillmentMethod: input.fulfillmentMethod,
     shoeCategory: input.shoeCategory,
+    customShoeType: input.customShoeType,
     pairCount: Math.max(1, input.pairCount || 1),
     items: q.items,
     status: initialStatus,

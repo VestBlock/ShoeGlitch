@@ -181,6 +181,7 @@ export interface Order {
 
   fulfillmentMethod: FulfillmentMethod;
   shoeCategory: ShoeCategory;
+  customShoeType?: string;
   pairCount: number;
 
   items: OrderItem[]; // includes primary service + add-ons
