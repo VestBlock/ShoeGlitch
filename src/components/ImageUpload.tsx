@@ -1,15 +1,29 @@
 'use client';
 
 import { useState } from 'react';
-import { uploadOrderPhoto } from '@/lib/storage';
+import { useRouter } from 'next/navigation';
+import { uploadOrderPhotos, type UploadOrderPhotoPhase } from '@/lib/storage';
 
 interface ImageUploadProps {
   orderId?: string;
   maxFiles?: number;
   onUploadComplete?: (urls: string[]) => void;
+  phase?: UploadOrderPhotoPhase;
+  buttonLabel?: string;
+  uploadLabel?: string;
+  helperText?: string;
 }
 
-export function ImageUpload({ orderId, maxFiles = 5, onUploadComplete }: ImageUploadProps) {
+export function ImageUpload({
+  orderId,
+  maxFiles = 5,
+  onUploadComplete,
+  phase = 'before',
+  buttonLabel,
+  uploadLabel,
+  helperText,
+}: ImageUploadProps) {
+  const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -48,10 +62,11 @@ export function ImageUpload({ orderId, maxFiles = 5, onUploadComplete }: ImageUp
     setError(null);
 
     try {
-      const urls = await Promise.all(files.map((f) => uploadOrderPhoto(f, orderId)));
+      const urls = await uploadOrderPhotos(files, orderId, phase);
       onUploadComplete?.(urls);
       setFiles([]);
       setPreviews([]);
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
@@ -61,6 +76,7 @@ export function ImageUpload({ orderId, maxFiles = 5, onUploadComplete }: ImageUp
 
   return (
     <div className="space-y-4">
+      {helperText ? <p className="text-sm text-ink/60">{helperText}</p> : null}
       <div className="flex items-center gap-3">
         <label className="btn-outline cursor-pointer">
           <input
@@ -71,12 +87,12 @@ export function ImageUpload({ orderId, maxFiles = 5, onUploadComplete }: ImageUp
             className="hidden"
             disabled={uploading || files.length >= maxFiles}
           />
-          Add Photos ({files.length}/{maxFiles})
+          {buttonLabel ?? `Add photos (${files.length}/${maxFiles})`}
         </label>
         
         {files.length > 0 && orderId && (
           <button onClick={handleUpload} disabled={uploading} className="btn-primary">
-            {uploading ? 'Uploading...' : 'Upload'}
+            {uploading ? 'Uploading...' : uploadLabel ?? 'Upload'}
           </button>
         )}
       </div>
@@ -87,6 +103,7 @@ export function ImageUpload({ orderId, maxFiles = 5, onUploadComplete }: ImageUp
         <div className="grid grid-cols-3 gap-3">
           {previews.map((preview, i) => (
             <div key={i} className="relative group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={preview} alt={`Preview ${i + 1}`} className="w-full h-32 object-cover rounded" />
               <button
                 onClick={() => removeFile(i)}

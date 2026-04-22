@@ -5,6 +5,10 @@ import { OrdersTable, buildLookups } from '@/components/OrdersTable';
 import { Badge, Card, ProgressBar } from '@/components/ui';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
+import {
+  extractPickupWindowFromNotes,
+  pickupWindowLabel,
+} from '@/lib/pickup-window';
 import { progressPercent, STATUS_LABELS } from '@/lib/status';
 
 export default async function CustomerDashboard() {
@@ -50,6 +54,7 @@ export default async function CustomerDashboard() {
               const city = lookups.cities.get(o.cityId);
               const primary = o.items.find((i) => !i.isAddOn);
               const pct = progressPercent(o.fulfillmentMethod, o.status);
+              const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(o.notes));
               return (
                 <Link key={o.id} href={`/customer/orders/${o.id}`} className="card p-6 card-lift">
                   <div className="flex items-start justify-between mb-3">
@@ -58,6 +63,14 @@ export default async function CustomerDashboard() {
                   </div>
                   <div className="h-display text-2xl mb-1">{primary?.serviceName ?? '—'}</div>
                   <div className="text-sm text-ink/60 mb-4">{city?.name} · {o.fulfillmentMethod}</div>
+                  {pickupWindow ? (
+                    <div className="mb-3 text-[11px] uppercase tracking-[0.22em] text-ink/45">
+                      Pickup window · {pickupWindow}
+                    </div>
+                  ) : null}
+                  <div className="mb-4 text-[11px] uppercase tracking-[0.22em] text-ink/45">
+                    {o.beforeImages.length} intake photo{o.beforeImages.length === 1 ? '' : 's'} · {o.afterImages.length} finish photo{o.afterImages.length === 1 ? '' : 's'}
+                  </div>
                   <ProgressBar percent={pct} />
                   <div className="flex justify-between mt-2 text-[10px] uppercase tracking-widest text-ink/40">
                     <span>{pct}% complete</span>

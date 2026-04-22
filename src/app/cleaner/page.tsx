@@ -5,6 +5,10 @@ import { OrdersTable, buildLookups } from '@/components/OrdersTable';
 import { Badge, Card, StatusDot } from '@/components/ui';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
+import {
+  extractPickupWindowFromNotes,
+  pickupWindowLabel,
+} from '@/lib/pickup-window';
 
 export default async function CleanerDashboard() {
   const session = await getSession();
@@ -62,12 +66,13 @@ export default async function CleanerDashboard() {
       <section className="mb-10">
         <h2 className="h-display text-3xl mb-5">Jobs needing you</h2>
         {needsAction.length === 0 ? (
-          <Card className="p-8 text-center text-ink/50">You're all caught up. 👟</Card>
+          <Card className="p-8 text-center text-ink/50">You&rsquo;re all caught up. 👟</Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {needsAction.map((o) => {
               const customer = lookups.customers.get(o.customerId);
               const primary = o.items.find((i) => !i.isAddOn);
+              const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(o.notes));
               return (
                 <Link key={o.id} href={`/cleaner/orders/${o.id}`} className="card p-6 card-lift">
                   <div className="flex items-start justify-between mb-3">
@@ -76,6 +81,14 @@ export default async function CleanerDashboard() {
                   </div>
                   <div className="h-display text-2xl mb-1">{primary?.serviceName}</div>
                   <div className="text-sm text-ink/60 mb-4">{customer?.name} · {o.fulfillmentMethod}</div>
+                  {pickupWindow ? (
+                    <div className="mb-3 text-[11px] uppercase tracking-[0.22em] text-ink/45">
+                      Pickup window · {pickupWindow}
+                    </div>
+                  ) : null}
+                  <div className="text-[11px] uppercase tracking-[0.22em] text-ink/45">
+                    {o.beforeImages.length} intake · {o.afterImages.length} finish
+                  </div>
                 </Link>
               );
             })}

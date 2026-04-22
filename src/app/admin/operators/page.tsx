@@ -1,39 +1,23 @@
 import { redirect } from 'next/navigation';
+import DashboardShell from '@/components/DashboardShell';
 import { getSession } from '@/lib/session';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createAdminSupabaseClient } from '@/lib/supabase/admin';
 import { AdminOperatorsClient } from './AdminOperatorsClient';
 
 export default async function AdminOperators() {
   const session = await getSession();
   if (!session) redirect('/login');
+  if (session.role !== 'super_admin') redirect('/login');
 
-  // Check admin role
-  const supabase = createServerSupabaseClient();
-  const { data: user } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', session.userId)
-    .maybeSingle();
-
-  if (user?.role !== 'admin') {
-    return (
-      <div className="container max-w-2xl mx-auto px-4 py-16 text-center">
-        <h1 className="h-display text-4xl mb-4">Access Denied</h1>
-        <p className="text-ink/60">Admin only</p>
-      </div>
-    );
-  }
-
-  // Get pending applications
-  const { data: applications } = await supabase
+  const admin = createAdminSupabaseClient();
+  const { data: applications } = await admin
     .from('operator_applications')
     .select('*, cities(name)')
     .order('createdAt', { ascending: false });
 
   return (
-    <div className="container max-w-6xl mx-auto px-4 py-12">
-      <h1 className="h-display text-4xl mb-8">Operator Applications</h1>
+    <DashboardShell currentPath="/admin/operators" pageTitle="Operator applications">
       <AdminOperatorsClient applications={applications || []} />
-    </div>
+    </DashboardShell>
   );
 }

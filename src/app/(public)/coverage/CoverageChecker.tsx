@@ -46,7 +46,7 @@ export function CoverageChecker() {
                 <StatusDot tone="ok" /> Local coverage
               </Badge>
               <h3 className="h-display text-4xl mb-2">
-                You're in <em className="h-italic text-glitch">{result.cityName}</em>.
+                You&rsquo;re in <em className="h-italic text-glitch">{result.cityName}</em>.
               </h3>
               <p className="text-ink/70">
                 Service area: <strong>{result.serviceAreaName}</strong>. Pickup, drop-off, and mail-in all available.

@@ -23,6 +23,8 @@ export default async function AdminOverview() {
   const flagged = orders.filter(o => o.status === 'issue_flagged');
   const revenue = orders.filter(o => o.paymentStatus === 'paid').reduce((s, o) => s + o.total, 0);
   const completedCount = orders.filter(o => o.status === 'completed').length;
+  const withBeforePhotos = orders.filter((o) => o.beforeImages.length > 0).length;
+  const withAfterPhotos = orders.filter((o) => o.afterImages.length > 0).length;
 
   const byCity = cities.map((c) => {
     const cityOrders = orders.filter((o) => o.cityId === c.id);
@@ -58,6 +60,17 @@ export default async function AdminOverview() {
         <Card>
           <div className="font-mono text-xs text-ink/40 mb-1">Flagged</div>
           <div className="h-display text-5xl text-glitch">{flagged.length}</div>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 mb-10 md:grid-cols-2">
+        <Card>
+          <div className="font-mono text-xs text-ink/40 mb-1">Orders with intake photos</div>
+          <div className="h-display text-4xl">{withBeforePhotos}</div>
+        </Card>
+        <Card>
+          <div className="font-mono text-xs text-ink/40 mb-1">Orders with finished photos</div>
+          <div className="h-display text-4xl">{withAfterPhotos}</div>
         </Card>
       </div>
 

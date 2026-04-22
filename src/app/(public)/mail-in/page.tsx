@@ -14,7 +14,7 @@ export default async function MailInPage() {
           <em className="h-italic text-glitch">Tracked end to end.</em>
         </h1>
         <p className="text-ink/70 max-w-2xl text-lg">
-          If local pickup isn't live in your city yet, ship them in. We'll clean, restore, and ship them back.
+          If local pickup isn&rsquo;t live in your city yet, ship them in. We&rsquo;ll clean, restore, and ship them back.
         </p>
       </section>
 
@@ -55,7 +55,7 @@ export default async function MailInPage() {
         <Card className="card-ink p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
             <h3 className="h-display text-4xl">Ready to ship them in?</h3>
-            <p className="text-bone/60 mt-2">Start a mail-in order and we'll email packing instructions.</p>
+            <p className="text-bone/60 mt-2">Start a mail-in order and we&rsquo;ll email packing instructions.</p>
           </div>
           <Link href="/book?mode=mailin" className="btn-glitch shrink-0">Start mail-in →</Link>
         </Card>

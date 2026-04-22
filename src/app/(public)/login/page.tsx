@@ -12,10 +12,13 @@ const DEMO_ROLES: Array<{ email: string; label: string; role: string; desc: stri
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { demo?: string };
+  searchParams: { demo?: string; error?: string };
 }) {
   const showDemo = searchParams?.demo === '1';
   const users = showDemo ? await db.users.all() : [];
+  const loginError = searchParams?.error === 'signin_failed'
+    ? 'Could not sign in with that account. Use a seeded demo email or continue with Google.'
+    : null;
 
   return (
     <section className="container-x pt-10 pb-24">
@@ -30,6 +33,11 @@ export default async function LoginPage({
               <label className="label">Email</label>
               <input name="email" className="input" placeholder="you@example.com" required />
             </div>
+            {loginError && (
+              <div className="rounded-xl border border-glitch/20 bg-glitch/5 px-4 py-3 text-sm text-glitch">
+                {loginError}
+              </div>
+            )}
             <button type="submit" className="btn-glitch w-full">Continue →</button>
           </form>
 

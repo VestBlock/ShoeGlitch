@@ -6,7 +6,11 @@ import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import { updateOrderStatus, addAfterImage, appendEvent } from '@/services/orders';
 import { requireRole } from '@/lib/rbac';
-import { sendStatusUpdate, sendOrderCompleted } from '@/lib/email';
+import {
+  sendOperatorOnTheWay,
+  sendOrderCompleted,
+  sendStatusUpdate,
+} from '@/lib/email';
 import type { OrderStatus } from '@/types';
 
 const StatusUpdateSchema = z.object({
@@ -98,4 +102,50 @@ export async function flagIssueAction(formData: FormData) {
   });
   revalidatePath(`/cleaner/orders/${orderId}`);
   revalidatePath('/admin/orders');
+}
+
+export async function markOnTheWayAction(formData: FormData) {
+  const session = await getSession();
+  requireRole(session, 'cleaner', 'city_manager', 'super_admin');
+
+  const orderId = String(formData.get('orderId'));
+  const order = await db.orders.byId(orderId);
+  if (!order) throw new Error('Order not found');
+  if (order.fulfillmentMethod !== 'pickup') {
+    throw new Error('Only pickup orders can send an on-the-way notice.');
+  }
+  if (!['awaiting_pickup', 'pickup_assigned'].includes(order.status)) {
+    throw new Error('This order is already past the pickup stage.');
+  }
+
+  let operatorName = session?.name ?? 'Your operator';
+  if (session?.role === 'cleaner') {
+    const cleaner = await db.cleaners.byUserId(session.userId);
+    if (!cleaner || order.cleanerId !== cleaner.id) {
+      throw new Error('You can only update your own assigned orders.');
+    }
+    operatorName = cleaner.name;
+  }
+
+  await appendEvent(
+    order.id,
+    order.status,
+    session!.role,
+    session!.userId,
+    `${operatorName} is on the way for pickup.`,
+  );
+
+  try {
+    const customer = await db.customers.byId(order.customerId);
+    if (customer) {
+      await sendOperatorOnTheWay({ order, customer, operatorName });
+    }
+  } catch (emailErr: any) {
+    console.error('[email] on-the-way email failed:', emailErr?.message ?? emailErr);
+  }
+
+  revalidatePath(`/cleaner/orders/${orderId}`);
+  revalidatePath('/cleaner');
+  revalidatePath(`/customer/orders/${orderId}`);
+  revalidatePath(`/admin/orders/${orderId}`);
 }

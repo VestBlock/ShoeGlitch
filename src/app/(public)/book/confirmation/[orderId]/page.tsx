@@ -19,7 +19,7 @@ export default async function ConfirmationPage({ params }: { params: { orderId: 
     <section className="container-x pt-16 pb-24 max-w-3xl mx-auto">
       <Badge tone="acid" className="mb-4">✓ Order confirmed</Badge>
       <h1 className="h-display text-[clamp(2.5rem,7vw,5rem)] leading-[0.9] mb-4">
-        We've got it from here.
+        We&rsquo;ve got it from here.
       </h1>
       <p className="text-ink/70 text-lg mb-10">
         Order <span className="font-mono font-semibold">{order.code}</span> is now in the queue.

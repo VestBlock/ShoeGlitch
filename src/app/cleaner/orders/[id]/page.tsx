@@ -1,12 +1,19 @@
 import { notFound, redirect } from 'next/navigation';
 import DashboardShell from '@/components/DashboardShell';
 import { Badge, Card, ProgressBar } from '@/components/ui';
+import { ImageUpload } from '@/components/ImageUpload';
+import { OrderPhotoGallery } from '@/components/OrderPhotoGallery';
 import { StatusPill } from '@/components/OrdersTable';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import { STATUS_LABELS, progressPercent, nextAllowedStatuses } from '@/lib/status';
+import {
+  extractPickupWindowFromNotes,
+  pickupWindowLabel,
+  stripPickupWindowFromNotes,
+} from '@/lib/pickup-window';
 import { formatDate } from '@/lib/utils';
-import { updateStatusAction, addAfterPhotoAction, flagIssueAction } from '../../actions';
+import { updateStatusAction, flagIssueAction, markOnTheWayAction } from '../../actions';
 
 export default async function CleanerOrderDetail({ params }: { params: { id: string } }) {
   const session = await getSession();
@@ -21,7 +28,7 @@ export default async function CleanerOrderDetail({ params }: { params: { id: str
       <DashboardShell currentPath="/cleaner">
         <Card className="p-8">
           <h2 className="h-display text-3xl mb-2">Not your job</h2>
-          <p className="text-ink/60">This order isn't assigned to you.</p>
+          <p className="text-ink/60">This order isn&rsquo;t assigned to you.</p>
         </Card>
       </DashboardShell>
     );
@@ -36,6 +43,11 @@ export default async function CleanerOrderDetail({ params }: { params: { id: str
     (s) => s !== 'cancelled' && s !== 'awaiting_customer_response',
   );
   const pct = progressPercent(order.fulfillmentMethod, order.status);
+  const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
+  const customerNotes = stripPickupWindowFromNotes(order.notes);
+  const canMarkOnTheWay =
+    order.fulfillmentMethod === 'pickup' &&
+    ['awaiting_pickup', 'pickup_assigned'].includes(order.status);
 
   return (
     <DashboardShell currentPath="/cleaner">
@@ -63,20 +75,33 @@ export default async function CleanerOrderDetail({ params }: { params: { id: str
           </Card>
 
           <Card>
-            <h2 className="h-display text-2xl mb-4">After-photos ({order.afterImages.length})</h2>
-            {order.afterImages.length > 0 && (
-              <div className="grid grid-cols-3 gap-3 mb-4">
-                {order.afterImages.map((url, i) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img key={i} src={url} alt={`After ${i}`} className="rounded-lg aspect-square object-cover" />
-                ))}
+            <h2 className="h-display text-2xl mb-4">Photo set</h2>
+            <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+              <OrderPhotoGallery
+                eyebrow="Customer intake"
+                title="Before photos"
+                photos={order.beforeImages}
+                emptyLabel="No intake photos have been uploaded yet."
+              />
+              <div className="space-y-5">
+                <OrderPhotoGallery
+                  eyebrow="Operator finish"
+                  title="After photos"
+                  photos={order.afterImages}
+                  emptyLabel="Upload the cleaned result here once the pair is ready."
+                />
+                <div className="rounded-3xl border border-ink/10 bg-bone-soft p-5">
+                  <div className="font-mono text-xs text-ink/40 mb-2">Upload cleaned shoes</div>
+                  <ImageUpload
+                    orderId={order.id}
+                    phase="after"
+                    buttonLabel="Select finished photos"
+                    uploadLabel="Publish after photos"
+                    helperText="These photos appear in the customer order view and the admin dashboard as soon as they finish uploading."
+                  />
+                </div>
               </div>
-            )}
-            <form action={addAfterPhotoAction} className="flex gap-2">
-              <input type="hidden" name="orderId" value={order.id} />
-              <input name="url" className="input" placeholder="Image URL (blank for demo)" />
-              <button className="btn-primary">Upload</button>
-            </form>
+            </div>
           </Card>
 
           <Card>
@@ -123,6 +148,26 @@ export default async function CleanerOrderDetail({ params }: { params: { id: str
             </Card>
           )}
 
+          {pickupWindow && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-1">Requested pickup window</div>
+              <div className="h-display text-2xl">{pickupWindow}</div>
+            </Card>
+          )}
+
+          {canMarkOnTheWay && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-2">Customer notification</div>
+              <p className="mb-4 text-sm text-ink/60">
+                Send the customer an email when you are heading out for pickup.
+              </p>
+              <form action={markOnTheWayAction}>
+                <input type="hidden" name="orderId" value={order.id} />
+                <button className="btn-glitch w-full">I&rsquo;m on the way →</button>
+              </form>
+            </Card>
+          )}
+
           <Card>
             <div className="font-mono text-xs text-ink/40 mb-2">Service</div>
             {order.items.map((it, i) => (
@@ -140,6 +185,13 @@ export default async function CleanerOrderDetail({ params }: { params: { id: str
             <Card>
               <div className="font-mono text-xs text-ink/40 mb-1">Condition issues</div>
               <p className="text-sm">{order.conditionIssues}</p>
+            </Card>
+          )}
+
+          {customerNotes && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-1">Customer notes</div>
+              <p className="text-sm">{customerNotes}</p>
             </Card>
           )}
         </div>

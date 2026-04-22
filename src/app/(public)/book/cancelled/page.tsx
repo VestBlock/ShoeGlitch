@@ -9,7 +9,7 @@ export default function BookCancelledPage() {
         No worries.
       </h1>
       <p className="text-ink/70 text-lg mb-10">
-        Your order wasn't placed. Want to try again?
+        Your order wasn&rsquo;t placed. Want to try again?
       </p>
       <div className="flex justify-center gap-3">
         <Link href="/book" className="btn-glitch">Start over →</Link>

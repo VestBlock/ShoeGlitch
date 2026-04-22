@@ -37,11 +37,11 @@ export default async function BookSuccessPage({
     <section className="container-x pt-16 pb-24 max-w-2xl mx-auto text-center">
       <Badge tone="acid" className="mb-6">✓ Payment received</Badge>
       <h1 className="h-display text-[clamp(2.5rem,7vw,5rem)] leading-[0.9] mb-4">
-        You're all set.
+        You&rsquo;re all set.
       </h1>
       <p className="text-ink/70 text-lg mb-10">
         Order <span className="font-mono font-semibold">{order.code}</span> is
-        confirmed. We'll email you with the next steps.
+        confirmed. We&rsquo;ll email you with the next steps.
       </p>
 
       <Card className="p-8 text-left mb-8">

@@ -7,16 +7,12 @@ export default function Footer() {
       <div className="container-x py-20 relative">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
           <div className="col-span-2">
-            <div className="flex items-center gap-3 mb-6">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Shoe Glitch" className="h-14 w-14 rounded-lg" />
-              <div>
-                <div className="h-display text-2xl">Shoe Glitch</div>
-                <div className="text-[10px] uppercase tracking-[0.25em] text-cyan">built for the culture</div>
-              </div>
+            <div className="mb-6">
+              <div className="h-display text-2xl">Shoe Glitch</div>
+              <div className="text-[10px] uppercase tracking-[0.25em] text-cyan">built for the culture</div>
             </div>
             <h3 className="h-display text-4xl mb-4">
-              Don't let your <em className="h-italic text-cyan">good ones</em> die dirty.
+              Don&rsquo;t let your <em className="h-italic text-cyan">good ones</em> die dirty.
             </h3>
             <p className="text-bone/60 max-w-sm text-sm">
               A multi-city network of sneaker specialists, sole-color experts, and quality-obsessed operators. Started in Milwaukee.

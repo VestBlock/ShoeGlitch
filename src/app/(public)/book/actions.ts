@@ -7,6 +7,10 @@ import { checkCoverage } from '@/lib/coverage';
 import { createOrder } from '@/services/orders';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
+import {
+  PICKUP_WINDOW_VALUES,
+  attachPickupWindowToNotes,
+} from '@/lib/pickup-window';
 
 const BookingSchema = z.object({
   cityId: z.string(),
@@ -20,6 +24,7 @@ const BookingSchema = z.object({
   couponCode: z.string().optional(),
   notes: z.string().optional(),
   conditionIssues: z.string().optional(),
+  pickupWindow: z.enum(PICKUP_WINDOW_VALUES).optional(),
   addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),
   addressCity: z.string().optional(),
@@ -76,7 +81,10 @@ export async function submitBookingAction(data: z.input<typeof BookingSchema>) {
     pairCount: parsed.pairCount,
     isRush: parsed.isRush ?? false,
     couponCode: parsed.couponCode,
-    notes: parsed.notes,
+    notes: attachPickupWindowToNotes(
+      parsed.notes,
+      parsed.fulfillmentMethod === 'pickup' ? parsed.pickupWindow : undefined,
+    ),
     conditionIssues: parsed.conditionIssues,
     pickupAddress,
     scheduledPickupAt: parsed.scheduledPickupAt,

@@ -11,7 +11,11 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
 import { db } from '@/lib/db';
-import { sendOrderConfirmation, sendRefundConfirmation } from '@/lib/email';
+import {
+  sendOperatorBookingAlert,
+  sendOrderConfirmation,
+  sendRefundConfirmation,
+} from '@/lib/email';
 import { appendEvent } from '@/services/orders';
 import type { Order } from '@/types';
 
@@ -73,19 +77,21 @@ export async function POST(req: Request) {
 
           // Fire order confirmation email
           try {
-            const [customer, cities] = await Promise.all([
+            const [customer, cities, cleaners] = await Promise.all([
               db.customers.byId(order.customerId),
               db.cities.all(),
+              db.cleaners.byCity(order.cityId),
             ]);
             const city = cities.find((c) => c.id === order.cityId) ?? null;
             if (customer) {
-            await sendOrderConfirmation({ order: updated, customer, city });
-          } else {
-            console.warn(`[email] customer ${order.customerId} not found for order ${order.code}`);
+              await sendOrderConfirmation({ order: updated, customer, city });
+            } else {
+              console.warn(`[email] customer ${order.customerId} not found for order ${order.code}`);
+            }
+            await sendOperatorBookingAlert({ order: updated, city, cleaners });
+          } catch (emailErr: any) {
+            console.error('[email] order confirmation failed:', emailErr?.message ?? emailErr);
           }
-        } catch (emailErr: any) {
-          console.error('[email] order confirmation failed:', emailErr?.message ?? emailErr);
-        }
         } else if (applicationId) {
           // Kit payment flow
           const supabase = (await import('@/lib/supabase/server')).createServerSupabaseClient();

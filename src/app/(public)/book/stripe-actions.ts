@@ -8,6 +8,10 @@ import { quote } from '@/lib/pricing';
 import { createOrder } from '@/services/orders';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
+import {
+  PICKUP_WINDOW_VALUES,
+  attachPickupWindowToNotes,
+} from '@/lib/pickup-window';
 import type { Order } from '@/types';
 
 const BookingSchema = z.object({
@@ -26,12 +30,14 @@ const BookingSchema = z.object({
   couponCode: z.string().optional(),
   notes: z.string().optional(),
   conditionIssues: z.string().optional(),
+  pickupWindow: z.enum(PICKUP_WINDOW_VALUES).optional(),
   addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),
   addressCity: z.string().optional(),
   addressState: z.string().optional(),
   addressZip: z.string().optional(),
   scheduledPickupAt: z.string().optional(),
+  beforeImages: z.array(z.string()).optional().default([]),
 });
 
 /**
@@ -82,10 +88,14 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
     pairCount: parsed.pairCount,
     isRush: parsed.isRush ?? false,
     couponCode: parsed.couponCode,
-    notes: parsed.notes,
+    notes: attachPickupWindowToNotes(
+      parsed.notes,
+      parsed.fulfillmentMethod === 'pickup' ? parsed.pickupWindow : undefined,
+    ),
     conditionIssues: parsed.conditionIssues,
     pickupAddress,
     scheduledPickupAt: parsed.scheduledPickupAt,
+    beforeImages: parsed.beforeImages ?? [],
   });
 
   // 2. Build Stripe line items from the order

@@ -59,7 +59,7 @@ export default function OperatorPage() {
         <Badge tone="glitch" className="mb-6">For operators</Badge>
         <h1 className="h-display text-[clamp(3rem,8vw,7rem)] leading-[0.88] mb-6">
           Make money cleaning.<br />
-          <em className="h-italic text-glitch">We'll send the gear.</em>
+          <em className="h-italic text-glitch">We&rsquo;ll send the gear.</em>
         </h1>
         <p className="text-ink/70 max-w-2xl text-lg mb-10">
           Join the Shoe Glitch network as a certified operator. Pick your tier, get a branded kit shipped to you, complete training, and start getting real jobs routed to you in your city.

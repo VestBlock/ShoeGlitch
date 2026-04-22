@@ -4,6 +4,12 @@ import { useState, useMemo, useTransition, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { zipLookupAction, quoteAction } from './actions';
 import { startStripeCheckoutAction } from './stripe-actions';
+import { uploadPreOrderPhotos } from '@/lib/storage';
+import {
+  PICKUP_WINDOW_OPTIONS,
+  type PickupWindow,
+  pickupWindowLabel,
+} from '@/lib/pickup-window';
 import type { Quote } from '@/lib/pricing';
 import type { ResolvedService } from '@/services/catalog';
 import type { City } from '@/types';
@@ -16,6 +22,11 @@ interface Props {
   cities: City[];
   servicesByCity: Record<string, { primary: ResolvedService[]; addOns: ResolvedService[] }>;
 }
+
+type SelectedPhoto = {
+  file: File;
+  preview: string;
+};
 
 const SHOE_CATEGORIES = [
   { id: 'sneakers', label: 'Sneakers' },
@@ -65,8 +76,12 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
 
   const [notes, setNotes] = useState('');
   const [conditionIssues, setConditionIssues] = useState('');
+  const [pickupWindow, setPickupWindow] = useState<PickupWindow>('morning');
   const [address, setAddress] = useState({ line1: '', line2: '', city: '', state: '', zip: '' });
   const [couponCode, setCouponCode] = useState('');
+  const [beforePhotos, setBeforePhotos] = useState<SelectedPhoto[]>([]);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmittingCheckout, setIsSubmittingCheckout] = useState(false);
 
   const [q, setQuote] = useState<Quote | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -121,35 +136,82 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
     setAddOnServiceIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(event.target.files || []);
+    if (selected.length === 0) return;
+
+    const remaining = 5 - beforePhotos.length;
+    if (selected.length > remaining) {
+      setSubmitError(`You can attach up to 5 photos total. Remove one before adding more.`);
+      return;
+    }
+
+    const nextPhotos = selected.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+
+    setBeforePhotos((prev) => [...prev, ...nextPhotos]);
+    setSubmitError(null);
+    event.target.value = '';
+  };
+
+  const removePhoto = (index: number) => {
+    setBeforePhotos((prev) => {
+      const target = prev[index];
+      if (target) {
+        URL.revokeObjectURL(target.preview);
+      }
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
   const canContinue: Record<Step, boolean> = {
     0: Boolean(cityId) || fulfillmentMethod === 'mailin',
     1: Boolean(fulfillmentMethod && cityId),
     2: Boolean(shoeCategory && pairCount >= 1),
     3: Boolean(primaryServiceId),
-    4: fulfillmentMethod !== 'pickup' || (address.line1 && address.zip ? true : false),
+    4:
+      fulfillmentMethod !== 'pickup' ||
+      (address.line1 && address.zip && pickupWindow ? true : false),
     5: true,
   };
 
   const submit = () => {
+    setSubmitError(null);
+    setIsSubmittingCheckout(true);
+
     startTransition(async () => {
-      await startStripeCheckoutAction({
-        cityId,
-        serviceAreaId,
-        fulfillmentMethod,
-        shoeCategory,
-        pairCount,
-        primaryServiceId,
-        addOnServiceIds,
-        isRush,
-        couponCode: couponCode || undefined,
-        notes: notes || undefined,
-        conditionIssues: conditionIssues || undefined,
-        addressLine1: address.line1,
-        addressLine2: address.line2,
-        addressCity: address.city,
-        addressState: address.state,
-        addressZip: address.zip,
-      });
+      try {
+        const beforeImageUrls =
+          beforePhotos.length > 0
+            ? await uploadPreOrderPhotos(beforePhotos.map((photo) => photo.file))
+            : [];
+
+        await startStripeCheckoutAction({
+          cityId,
+          serviceAreaId,
+          fulfillmentMethod,
+          shoeCategory,
+          pairCount,
+          primaryServiceId,
+          addOnServiceIds,
+          isRush,
+          couponCode: couponCode || undefined,
+          notes: notes || undefined,
+          conditionIssues: conditionIssues || undefined,
+          addressLine1: address.line1,
+          addressLine2: address.line2,
+          addressCity: address.city,
+          addressState: address.state,
+          addressZip: address.zip,
+          pickupWindow: fulfillmentMethod === 'pickup' ? pickupWindow : undefined,
+          beforeImages: beforeImageUrls,
+        });
+      } catch (error) {
+        setSubmitError(error instanceof Error ? error.message : 'Checkout failed');
+        setIsSubmittingCheckout(false);
+      }
     });
   };
 
@@ -326,18 +388,77 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
                   <input className="input md:col-span-2" placeholder="ZIP" value={address.zip}
                     onChange={(e) => setAddress({ ...address, zip: e.target.value })} maxLength={5} />
                 </div>
+
+                <label className="label">Pickup window</label>
+                <select
+                  className="input mb-3 max-w-md"
+                  value={pickupWindow}
+                  onChange={(event) => setPickupWindow(event.target.value as PickupWindow)}
+                >
+                  {PICKUP_WINDOW_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="mb-6 text-sm text-ink/60">
+                  {PICKUP_WINDOW_OPTIONS.find((option) => option.value === pickupWindow)?.detail}
+                </p>
               </>
             )}
 
             {fulfillmentMethod === 'mailin' && (
               <div className="card p-5 mb-6 bg-bone-soft">
-                <p className="text-sm"><strong>You'll ship to:</strong> {currentCity?.hubAddress ?? 'Our central hub'} — packing instructions are emailed after booking.</p>
+                <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {currentCity?.hubAddress ?? 'Our central hub'} — packing instructions are emailed after booking.</p>
               </div>
             )}
 
             <label className="label">Condition issues (optional)</label>
             <textarea className="input mb-6 min-h-[80px]" placeholder="e.g. scuff on left toe, yellowing on sole, loose stitching…"
               value={conditionIssues} onChange={(e) => setConditionIssues(e.target.value)} />
+
+            <label className="label">Photos before we touch the pair (optional)</label>
+            <div className="card p-5 mb-6 bg-bone-soft">
+              <p className="text-sm text-ink/70 mb-4">
+                Add up to five photos and we&rsquo;ll attach them to the order before checkout so the customer, operator, and admin dashboards all see the same intake reference.
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <label className="btn-outline cursor-pointer">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={handlePhotoChange}
+                    disabled={beforePhotos.length >= 5}
+                  />
+                  Add photos ({beforePhotos.length}/5)
+                </label>
+                {beforePhotos.length > 0 ? (
+                  <span className="text-xs uppercase tracking-[0.24em] text-ink/45">
+                    Uploaded at checkout
+                  </span>
+                ) : null}
+              </div>
+
+              {beforePhotos.length > 0 ? (
+                <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
+                  {beforePhotos.map((photo, index) => (
+                    <div key={`${photo.file.name}-${index}`} className="relative overflow-hidden rounded-3xl border border-ink/10 bg-white">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={photo.preview} alt={photo.file.name} className="aspect-square w-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removePhoto(index)}
+                        className="absolute right-2 top-2 rounded-full bg-ink px-2 py-1 text-xs font-semibold text-bone"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
 
             <label className="label">Notes for the cleaner (optional)</label>
             <textarea className="input mb-6 min-h-[80px]" placeholder="Anything special we should know?"
@@ -363,10 +484,15 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
               <div className="space-y-1 text-sm">
                 <Row label="Shoes" value={`${pairCount}× ${SHOE_CATEGORIES.find(c => c.id === shoeCategory)?.label}`} />
                 {address.line1 && <Row label="Pickup" value={`${address.line1}, ${address.city}`} />}
+                {fulfillmentMethod === 'pickup' && pickupWindow && (
+                  <Row label="Pickup window" value={pickupWindowLabel(pickupWindow) ?? '—'} />
+                )}
                 {isRush && <Row label="Rush" value="Yes" />}
+                {beforePhotos.length > 0 && <Row label="Intake photos" value={`${beforePhotos.length} attached`} />}
               </div>
             </div>
             <p className="text-sm text-ink/60">By confirming, you authorize payment for the total shown in the summary.</p>
+            {submitError ? <p className="mt-4 text-sm font-medium text-glitch">{submitError}</p> : null}
           </Panel>
         )}
 
@@ -388,8 +514,8 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
               Continue →
             </button>
           ) : (
-            <button onClick={submit} disabled={isPending || !q || q.errors.length > 0} className="btn-glitch">
-              {isPending ? 'Redirecting…' : `Pay $${q?.total ?? 0} →`}
+            <button onClick={submit} disabled={isSubmittingCheckout || !q || q.errors.length > 0} className="btn-glitch">
+              {isSubmittingCheckout ? 'Uploading and redirecting…' : `Pay $${q?.total ?? 0} →`}
             </button>
           )}
         </div>

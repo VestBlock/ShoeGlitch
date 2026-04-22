@@ -1,10 +1,15 @@
 import { notFound, redirect } from 'next/navigation';
 import DashboardShell from '@/components/DashboardShell';
 import { Badge, Card, ProgressBar } from '@/components/ui';
+import { OrderPhotoGallery } from '@/components/OrderPhotoGallery';
 import { StatusPill } from '@/components/OrdersTable';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import { STATUS_LABELS, progressPercent, flowFor } from '@/lib/status';
+import {
+  extractPickupWindowFromNotes,
+  pickupWindowLabel,
+} from '@/lib/pickup-window';
 import { formatDate } from '@/lib/utils';
 
 export default async function CustomerOrderDetail({ params }: { params: { id: string } }) {
@@ -19,7 +24,7 @@ export default async function CustomerOrderDetail({ params }: { params: { id: st
     return (
       <DashboardShell currentPath="/customer/orders" pageTitle="Order">
         <Card className="p-8">
-          <p className="text-ink/70">You don't have access to this order.</p>
+          <p className="text-ink/70">You don&rsquo;t have access to this order.</p>
         </Card>
       </DashboardShell>
     );
@@ -33,6 +38,7 @@ export default async function CustomerOrderDetail({ params }: { params: { id: st
   const pct = progressPercent(order.fulfillmentMethod, order.status);
   const flow = flowFor(order.fulfillmentMethod);
   const currentIdx = flow.indexOf(order.status);
+  const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
 
   return (
     <DashboardShell currentPath="/customer/orders">
@@ -69,6 +75,12 @@ export default async function CustomerOrderDetail({ params }: { params: { id: st
             <div className="h-display text-2xl">{city?.name}</div>
             <div className="text-sm text-ink/60">{city?.state}</div>
           </Card>
+          {pickupWindow && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-1">Pickup window</div>
+              <div className="h-display text-2xl">{pickupWindow}</div>
+            </Card>
+          )}
           {cleaner && (
             <Card>
               <div className="font-mono text-xs text-ink/40 mb-1">Your cleaner</div>
@@ -103,6 +115,21 @@ export default async function CustomerOrderDetail({ params }: { params: { id: st
           </div>
         </div>
       </Card>
+
+      <div className="grid grid-cols-1 gap-5 mb-6 lg:grid-cols-2">
+        <OrderPhotoGallery
+          eyebrow="Intake reference"
+          title="Before photos"
+          photos={order.beforeImages}
+          emptyLabel="No intake photos have been added yet."
+        />
+        <OrderPhotoGallery
+          eyebrow="Finished result"
+          title="After photos"
+          photos={order.afterImages}
+          emptyLabel="Your finished photos will show up here once the team uploads them."
+        />
+      </div>
 
       <Card>
         <h3 className="h-display text-2xl mb-4">Timeline</h3>

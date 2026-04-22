@@ -6,7 +6,7 @@ export default function OperatorApplied({ searchParams }: { searchParams: { ref?
     <section className="container-x pt-20 pb-32 max-w-2xl mx-auto">
       <Badge tone="glitch" className="mb-6">✓ Application received</Badge>
       <h1 className="h-display text-[clamp(3rem,7vw,5rem)] leading-[0.9] mb-6">
-        We'll be in touch within 48 hours.
+        We&rsquo;ll be in touch within 48 hours.
       </h1>
       <p className="text-ink/70 text-lg mb-10">
         Your application reference is <span className="font-mono font-bold text-glitch">{searchParams.ref ?? 'OP-PENDING'}</span>.

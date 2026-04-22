@@ -16,7 +16,7 @@ export default async function ServicesPage() {
           Every job, <em className="h-italic text-glitch">named and priced.</em>
         </h1>
         <p className="text-ink/70 max-w-2xl text-lg">
-          Pricing shown is the national default. Your city may have local pricing — you'll see the final number at checkout.
+          Pricing shown is the national default. Your city may have local pricing — you&rsquo;ll see the final number at checkout.
         </p>
       </section>
 

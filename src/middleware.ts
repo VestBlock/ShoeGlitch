@@ -22,6 +22,43 @@ function requiredRoleForPath(pathname: string): RoleKey | null {
   return null;
 }
 
+function redirectUrl(request: NextRequest, pathname: string) {
+  const host =
+    request.headers.get('x-forwarded-host') ||
+    request.headers.get('host') ||
+    request.nextUrl.host;
+  const proto =
+    request.headers.get('x-forwarded-proto') ||
+    request.nextUrl.protocol.replace(':', '') ||
+    'http';
+
+  return new URL(`${proto}://${host}${pathname}`);
+}
+
+async function lookupRole(
+  supabase: ReturnType<typeof createServerClient>,
+  user: { id: string; email?: string | null },
+): Promise<RoleKey | undefined> {
+  const { data: byAuthId } = await supabase
+    .from('users')
+    .select('role')
+    .eq('authUserId', user.id)
+    .maybeSingle();
+
+  const authRole = byAuthId?.role as RoleKey | undefined;
+  if (authRole && ROLE_HOME[authRole]) return authRole;
+  if (!user.email) return undefined;
+
+  const { data: byEmail } = await supabase
+    .from('users')
+    .select('role')
+    .eq('email', user.email)
+    .maybeSingle();
+
+  const emailRole = byEmail?.role as RoleKey | undefined;
+  return emailRole && ROLE_HOME[emailRole] ? emailRole : undefined;
+}
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -47,21 +84,16 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  // Validate + refresh session. Use getUser, NOT getSession, for security.
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
 
-  // If already signed in and visiting /login, bounce to role home
-  if (pathname === '/login' && user?.email) {
-    const { data } = await supabase
-      .from('users')
-      .select('role')
-      .eq('email', user.email)
-      .maybeSingle();
-    const role = data?.role as RoleKey | undefined;
-    if (role && ROLE_HOME[role]) {
-      return NextResponse.redirect(new URL(ROLE_HOME[role], request.url));
+  if (pathname === '/login' && user?.id) {
+    const role = await lookupRole(supabase, user);
+    if (role) {
+      return NextResponse.redirect(redirectUrl(request, ROLE_HOME[role]));
     }
     return response;
   }
@@ -69,21 +101,15 @@ export async function middleware(request: NextRequest) {
   const required = requiredRoleForPath(pathname);
   if (!required) return response;
 
-  if (!user?.email) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  if (!user?.id) {
+    return NextResponse.redirect(redirectUrl(request, '/login'));
   }
 
-  const { data } = await supabase
-    .from('users')
-    .select('role')
-    .eq('email', user.email)
-    .maybeSingle();
-  const role = data?.role as RoleKey | undefined;
+  const role = await lookupRole(supabase, user);
 
   if (!role || role !== required) {
-    // Wrong role → send them to their own home (or /login if unknown)
     const target = role && ROLE_HOME[role] ? ROLE_HOME[role] : '/login';
-    return NextResponse.redirect(new URL(target, request.url));
+    return NextResponse.redirect(redirectUrl(request, target));
   }
 
   return response;

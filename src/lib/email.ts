@@ -10,7 +10,11 @@
 // ==========================================================================
 
 import { Resend } from 'resend';
-import type { Order, Customer, City } from '@/types';
+import {
+  extractPickupWindowFromNotes,
+  pickupWindowLabel,
+} from '@/lib/pickup-window';
+import type { Order, Customer, City, Cleaner } from '@/types';
 
 const FROM = 'Shoe Glitch <contact@shoeglitch.com>';
 const REPLY_TO = 'contact@shoeglitch.com';
@@ -80,6 +84,7 @@ function renderOrderConfirmationHtml(args: {
   addOns: Array<{ serviceName: string; unitPrice: number }>;
 }): string {
   const { order, customer, city, primary, addOns } = args;
+  const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
   const addOnRows = addOns
     .map(
       (a) => `
@@ -121,6 +126,11 @@ function renderOrderConfirmationHtml(args: {
             <td style="padding:12px 0;border-top:1px solid #E5E7EB;color:#6B7280;font-size:13px;">Fulfillment</td>
             <td style="padding:12px 0;border-top:1px solid #E5E7EB;text-align:right;text-transform:capitalize;">${escapeHtml(order.fulfillmentMethod.replace(/_/g, ' '))}</td>
           </tr>
+          ${pickupWindow ? `
+          <tr>
+            <td style="padding:12px 0;border-top:1px solid #E5E7EB;color:#6B7280;font-size:13px;">Pickup window</td>
+            <td style="padding:12px 0;border-top:1px solid #E5E7EB;text-align:right;">${escapeHtml(pickupWindow)}</td>
+          </tr>` : ''}
           ${city ? `
           <tr>
             <td style="padding:12px 0;border-top:1px solid #E5E7EB;color:#6B7280;font-size:13px;">City</td>
@@ -170,12 +180,14 @@ function renderOrderConfirmationText(args: {
   addOns: Array<{ serviceName: string; unitPrice: number }>;
 }): string {
   const { order, customer, city, primary, addOns } = args;
+  const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
   const lines: string[] = [];
   lines.push(`Thanks, ${customer.name.split(' ')[0]} — your Shoe Glitch order is confirmed.`);
   lines.push('');
   lines.push(`Order code: ${order.code}`);
   lines.push(`Pairs: ${order.pairCount}`);
   lines.push(`Fulfillment: ${order.fulfillmentMethod.replace(/_/g, ' ')}`);
+  if (pickupWindow) lines.push(`Pickup window: ${pickupWindow}`);
   if (city) lines.push(`City: ${city.name}`);
   lines.push('');
   lines.push('What you ordered:');
@@ -206,13 +218,18 @@ function escapeHtml(s: string): string {
 // ===========================================================================
 
 const STATUS_FRIENDLY: Record<string, { title: string; blurb: string }> = {
-  scheduled_pickup:    { title: 'Pickup scheduled',      blurb: 'An operator is booked to come grab your shoes.' },
-  picked_up:           { title: 'Picked up',             blurb: 'We have your shoes. Service is starting.' },
-  received_at_hub:     { title: 'Received at our hub',   blurb: 'Your shoes arrived safely. Queued for service.' },
-  in_progress:         { title: 'Service in progress',   blurb: 'Your shoes are getting the treatment.' },
-  ready_for_return:    { title: 'Ready for return',      blurb: 'Service complete. Coordinating return.' },
-  out_for_return:      { title: 'Out for return',        blurb: 'On the way back to you.' },
-  in_transit:          { title: 'In transit',            blurb: 'Your shoes are on the move.' },
+  pickup_assigned: { title: 'Pickup assigned', blurb: 'An operator has your pickup on deck.' },
+  picked_up: { title: 'Picked up', blurb: 'We have your shoes and the service flow has started.' },
+  received_at_hub: { title: 'Received at our hub', blurb: 'Your pair arrived safely and is queued for care.' },
+  in_cleaning: { title: 'In cleaning', blurb: 'Your shoes are in the cleaning stage now.' },
+  in_restoration: { title: 'In restoration', blurb: 'We are handling repair and detail work on your pair.' },
+  quality_check: { title: 'In quality check', blurb: 'The final finish is being checked before return.' },
+  ready_for_return: { title: 'Ready for return', blurb: 'Your pair is done and we are lining up the return.' },
+  ready_for_pickup: { title: 'Ready for pickup', blurb: 'Your order is finished and ready to be picked up.' },
+  out_for_delivery: { title: 'On the way back', blurb: 'Your operator is out for delivery with your pair.' },
+  shipped_back: { title: 'Shipped back', blurb: 'Your finished pair is on the way back to you.' },
+  delivered: { title: 'Delivered', blurb: 'Your order has been delivered.' },
+  issue_flagged: { title: 'Issue flagged', blurb: 'Our team flagged an issue and will follow up with the next step.' },
 };
 
 export async function sendStatusUpdate(params: {
@@ -317,6 +334,117 @@ export async function sendRefundConfirmation(params: {
     }
   } catch (err: any) {
     console.error('[email] exception in sendRefundConfirmation:', err?.message ?? err);
+  }
+}
+
+export async function sendOperatorBookingAlert(params: {
+  order: Order;
+  city: City | null;
+  cleaners: Cleaner[];
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  const { order, city, cleaners } = params;
+  const recipients = cleaners.map((cleaner) => cleaner.email).filter(Boolean);
+  if (recipients.length === 0) return;
+
+  const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
+  const primary = order.items.find((item) => !item.isAddOn);
+  const subject = `New ${order.fulfillmentMethod} booking — ${order.code}`;
+  const detailRows = [
+    `Order code: ${order.code}`,
+    `City: ${city?.name ?? 'Shoe Glitch'}`,
+    `Service: ${primary?.serviceName ?? 'Order booked'}`,
+    `Pairs: ${order.pairCount}`,
+    `Fulfillment: ${order.fulfillmentMethod}`,
+    pickupWindow ? `Pickup window: ${pickupWindow}` : null,
+  ]
+    .filter(Boolean)
+    .join('<br>');
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: recipients,
+      replyTo: REPLY_TO,
+      subject,
+      html: simpleShell({
+        badge: 'New booking',
+        heading: `New ${order.fulfillmentMethod} order in ${city?.name ?? 'your city'}.`,
+        body: `<p style="font-size:16px;color:#4B5563;margin:0 0 20px 0;">A customer just booked a new service. Jump into the operator dashboard to claim or review it.</p>
+          <div style="font-size:14px;line-height:1.7;color:#4B5563;">${detailRows}</div>`,
+        cta: { href: `${SITE_URL}/cleaner`, label: 'Open operator dashboard →' },
+      }),
+      text: [
+        `New ${order.fulfillmentMethod} order in ${city?.name ?? 'your city'}.`,
+        '',
+        `Order code: ${order.code}`,
+        `Service: ${primary?.serviceName ?? 'Order booked'}`,
+        `Pairs: ${order.pairCount}`,
+        pickupWindow ? `Pickup window: ${pickupWindow}` : null,
+        '',
+        `Open dashboard: ${SITE_URL}/cleaner`,
+        '',
+        '— Shoe Glitch',
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendOperatorBookingAlert:', error);
+    } else {
+      console.log(`[email] sent operator booking alert for ${order.code} to ${recipients.length} operators`);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendOperatorBookingAlert:', err?.message ?? err);
+  }
+}
+
+export async function sendOperatorOnTheWay(params: {
+  order: Order;
+  customer: Customer;
+  operatorName: string;
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  const { order, customer, operatorName } = params;
+  const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
+  const subject = `Your Shoe Glitch operator is on the way — ${order.code}`;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: customer.email,
+      replyTo: REPLY_TO,
+      subject,
+      html: simpleShell({
+        badge: 'Operator en route',
+        heading: `${escapeHtml(operatorName)} is on the way.`,
+        body: `<p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">Your Shoe Glitch operator is heading out now for order <strong>${escapeHtml(order.code)}</strong>.</p>
+          ${pickupWindow ? `<p style="font-size:14px;color:#6B7280;margin:0;">Requested pickup window: <strong>${escapeHtml(pickupWindow)}</strong></p>` : ''}`,
+        cta: { href: `${SITE_URL}/customer/orders/${order.id}`, label: 'Track order →' },
+      }),
+      text: [
+        `${operatorName} is on the way for your Shoe Glitch pickup.`,
+        '',
+        `Order code: ${order.code}`,
+        pickupWindow ? `Requested pickup window: ${pickupWindow}` : null,
+        `Track order: ${SITE_URL}/customer/orders/${order.id}`,
+        '',
+        '— Shoe Glitch',
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendOperatorOnTheWay:', error);
+    } else {
+      console.log(`[email] sent on-the-way email to ${customer.email} for ${order.code}`);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendOperatorOnTheWay:', err?.message ?? err);
   }
 }
 

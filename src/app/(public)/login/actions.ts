@@ -20,7 +20,7 @@ export async function loginAction(formData: FormData) {
   const email = String(formData.get('email') ?? '').trim();
   const session = await signInWithDemoEmail(email);
   if (!session) {
-    return { ok: false as const, error: 'Could not sign in. Check that the email matches a seeded demo user.' };
+    redirect('/login?error=signin_failed');
   }
   redirect(ROLE_HOME[session.role]);
 }

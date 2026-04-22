@@ -1,25 +1,22 @@
 'use server';
 
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createAdminSupabaseClient } from '@/lib/supabase/admin';
 import { getSession } from '@/lib/session';
 
-export async function approveOperatorAction(applicationId: string) {
+async function requireSuperAdmin() {
   const session = await getSession();
-  if (!session) throw new Error('Unauthorized');
+  if (!session || session.role !== 'super_admin') {
+    throw new Error('Admin only');
+  }
+  return session;
+}
 
-  const supabase = createServerSupabaseClient();
+export async function approveOperatorAction(applicationId: string) {
+  await requireSuperAdmin();
 
-  // Verify admin
-  const { data: user } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', session.userId)
-    .maybeSingle();
+  const admin = createAdminSupabaseClient();
 
-  if (user?.role !== 'admin') throw new Error('Admin only');
-
-  // Get application
-  const { data: app } = await supabase
+  const { data: app } = await admin
     .from('operator_applications')
     .select('*')
     .eq('id', applicationId)
@@ -29,9 +26,8 @@ export async function approveOperatorAction(applicationId: string) {
   if (app.status !== 'pending') throw new Error('Already processed');
   if (app.kitPaymentStatus !== 'paid') throw new Error('Kit not paid');
 
-  // Create user account if doesn't exist
   let userId = null;
-  const { data: existingUser } = await supabase
+  const { data: existingUser } = await admin
     .from('users')
     .select('id')
     .eq('email', app.email)
@@ -40,7 +36,7 @@ export async function approveOperatorAction(applicationId: string) {
   if (existingUser) {
     userId = existingUser.id;
   } else {
-    const { data: newUser, error: userError } = await supabase
+    const { data: newUser, error: userError } = await admin
       .from('users')
       .insert({
         email: app.email,
@@ -54,8 +50,7 @@ export async function approveOperatorAction(applicationId: string) {
     userId = newUser.id;
   }
 
-  // Create customer record
-  const { data: customer, error: custError } = await supabase
+  const { data: customer, error: custError } = await admin
     .from('customers')
     .insert({
       userId,
@@ -68,8 +63,7 @@ export async function approveOperatorAction(applicationId: string) {
 
   if (custError) throw custError;
 
-  // Create cleaner record
-  const { error: cleanerError } = await supabase
+  const { error: cleanerError } = await admin
     .from('cleaners')
     .insert({
       userId,
@@ -83,8 +77,7 @@ export async function approveOperatorAction(applicationId: string) {
 
   if (cleanerError) throw cleanerError;
 
-  // Mark application approved
-  const { error: updateError } = await supabase
+  const { error: updateError } = await admin
     .from('operator_applications')
     .update({ status: 'approved' })
     .eq('id', applicationId);
@@ -93,21 +86,10 @@ export async function approveOperatorAction(applicationId: string) {
 }
 
 export async function rejectOperatorAction(applicationId: string) {
-  const session = await getSession();
-  if (!session) throw new Error('Unauthorized');
+  await requireSuperAdmin();
 
-  const supabase = createServerSupabaseClient();
-
-  // Verify admin
-  const { data: user } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', session.userId)
-    .maybeSingle();
-
-  if (user?.role !== 'admin') throw new Error('Admin only');
-
-  const { error } = await supabase
+  const admin = createAdminSupabaseClient();
+  const { error } = await admin
     .from('operator_applications')
     .update({ status: 'rejected' })
     .eq('id', applicationId);

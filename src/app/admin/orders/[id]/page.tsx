@@ -1,10 +1,16 @@
 import { notFound, redirect } from 'next/navigation';
 import DashboardShell from '@/components/DashboardShell';
 import { Badge, Card, ProgressBar } from '@/components/ui';
+import { ImageUpload } from '@/components/ImageUpload';
+import { OrderPhotoGallery } from '@/components/OrderPhotoGallery';
 import { StatusPill } from '@/components/OrdersTable';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import { STATUS_LABELS, progressPercent, nextAllowedStatuses } from '@/lib/status';
+import {
+  extractPickupWindowFromNotes,
+  pickupWindowLabel,
+} from '@/lib/pickup-window';
 import { formatDate } from '@/lib/utils';
 import { updateStatusAction, flagIssueAction } from '@/app/cleaner/actions';
 import { assignCleanerAction } from '@/app/city-manager/actions';
@@ -36,6 +42,7 @@ export default async function AdminOrderDetail({ params }: { params: { id: strin
   }
 
   const pct = progressPercent(order.fulfillmentMethod, order.status);
+  const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
 
   return (
     <DashboardShell currentPath="/admin/orders">
@@ -98,6 +105,36 @@ export default async function AdminOrderDetail({ params }: { params: { id: strin
           </Card>
 
           <Card>
+            <h2 className="h-display text-2xl mb-4">Order photo coverage</h2>
+            <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+              <OrderPhotoGallery
+                eyebrow="Customer intake"
+                title="Before photos"
+                photos={order.beforeImages}
+                emptyLabel="No intake photos attached yet."
+              />
+              <div className="space-y-5">
+                <OrderPhotoGallery
+                  eyebrow="Delivered back"
+                  title="After photos"
+                  photos={order.afterImages}
+                  emptyLabel="No cleaned-shoe photos have been uploaded yet."
+                />
+                <div className="rounded-3xl border border-ink/10 bg-bone-soft p-5">
+                  <div className="font-mono text-xs text-ink/40 mb-2">Admin upload</div>
+                  <ImageUpload
+                    orderId={order.id}
+                    phase="after"
+                    buttonLabel="Select finished photos"
+                    uploadLabel="Add after photos"
+                    helperText="Use this if you or the operator need to publish the cleaned result from HQ."
+                  />
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <Card>
             <h2 className="h-display text-2xl mb-4">Timeline</h2>
             <ol className="space-y-4">
               {events.map((e) => (
@@ -135,6 +172,13 @@ export default async function AdminOrderDetail({ params }: { params: { id: strin
               <div className="text-sm text-glitch">Unassigned</div>
             )}
           </Card>
+
+          {pickupWindow && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-1">Pickup window</div>
+              <div className="h-display text-xl">{pickupWindow}</div>
+            </Card>
+          )}
 
           <Card>
             <div className="font-mono text-xs text-ink/40 mb-1">Breakdown</div>

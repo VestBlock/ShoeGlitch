@@ -33,6 +33,7 @@ const NAVS: Record<Role, { title: string; items: NavItem[] }> = {
       { href: '/admin', label: 'Overview', icon: Home },
       { href: '/admin/cities', label: 'Cities', icon: Building2 },
       { href: '/admin/orders', label: 'Orders', icon: Package },
+      { href: '/admin/operators', label: 'Operators', icon: Wrench },
       { href: '/admin/services', label: 'Services & pricing', icon: Tag },
       { href: '/admin/team', label: 'Team', icon: Users },
     ],
