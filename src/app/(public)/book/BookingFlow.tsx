@@ -109,6 +109,20 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
     [customShoeBrand, shoeBrand],
   );
   const resolvedShoeTitle = shoeModelName.trim();
+  const selectedPrimaryService = useMemo(
+    () => catalog?.primary.find((service) => service.id === primaryServiceId) ?? null,
+    [catalog, primaryServiceId],
+  );
+  const quickSummary = useMemo(
+    () =>
+      [
+        currentCity ? `${currentCity.name}` : null,
+        fulfillmentMethod ? fulfillmentMethod.replace('mailin', 'mail-in') : null,
+        pairCount ? `${pairCount} pair${pairCount > 1 ? 's' : ''}` : null,
+        selectedPrimaryService?.name ?? null,
+      ].filter(Boolean) as string[],
+    [currentCity, fulfillmentMethod, pairCount, selectedPrimaryService],
+  );
 
   // Set a default service once the city is picked (or from URL param)
   useEffect(() => {
@@ -246,6 +260,27 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
       <div className="lg:col-span-2">
         {/* Stepper */}
         <div className="mb-10">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div>
+              <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">
+                Step {step + 1} of {STEPS.length}
+              </div>
+              <div className="mt-1 text-sm text-ink/58">
+                {step < STEPS.length - 1
+                  ? 'Move one decision at a time and keep the quote live as you go.'
+                  : 'Final review before checkout.'}
+              </div>
+            </div>
+            {quickSummary.length > 0 ? (
+              <div className="hidden max-w-[18rem] flex-wrap justify-end gap-2 md:flex">
+                {quickSummary.slice(0, 3).map((item) => (
+                  <span key={item} className="rounded-full border border-ink/10 bg-white px-3 py-2 text-xs font-medium text-ink/68">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </div>
           <div className="flex items-center gap-1 flex-wrap">
             {STEPS.map((s, i) => (
               <button
@@ -264,6 +299,15 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
             ))}
           </div>
           <div className="mt-4 rail"><span style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} /></div>
+          {quickSummary.length > 0 ? (
+            <div className="mt-4 flex flex-wrap gap-2 md:hidden">
+              {quickSummary.slice(0, 3).map((item) => (
+                <span key={item} className="rounded-full border border-ink/10 bg-white px-3 py-2 text-xs font-medium text-ink/68">
+                  {item}
+                </span>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         {/* STEP 0 — Location */}
@@ -563,7 +607,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
         )}
 
         {/* Step controls */}
-        <div className="mt-8 flex items-center justify-between">
+        <div className="mt-8 hidden items-center justify-between md:flex">
           <button
             onClick={() => setStep((s) => Math.max(0, s - 1) as Step)}
             className="btn-ghost"
@@ -584,6 +628,56 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
               {isSubmittingCheckout ? 'Uploading and redirecting…' : `Pay $${q?.total ?? 0} →`}
             </button>
           )}
+        </div>
+
+        <div className="sticky bottom-3 z-20 mt-8 md:hidden">
+          <div className="rounded-[1.6rem] border border-ink/12 bg-white/92 p-3 shadow-[0_20px_50px_rgba(10,15,31,0.16)] backdrop-blur-xl">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-glitch/80">
+                  {step < 5 ? 'Next move' : 'Checkout'}
+                </div>
+                <div className="mt-1 text-sm text-ink/60">
+                  {step < 5
+                    ? `Keep going to ${STEPS[Math.min(step + 1, STEPS.length - 1)].toLowerCase()}.`
+                    : q
+                      ? `Total due now: $${q.total}`
+                      : 'Review your quote before checkout.'}
+                </div>
+              </div>
+              {q && (
+                <div className="rounded-full bg-bone-soft px-3 py-2 text-sm font-semibold text-ink">
+                  ${q.total}
+                </div>
+              )}
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setStep((s) => Math.max(0, s - 1) as Step)}
+                className="btn-outline min-h-[3.2rem] flex-1"
+                disabled={step === 0}
+              >
+                Back
+              </button>
+              {step < 5 ? (
+                <button
+                  onClick={() => setStep((s) => Math.min(5, s + 1) as Step)}
+                  className="btn-glitch min-h-[3.2rem] flex-1"
+                  disabled={!canContinue[step]}
+                >
+                  Continue →
+                </button>
+              ) : (
+                <button
+                  onClick={submit}
+                  disabled={isSubmittingCheckout || !q || q.errors.length > 0}
+                  className="btn-glitch min-h-[3.2rem] flex-1"
+                >
+                  {isSubmittingCheckout ? 'Redirecting…' : 'Pay now →'}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -623,7 +717,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
 
 function Panel({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <div className="animate-slide-up">
+    <div className="animate-slide-up rounded-[2rem] border border-ink/10 bg-white/82 p-5 shadow-[0_18px_44px_rgba(10,15,31,0.08)] backdrop-blur-xl md:p-8">
       <h2 className="h-display text-4xl md:text-5xl mb-2">{title}</h2>
       {subtitle && <p className="text-ink/60 mb-8">{subtitle}</p>}
       {!subtitle && <div className="mb-8" />}

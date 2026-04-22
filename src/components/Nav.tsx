@@ -53,13 +53,14 @@ export default async function Nav({ theme = 'light' }: { theme?: 'light' | 'dark
           </div>
         </div>
 
-        <nav className="mt-4 flex gap-2 overflow-x-auto pb-1 md:hidden">
-          {NAV_ITEMS.map((item) => (
+        <nav className="mt-4 grid grid-cols-2 gap-2 md:hidden">
+          {NAV_ITEMS.map((item, index) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'shrink-0 rounded-full border px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] transition',
+                'rounded-[1.1rem] border px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] transition',
+                index === NAV_ITEMS.length - 1 && 'col-span-2 text-center',
                 dark
                   ? 'border-bone/15 bg-bone/5 text-bone/80 hover:border-cyan hover:text-cyan'
                   : 'border-ink/10 bg-white text-ink/70 hover:border-glitch hover:text-glitch',

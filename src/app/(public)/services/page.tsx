@@ -1,6 +1,25 @@
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { Badge, Card } from '@/components/ui';
+import TrustProofStrip from '@/components/TrustProofStrip';
+
+const SERVICE_GUIDE = [
+  {
+    title: 'Start with a clean',
+    bestFor: 'Daily pairs, mesh runners, and visible dirt or salt.',
+    route: '/book?service=fresh-start',
+  },
+  {
+    title: 'Go restoration',
+    bestFor: 'Scuffs, sole yellowing, heavy wear, or a pair you want to keep long-term.',
+    route: '/book?service=full-reset',
+  },
+  {
+    title: 'Use pickup or mail-in',
+    bestFor: 'When you want the easiest handoff and tracked updates instead of guessing next steps.',
+    route: '/pickup-dropoff',
+  },
+] as const;
 
 export default async function ServicesPage() {
   const allPrimary = await db.services.primary();
@@ -18,6 +37,52 @@ export default async function ServicesPage() {
         <p className="text-ink/70 max-w-2xl text-lg">
           Pricing shown is the national default. Your city may have local pricing — you&rsquo;ll see the final number at checkout.
         </p>
+        <TrustProofStrip
+          className="mt-8"
+          items={[
+            {
+              label: 'See pricing before checkout',
+              detail: 'Quotes update live based on city, route, service mix, and rush selection.',
+            },
+            {
+              label: 'Built around the pair',
+              detail: 'Cleaning, restoration, sole work, and add-ons all stack into one tracked order.',
+            },
+            {
+              label: 'Use the route that fits',
+              detail: 'Pickup, drop-off, and mail-in stay in the same booking flow so the handoff stays clear.',
+            },
+          ]}
+        />
+      </section>
+
+      <section className="container-x pb-16">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+          <Card className="p-7">
+            <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">Need the right service fast?</div>
+            <h2 className="h-display mt-4 text-[clamp(2.2rem,4vw,3.6rem)] leading-[0.96]">
+              Start with the outcome, not the menu.
+            </h2>
+            <p className="mt-4 text-base leading-7 text-ink/68">
+              Most customers only need one question answered: does this pair need a quick clean, a deeper restoration, or the easiest route to hand it off?
+            </p>
+          </Card>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {SERVICE_GUIDE.map((item) => (
+              <Link
+                key={item.title}
+                href={item.route}
+                className="rounded-[1.6rem] border border-ink/10 bg-white/80 p-5 shadow-[0_18px_40px_rgba(10,15,31,0.06)] transition hover:-translate-y-1 hover:border-glitch/20 hover:bg-white"
+              >
+                <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Best for</div>
+                <h3 className="h-display mt-3 text-3xl leading-[0.96] text-ink">{item.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-ink/66">{item.bestFor}</p>
+                <div className="mt-5 text-sm font-semibold text-glitch">Go this route →</div>
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section className="container-x pb-16">
@@ -39,6 +104,11 @@ export default async function ServicesPage() {
               </div>
               <p className="text-sm text-ink/50 italic mb-4">{s.tagline}</p>
               <p className="text-ink/70 mb-6">{s.description}</p>
+              <div className="mb-6 flex flex-wrap gap-2">
+                {s.category === 'clean' && <Badge tone="neon">Best for visible dirt</Badge>}
+                {s.category === 'restoration' && <Badge tone="acid">Best for deeper recovery</Badge>}
+                {s.category === 'specialty' && <Badge>Best for material-specific care</Badge>}
+              </div>
               <div className="flex items-center justify-between pt-4 border-t border-ink/10">
                 <div className="flex gap-2 flex-wrap">
                   <Badge>{s.category}</Badge>

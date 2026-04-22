@@ -3,29 +3,24 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import TrustProofStrip from '@/components/TrustProofStrip';
 
 const primaryMp4Url = '/ShoeTest.mp4?v=6';
 const fallbackMp4Url = '/ShoeTest-web.mp4?v=3';
 const posterUrl = '/ShoeTest-poster.png?v=6';
 
-const supportCards = [
+const trustItems = [
   {
-    title: 'Book pickup or drop-off',
-    body: 'Schedule your pair on your time and lock in intake photos before checkout.',
-    href: '/book',
-    tone: 'primary',
+    label: 'Tracked from intake',
+    detail: 'Photos, notes, and status updates stay attached to the order from drop-off to return.',
   },
   {
-    title: 'Check your service area',
-    body: 'See if Shoe Glitch is already live in your city before you start.',
-    href: '/coverage',
-    tone: 'secondary',
+    label: 'Pickup, drop-off, or mail-in',
+    detail: 'Use the local route if we serve your city or mail your pair in from anywhere.',
   },
   {
-    title: 'Mail-in from anywhere',
-    body: 'No local route yet? Send your shoes in and track the clean from intake to finish.',
-    href: '/mail-in',
-    tone: 'secondary',
+    label: 'Built for premium pairs',
+    detail: 'Jordan retros, runners, suede, mesh, and statement pairs all flow through the same care system.',
   },
 ] as const;
 
@@ -120,24 +115,7 @@ export default function HomeHeroMotion({
             </Link>
           </div>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {supportCards.map((card) => (
-              <Link
-                key={card.title}
-                href={card.href}
-                className={`group rounded-[1.4rem] border p-4 transition ${
-                  card.tone === 'primary'
-                    ? 'border-glitch/25 bg-glitch/[0.08] shadow-[0_18px_36px_rgba(30,144,255,0.10)]'
-                    : 'border-ink/10 bg-white/70 hover:border-glitch/20 hover:bg-white'
-                }`}
-              >
-                <div className="text-sm font-semibold text-ink transition group-hover:text-glitch">
-                  {card.title}
-                </div>
-                <p className="mt-2 text-sm leading-6 text-ink/62">{card.body}</p>
-              </Link>
-            ))}
-          </div>
+          <TrustProofStrip items={[...trustItems]} className="mt-8" />
         </div>
 
         <motion.div
@@ -232,10 +210,10 @@ export default function HomeHeroMotion({
               </div>
 
               <div className="absolute inset-x-0 bottom-0 z-10 p-4 md:p-5">
-                <div className="max-w-[24rem] rounded-[1.35rem] border border-white/18 bg-ink/18 px-4 py-4 shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-sm md:px-5">
-                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/70">Ready to book</div>
+                <div className="max-w-[22rem] rounded-[1.35rem] border border-white/18 bg-ink/12 px-4 py-4 shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-sm md:px-5">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/70">Book with confidence</div>
                   <div className="mt-2 text-sm leading-6 text-white [text-shadow:0_2px_18px_rgba(7,20,44,0.55)]">
-                    Start your order now, then upload intake photos and track the clean from first pickup to final return.
+                    Pick the route, upload the intake photos, and let the order stay tracked all the way through return.
                   </div>
                   <div className="mt-4 flex flex-wrap gap-3">
                     <Link href="/book" className="btn-glitch">

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { Badge, Card } from '@/components/ui';
 import HomeHeroMotion from '@/components/HomeHeroMotion';
+import TrustProofStrip from '@/components/TrustProofStrip';
 
 export default async function HomePage() {
   const [cities, allServices] = await Promise.all([
@@ -10,6 +11,20 @@ export default async function HomePage() {
   ]);
   const services = allServices.filter((service) => service.category !== 'luxury').slice(0, 6);
   const activeCityCount = cities.filter((city) => city.active).length;
+  const trustItems = [
+    {
+      label: 'Live in real cities',
+      detail: `${activeCityCount} active routes, with pickup, drop-off, and mail-in options depending on coverage.`,
+    },
+    {
+      label: 'Photo-backed intake',
+      detail: 'Upload the pair before checkout so the customer, operator, and admin team all see the same reference.',
+    },
+    {
+      label: 'Tracked all the way through',
+      detail: 'The order keeps its notes, status, and service history from intake to final return.',
+    },
+  ];
 
   return (
     <>
@@ -17,6 +32,10 @@ export default async function HomePage() {
         <div className="absolute inset-0 matrix-strip opacity-30 pointer-events-none" />
         <div className="container-x relative pt-8 pb-16 md:pt-10 md:pb-24">
           <HomeHeroMotion activeCityCount={activeCityCount} />
+        </div>
+
+        <div className="container-x relative -mt-2 pb-14 md:pb-16">
+          <TrustProofStrip items={trustItems} />
         </div>
 
         <div className="border-y border-glitch/20 bg-ink text-bone overflow-hidden relative">
@@ -44,7 +63,7 @@ export default async function HomePage() {
               Real jobs. <em className="h-italic">Real tracking.</em>
             </h2>
             <p className="text-ink/70 max-w-md mb-6">
-              Every order gets a unique code, photo-backed intake notes, a tracked status pipeline, and a dedicated cleaner.
+              Every order gets a unique code, photo-backed intake notes, and a tracked status pipeline that stays visible across customer, operator, and admin views.
             </p>
             <Link href="/book" className="btn-glitch">Start your order →</Link>
           </div>
