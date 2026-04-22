@@ -12,6 +12,11 @@ import {
   pickupWindowLabel,
   stripPickupWindowFromNotes,
 } from '@/lib/pickup-window';
+import {
+  extractShoeProfileFromNotes,
+  formatShoeProfile,
+  stripShoeProfileFromNotes,
+} from '@/lib/shoe-profile';
 import { formatDate } from '@/lib/utils';
 import { updateStatusAction, flagIssueAction, markOnTheWayAction } from '../../actions';
 
@@ -44,7 +49,12 @@ export default async function CleanerOrderDetail({ params }: { params: { id: str
   );
   const pct = progressPercent(order.fulfillmentMethod, order.status);
   const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
-  const customerNotes = stripPickupWindowFromNotes(order.notes);
+  const shoeProfile = extractShoeProfileFromNotes(order.notes);
+  const shoeSummary = formatShoeProfile({
+    brand: shoeProfile.brand,
+    title: shoeProfile.title ?? order.customShoeType,
+  });
+  const customerNotes = stripShoeProfileFromNotes(stripPickupWindowFromNotes(order.notes));
   const canMarkOnTheWay =
     order.fulfillmentMethod === 'pickup' &&
     ['awaiting_pickup', 'pickup_assigned'].includes(order.status);
@@ -152,6 +162,12 @@ export default async function CleanerOrderDetail({ params }: { params: { id: str
             <Card>
               <div className="font-mono text-xs text-ink/40 mb-1">Requested pickup window</div>
               <div className="h-display text-2xl">{pickupWindow}</div>
+            </Card>
+          )}
+          {shoeSummary && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-1">Shoe submitted</div>
+              <div className="h-display text-2xl">{shoeSummary}</div>
             </Card>
           )}
 

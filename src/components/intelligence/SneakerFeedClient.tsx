@@ -18,8 +18,10 @@ function sortItems(items: SneakerFeedItem[], sort: SneakerFilterState['sort']) {
 
   if (sort === 'cleaning') next.sort((a, b) => b.scores.cleaning - a.scores.cleaning);
   if (sort === 'restoration') next.sort((a, b) => b.scores.restoration - a.scores.restoration);
-  if (sort === 'flip') next.sort((a, b) => b.scores.flipPotential - a.scores.flipPotential);
-  if (sort === 'urgency') next.sort((a, b) => b.scores.urgency - a.scores.urgency);
+  if (sort === 'market') next.sort((a, b) => b.scores.marketStrength - a.scores.marketStrength);
+  if (sort === 'rarity') next.sort((a, b) => b.scores.rarity - a.scores.rarity);
+  if (sort === 'service') next.sort((a, b) => b.scores.serviceFit - a.scores.serviceFit);
+  if (sort === 'pressure') next.sort((a, b) => b.scores.releasePressure - a.scores.releasePressure);
   if (sort === 'release') {
     next.sort((a, b) => new Date(a.release.date).getTime() - new Date(b.release.date).getTime());
   }
@@ -105,9 +107,9 @@ export default function SneakerFeedClient({ feed }: { feed: SneakerFeedResult })
 
           <div ref={sentinelRef} className="flex items-center justify-center py-4">
             {hasMore ? (
-              <div className="rounded-full border border-ink/10 bg-white/78 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-ink/55 shadow-[0_14px_36px_rgba(10,15,31,0.05)] backdrop-blur-xl">
-                Loading more releases…
-              </div>
+            <div className="rounded-full border border-ink/10 bg-white/78 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-ink/55 shadow-[0_14px_36px_rgba(10,15,31,0.05)] backdrop-blur-xl">
+                Loading more intelligence…
+            </div>
             ) : (
               <div className="text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-ink/40">
                 End of current feed

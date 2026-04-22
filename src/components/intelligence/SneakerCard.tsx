@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { Badge, Card } from '@/components/ui';
+import IntelligenceSignals from '@/components/intelligence/IntelligenceSignals';
 import { formatDateOnly } from '@/lib/utils';
 import type { SneakerFeedItem } from '@/features/intelligence/types';
 
-function scoreTone(score: number) {
-  if (score >= 75) return 'glitch';
-  if (score >= 60) return 'neon';
+function flagTone(flag: SneakerFeedItem['opportunityFlags'][number]) {
+  if (flag === 'cleaning' || flag === 'restoration') return 'neon';
+  if (flag === 'flip' || flag === 'watch') return 'glitch';
   return 'default';
 }
 
@@ -51,28 +52,13 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
 
         <p className="mt-4 text-sm leading-6 text-ink/66">{item.description}</p>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <div className="rounded-[1rem] border border-ink/10 bg-bone-soft p-3">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Cleaning</div>
-            <div className="mt-2 text-lg font-semibold text-ink">{item.scores.cleaning}</div>
-          </div>
-          <div className="rounded-[1rem] border border-ink/10 bg-bone-soft p-3">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Restore</div>
-            <div className="mt-2 text-lg font-semibold text-ink">{item.scores.restoration}</div>
-          </div>
-          <div className="rounded-[1rem] border border-ink/10 bg-bone-soft p-3">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Flip</div>
-            <div className="mt-2 text-lg font-semibold text-ink">{item.scores.flipPotential}</div>
-          </div>
-          <div className="rounded-[1rem] border border-ink/10 bg-bone-soft p-3">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Urgency</div>
-            <div className="mt-2 text-lg font-semibold text-ink">{item.scores.urgency}</div>
-          </div>
+        <div className="mt-5">
+          <IntelligenceSignals item={item} />
         </div>
 
         <div className="mt-5 flex flex-wrap items-center gap-2">
           {item.opportunityFlags.map((flag) => (
-            <Badge key={flag} tone={flag === 'flip' ? scoreTone(item.scores.flipPotential) : 'default'}>
+            <Badge key={flag} tone={flagTone(flag)}>
               {flag}
             </Badge>
           ))}
@@ -80,7 +66,7 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
 
         <div className="mt-5 flex items-end justify-between gap-4">
           <div>
-            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Resale estimate</div>
+            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Market snapshot</div>
             <div className="mt-2 text-base font-semibold text-ink">
               {item.market.estimatedResale
                 ? `$${item.market.estimatedResale}`
@@ -97,6 +83,11 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
             <Link href={item.primaryCta.href} className="btn-glitch min-h-[2.9rem] px-4 text-xs">
               {item.primaryCta.label}
             </Link>
+            {item.marketUrl ? (
+              <Link href={item.marketUrl} className="btn-outline min-h-[2.9rem] px-4 text-xs" target="_blank">
+                View market
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>

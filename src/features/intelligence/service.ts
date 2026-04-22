@@ -34,13 +34,13 @@ function describeProvider(item: NormalizedSneaker) {
 
 function sortByPriority(items: SneakerFeedItem[]) {
   return [...items].sort((left, right) => {
-    const urgencyDelta = right.scores.urgency - left.scores.urgency;
-    if (urgencyDelta !== 0) return urgencyDelta;
+    const pressureDelta = right.scores.releasePressure - left.scores.releasePressure;
+    if (pressureDelta !== 0) return pressureDelta;
 
     const releaseDelta = new Date(left.release.date).getTime() - new Date(right.release.date).getTime();
     if (releaseDelta !== 0) return releaseDelta;
 
-    return right.scores.flipPotential - left.scores.flipPotential;
+    return right.scores.marketWatchFit - left.scores.marketWatchFit;
   });
 }
 
@@ -59,33 +59,99 @@ function mergeUnique(items: SneakerFeedItem[]) {
 }
 
 function inferMaterials(item: NormalizedSneaker) {
-  const text = `${item.name} ${item.colorway} ${item.description}`.toLowerCase();
-  const materials: string[] = [];
+  const text = `${item.name} ${item.model} ${item.colorway} ${item.description} ${item.sku} ${item.brand}`.toLowerCase();
+  const traits = new Set<string>();
 
-  if (/(white|cream|sail|light)/.test(text)) materials.push('light-upper');
-  if (/mesh/.test(text)) materials.push('mesh');
-  if (/suede/.test(text)) materials.push('suede');
-  if (/leather/.test(text)) materials.push('leather');
-  if (/gum/.test(text)) materials.push('gum-sole');
-  if (/jordan 1|collector|retro/.test(text)) materials.push('collector-lean');
+  if (/(white|light bone|summit white|cream|sail|ivory|bone|coconut milk|pearl|orewood|fossil|light smoke)/.test(text)) {
+    traits.add('light-upper');
+  }
+  if (/(cream|sail|bone|ivory|coconut milk)/.test(text)) traits.add('cream-upper');
+  if (/(black|anthracite|obsidian|navy|midnight|onyx|charcoal)/.test(text)) traits.add('dark-upper');
+  if (/mesh|netting/.test(text)) traits.add('mesh');
+  if (/suede/.test(text)) traits.add('suede');
+  if (/nubuck/.test(text)) traits.add('nubuck');
+  if (/canvas|hemp/.test(text)) traits.add('canvas');
+  if (/knit|flyknit|primeknit/.test(text)) traits.add('knit');
+  if (/patent/.test(text)) traits.add('patent');
+  if (/leather/.test(text)) traits.add('leather');
+  if (/gum/.test(text)) traits.add('gum-sole');
+  if (/icy|translucent/.test(text)) traits.add('icy-sole');
+  if (/sail midsole|aged sole|yellowed|yellowing/.test(text)) traits.add('aged-sole');
+  if (/midsole/.test(text)) traits.add('white-midsole');
+  if (/(daily|everyday|lifestyle|general release|easy wear)/.test(text)) traits.add('daily-wear');
+  if (/retro|og|reimagined|anniversary|foamposite/.test(text)) traits.add('retro-lean');
+  if (/(travis scott|off-white|union|a ma maniere|fragment|kith|patta|concepts|trophy room|salehe|j balvin)/.test(text)) {
+    traits.add('collab-lean');
+  }
+  if ((item.rawSummary?.rank ?? 99999) < 2500) traits.add('limited-lean');
+  if ((item.priceSummary.averagePrice ?? item.priceSummary.lowestAsk ?? 0) >= 350) traits.add('premium-lean');
+  if (/(air max|vomero|pegasus|samba|gel-|asics|runner|1906|990|2002r)/.test(text)) traits.add('runner-lean');
+  if (/dunk|jordan|air force|foamposite|retro/.test(text)) traits.add('collector-lean');
+  if (!traits.has('limited-lean') && !traits.has('collab-lean') && !traits.has('collector-lean')) {
+    traits.add('general-release');
+  }
 
-  return materials;
+  return [...traits];
 }
 
-function inferFlags(item: NormalizedSneaker) {
+function inferFlags(item: NormalizedSneaker, materials: string[]) {
   const flags: SneakerFeedItem['opportunityFlags'] = [];
   if (item.availability === 'upcoming') flags.push('upcoming');
   if (item.availability === 'watch-worthy') flags.push('watch');
-  if (inferMaterials(item).some((material) => ['light-upper', 'mesh', 'suede'].includes(material))) flags.push('cleaning');
-  if (inferMaterials(item).some((material) => ['leather', 'collector-lean'].includes(material))) flags.push('restoration');
+  if (materials.some((material) => ['light-upper', 'mesh', 'suede', 'nubuck', 'canvas', 'knit'].includes(material))) {
+    flags.push('cleaning');
+  }
+  if (materials.some((material) => ['leather', 'collector-lean', 'collab-lean', 'retro-lean', 'aged-sole'].includes(material))) {
+    flags.push('restoration');
+  }
   if ((item.priceSummary.lowestAsk ?? 0) > (item.retailPrice ?? 0)) flags.push('flip');
   return [...new Set(flags)];
+}
+
+function buildRankingNote(item: NormalizedSneaker, materials: string[], scores: ReturnType<typeof buildScoreRecord>) {
+  const textureReason = materials.find((material) =>
+    ['mesh', 'suede', 'nubuck', 'canvas', 'knit', 'patent', 'leather'].includes(material),
+  );
+  const colorReason = materials.includes('light-upper')
+    ? 'light colorway'
+    : materials.includes('cream-upper')
+      ? 'cream-toned upper'
+      : materials.includes('dark-upper')
+        ? 'darker finish'
+        : 'material mix';
+  const rarityReason = materials.find((material) =>
+    ['collab-lean', 'limited-lean', 'collector-lean', 'premium-lean', 'retro-lean'].includes(material),
+  );
+
+  if (scores.serviceFit >= scores.marketWatchFit && scores.cleaning >= scores.restoration) {
+    return `${item.name} leans cleaning-first because the ${colorReason}${textureReason ? ` and ${textureReason}` : ''} drive visible wear faster than most pairs in the feed.`;
+  }
+
+  if (scores.preservationValue >= scores.marketWatchFit) {
+    return `${item.name} reads more like a restoration and preservation candidate thanks to its ${rarityReason?.replace(/-lean$/, '') ?? 'collector'} profile and the details owners usually want protected long-term.`;
+  }
+
+  return `${item.name} is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if ${rarityReason ? 'rarity still helps the story' : 'the service angle remains secondary'}.`;
+}
+
+function buildWatchlistHref(item: NormalizedSneaker) {
+  const params = new URLSearchParams({
+    source: 'intelligence',
+    sku: item.sku,
+    brand: item.brand,
+    model: item.model,
+    colorway: item.colorway,
+    name: item.name,
+    slug: item.slug,
+  });
+
+  return `/customer/watchlist?${params.toString()}`;
 }
 
 function mapNormalizedToFeedItem(item: NormalizedSneaker): SneakerFeedItem {
   const now = new Date();
   const materials = inferMaterials(item);
-  const opportunityFlags = inferFlags(item);
+  const opportunityFlags = inferFlags(item, materials);
   const providerInfo = describeProvider(item);
   const market = {
     source: item.provider,
@@ -104,11 +170,14 @@ function mapNormalizedToFeedItem(item: NormalizedSneaker): SneakerFeedItem {
       materials,
       opportunityFlags,
       sourceType: providerInfo.sourceType,
+      weeklyOrders: item.rawSummary?.weeklyOrders ?? null,
+      rank: item.rawSummary?.rank ?? null,
+      sizesCount: item.sizes.length,
     },
     now,
   );
 
-  const primaryCta =
+  const serviceCta =
     scores.restoration >= scores.cleaning
       ? {
           label: 'Restore this pair',
@@ -120,6 +189,14 @@ function mapNormalizedToFeedItem(item: NormalizedSneaker): SneakerFeedItem {
           href: `/book?intent=cleaning&pair=${item.slug}`,
           kind: 'book-cleaning' as const,
         };
+  const watchCta = {
+    label: scores.releasePressure >= 72 ? 'Watch this release' : 'Add to watchlist',
+    href: buildWatchlistHref(item),
+    kind: 'join-waitlist' as const,
+  };
+  const primaryCta =
+    scores.marketWatchFit >= scores.serviceFit + 8 && scores.confidence >= 54 ? watchCta : serviceCta;
+  const secondaryCta = primaryCta.kind === 'join-waitlist' ? serviceCta : watchCta;
 
   return {
     id: item.id,
@@ -160,17 +237,13 @@ function mapNormalizedToFeedItem(item: NormalizedSneaker): SneakerFeedItem {
     opportunityFlags,
     scores,
     primaryCta,
-    secondaryCta: {
-      label: item.marketUrl ? 'View market' : 'Watch market',
-      href: item.marketUrl ?? `/intelligence/${item.slug}`,
-      kind: 'watch-market',
-    },
+    secondaryCta,
     rankingNote:
       item.provider === 'nike-public'
-        ? 'This release is coming from Nike SNKRS public launch data, so market pricing is still a placeholder while KicksDB is offline locally.'
+        ? `${buildRankingNote(item, materials, scores)} Market pricing is still partial because this record is coming from Nike SNKRS public launch data.`
         : item.priceSummary.isPlaceholder
-          ? 'Market fields are still partial here, so treat this as a service-first watch candidate.'
-        : 'Live provider pricing is available here, which makes the feed ranking more reliable.',
+          ? `${buildRankingNote(item, materials, scores)} Market fields are still partial here, so treat this as a service-first watch candidate.`
+          : buildRankingNote(item, materials, scores),
     lastUpdatedAt: item.updatedAt,
   };
 }

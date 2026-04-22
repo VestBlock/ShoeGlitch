@@ -1,66 +1,47 @@
 ---
 name: seo-aeo-growth
-description: Make ShoeGlitch feed, release, guide, and comparison pages discoverable through SEO and answer-engine optimization with structured content, metadata, schema, internal linking, and conversion intent.
+description: Build ShoeGlitch SEO and AEO surfaces that rank by city and service, answer questions clearly, emit schema, cross-link intelligently, and convert readers into bookings.
 ---
 
 # Purpose
-Turn sneaker intelligence pages into discoverable, AI-readable, conversion-focused acquisition surfaces.
+Turn ShoeGlitch pages into indexed, answer-engine-readable booking surfaces.
 
 # Use this skill when
-- Building release pages, brand pages, sneaker detail pages, city pages, care guides, comparison pages, FAQ pages, or content hubs.
-- Adding metadata, schema, FAQ blocks, internal links, or AI-readable summaries.
+- Adding city pages, service pages, comparison pages, care guides, FAQs, metadata, schema, or internal-link clusters.
+- Reviewing whether a page is likely to earn search traffic and turn it into bookings.
 
-# Core rule
-Every SEO page must have a conversion purpose.
+# Operating rules
+- Every page needs a conversion purpose.
+- Lead with the direct answer before the long explanation.
+- Prefer page systems over isolated copy edits.
+- Use real ShoeGlitch cities, service areas, and service flows. Do not invent fake coverage.
 
 # Required page ingredients
-- strong title
-- meta description
-- canonical
-- H1
-- structured H2/H3 sections
-- quick answer block
-- long answer block
-- FAQ section
-- summary bullets
-- internal links
-- CTA block
+- title tag tied to a city or service query
+- meta description with the booking angle
+- H1 that matches the query intent
+- quick answer block for AEO
+- structured H2 sections
+- FAQ block
+- JSON-LD
+- internal links to `/book`, `/services`, `/coverage`, and related city/service pages
+- visible CTA above the fold and another CTA lower on the page
 
 # AEO rules
-- Put the direct answer near the top.
-- Include both short answer and long answer variations.
-- Use bullets when the answer can be broken into steps or signals.
-- Avoid vague intros that delay the answer.
-- Write so an answer engine can quote a paragraph cleanly.
+- Include a short answer and a longer answer.
+- Write clean paragraphs that can be quoted by AI tools without cleanup.
+- Use bullets for steps, signals, or comparisons.
+- Keep headings literal and query-aligned.
 
-# Schema rules
-- Use `FAQPage` when FAQs exist.
-- Use `HowTo` when the page explains a process.
-- Use `LocalBusiness` for ShoeGlitch service pages.
-- Use `Service` for service landing pages.
-- Use `Product` only when the page genuinely behaves like a product page.
-
-# Page templates to support
-- sneaker release pages
-- brand hub pages
-- cleaning guide pages
-- worth-restoring pages
-- comparison pages
-
-# Internal linking rules
-- Link laterally to similar models, brands, cities, and service pages.
-- Link down-funnel to booking or quote pages.
-- Link from intelligence pages to monetizable service surfaces.
-
-# Rendering guidance
-- Prefer static generation or ISR for durable programmatic pages.
-- Keep dynamic rendering only where it materially improves freshness or personalization.
-- Keep page payloads lean and prioritize Core Web Vitals.
+# ShoeGlitch priorities
+- Focus on city-by-city sneaker cleaning, restoration, pickup/drop-off, and mail-in intent.
+- Treat “near me” and city variants as booking-intent pages, not blog posts.
+- Cross-link into live service and booking flows.
 
 # Anti-patterns
-- Do not publish thin pages with swapped city names.
-- Do not hide CTAs below generic long-form content.
-- Do not create AI-readable content with no business objective.
+- Do not publish thin city pages with only swapped place names.
+- Do not write generic SEO copy with no proof of service availability.
+- Do not hide conversion actions below long content blocks.
 
 # References
-- Read `references/page-template.md` for the recommended page skeleton.
+- Read `references/shoeglitch-seo-map.md` for the route and intent map.

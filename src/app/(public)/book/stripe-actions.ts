@@ -12,6 +12,7 @@ import {
   PICKUP_WINDOW_VALUES,
   attachPickupWindowToNotes,
 } from '@/lib/pickup-window';
+import { attachShoeProfileToNotes } from '@/lib/shoe-profile';
 import type { Order } from '@/types';
 
 const BookingSchema = z.object({
@@ -22,6 +23,9 @@ const BookingSchema = z.object({
     'sneakers', 'designer_sneakers', 'womens_heels',
     'red_bottom_heels', 'boots', 'kids', 'other',
   ]),
+  shoeBrand: z.string().optional(),
+  customShoeBrand: z.string().optional(),
+  shoeModelName: z.string().optional(),
   customShoeType: z.string().optional(),
   pairCount: z.coerce.number().min(1).max(10),
   primaryServiceId: z.string(),
@@ -48,6 +52,11 @@ const BookingSchema = z.object({
  */
 export async function startStripeCheckoutAction(data: z.input<typeof BookingSchema>) {
   const parsed = BookingSchema.parse(data);
+  const resolvedBrand =
+    parsed.shoeBrand?.toLowerCase() === 'other'
+      ? parsed.customShoeBrand?.trim()
+      : parsed.shoeBrand?.trim();
+  const resolvedShoeTitle = parsed.shoeModelName?.trim() || parsed.customShoeType?.trim();
 
   // Resolve customerId — must be a signed-in customer.
   // In production (no demo fallback): a customer row must exist for this user.
@@ -84,13 +93,16 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
     addOnServiceIds: parsed.addOnServiceIds ?? [],
     fulfillmentMethod: parsed.fulfillmentMethod,
     shoeCategory: parsed.shoeCategory,
-    customShoeType: parsed.customShoeType,
+    customShoeType: resolvedShoeTitle,
     pairCount: parsed.pairCount,
     isRush: parsed.isRush ?? false,
     couponCode: parsed.couponCode,
-    notes: attachPickupWindowToNotes(
-      parsed.notes,
-      parsed.fulfillmentMethod === 'pickup' ? parsed.pickupWindow : undefined,
+    notes: attachShoeProfileToNotes(
+      attachPickupWindowToNotes(
+        parsed.notes,
+        parsed.fulfillmentMethod === 'pickup' ? parsed.pickupWindow : undefined,
+      ),
+      { brand: resolvedBrand, title: resolvedShoeTitle },
     ),
     conditionIssues: parsed.conditionIssues,
     pickupAddress,

@@ -60,10 +60,12 @@ export default function FeedFilters({
         <span className="label">Sort</span>
         <select className="input" value={value.sort} onChange={(event) => setField('sort', event.target.value as SneakerFilterState['sort'])}>
           <option value="release">Release date</option>
-          <option value="urgency">Urgency</option>
+          <option value="pressure">Release pressure</option>
           <option value="cleaning">Cleaning score</option>
           <option value="restoration">Restoration score</option>
-          <option value="flip">Flip potential</option>
+          <option value="market">Market strength</option>
+          <option value="service">Service fit</option>
+          <option value="rarity">Collector value</option>
         </select>
       </label>
     </div>

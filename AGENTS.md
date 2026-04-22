@@ -1,16 +1,17 @@
-# ShoeGlitch Codex Rules
+# ShoeGlitch Codex Operating Rules
 
-This is a revenue-focused product codebase. Build for traffic, conversions, retention, and operational stability.
+This is a revenue-focused production codebase. Build for organic traffic, answer-engine visibility, bookings, and operational reliability.
 
-- Preserve production stability first. Do not break booking, auth, dashboards, payments, or live public pages.
-- Before coding, inspect the relevant files, architecture, and existing patterns.
-- Prefer reusable modules, typed interfaces, and clear extension points over one-off hacks.
-- For sneaker feed, scraping, release calendar, catalog, ranking, or intelligence work, load the sneaker-related skills in `.agents/skills/`.
-- For landing pages, metadata, schema, discoverability, SEO, and AEO, load the `seo-aeo-growth` skill.
-- For lead capture, booking flows, upsells, sticky CTAs, and monetization surfaces, load the `conversion-ui` skill.
-- For database changes, auth, route handlers, background jobs, caching, and deployment-sensitive code, load the `vercel-supabase-ops` skill.
-- For scraping, source adapters, retries, rate limits, robots awareness, and source fragility, load the `scraping-and-compliance` skill.
-- Keep raw source data separate from normalized app models.
+- Preserve production stability first. Do not break booking, auth, dashboards, payments, intelligence pages, or live public routes.
+- For new repo-spanning work or structural changes, load `repo-memory` first and use the docs in `docs/` as the orientation layer before broad code exploration.
+- Inspect the existing files, data model, and route structure before coding.
+- Prefer reusable modules, typed interfaces, and extension points over one-off page hacks.
+- For sneaker intelligence, catalogs, release feeds, scraping, ranking, or market data, load the sneaker-related skills in `.agents/skills/`.
+- For metadata, city pages, service pages, schema, internal links, and discoverability, load `seo-aeo-growth`, `programmatic-seo`, `local-city-pages`, `schema-structured-data`, `content-generation`, and `internal-linking` as needed.
+- For lead capture, booking CTAs, service upsells, and monetization surfaces, load `conversion-cta`.
+- For database, caching, route handlers, cron, Supabase, or deployment-sensitive changes, load `vercel-supabase-ops`.
+- For scraping, rate limits, retries, robots awareness, and fragile sources, load `scraping-and-compliance`.
+- Keep provider payloads, normalized app models, and UI presentation separate.
 - Always leave the codebase cleaner than you found it.
 - Prefer implementation over commentary.
-- When finished, run relevant checks and summarize what changed, what still needs attention, and what could break.
+- Before finishing, run the relevant checks and summarize what changed, what still needs attention, and what could break.

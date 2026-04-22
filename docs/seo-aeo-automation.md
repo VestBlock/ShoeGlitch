@@ -1,0 +1,126 @@
+# SEO / AEO automation foundation
+
+This repo now includes a reusable automation layer for ShoeGlitch city and service SEO pages.
+
+## What it does
+- derives indexable city-service routes from live ShoeGlitch city data
+- derives operator-acquisition routes from live ShoeGlitch city data and the existing operator apply flow
+- builds reusable page models for:
+  - `/operators`
+  - `/become-an-operator`
+  - `/operator-opportunities/[city]`
+  - `/pickup-dropoff-operator/[city]`
+  - `/start-a-sneaker-cleaning-business`
+  - `/shoe-restoration-side-hustle`
+  - `/locations`
+  - `/sneaker-cleaning/[city]`
+  - `/shoe-restoration/[city]`
+  - `/pickup-dropoff/[city]`
+  - `/locations/[city]`
+  - `/sneaker-cleaning/[city]/[service-area]`
+  - `/shoe-restoration/[city]/[service-area]`
+  - `/pickup-dropoff/[city]/[service-area]`
+  - `/sneaker-cleaning/near-me`
+  - `/shoe-restoration/near-me`
+  - `/pickup-dropoff/near-me`
+- emits metadata and JSON-LD from the same model used by the page UI
+- exposes a manifest builder for route audits and expansion planning
+- exposes a live automation manifest endpoint at `/api/seo/manifest`
+- exports a static route manifest snapshot to `public/seo/route-manifest.json`
+- powers release content routes at `/releases/[slug]`
+- powers restoration-intent content routes at `/worth-restoring/[slug]`
+- powers cleaning-intent content routes at `/how-to-clean/[slug]`
+- powers alert-intent retention pages at `/release-alerts/[slug]`
+- exposes a release-content manifest endpoint at `/api/seo/release-manifest`
+- exports a static release-content manifest snapshot to `public/seo/release-content-manifest.json`
+
+## Core files
+- `src/features/seo/routes.ts`
+- `src/features/seo/content.ts`
+- `src/features/seo/schema.ts`
+- `src/features/seo/internal-links.ts`
+- `src/features/seo/automation.ts`
+- `src/features/operator-seo/routes.ts`
+- `src/features/operator-seo/content.ts`
+- `src/features/operator-seo/schema.ts`
+- `src/features/operator-seo/automation.ts`
+- `src/components/operator-seo/OperatorSeoLandingPage.tsx`
+- `src/features/releases/content.ts`
+- `src/features/releases/restoration-content.ts`
+- `src/features/releases/cleaning-content.ts`
+- `src/features/releases/alerts-content.ts`
+- `src/features/releases/automation.ts`
+- `src/components/seo/LocalLandingPage.tsx`
+- `src/components/seo/ServiceHubLandingPage.tsx`
+- `src/components/seo/LocationsIndexLandingPage.tsx`
+- `src/components/releases/ReleaseLandingPage.tsx`
+- `src/components/releases/WorthRestoringLandingPage.tsx`
+- `src/components/releases/HowToCleanLandingPage.tsx`
+- `src/components/releases/ReleaseAlertsLandingPage.tsx`
+- `src/app/api/seo/manifest/route.ts`
+- `src/app/api/seo/release-manifest/route.ts`
+- `scripts/seo/export-route-manifest.ts`
+- `scripts/releases/export-content-manifest.ts`
+
+## Useful commands
+- `npm run build`
+- `npm run typecheck`
+- `npm run lint`
+- `npx tsx .agents/skills/analytics-and-testing/scripts/check-seo-routes.ts http://localhost:3000/sneaker-cleaning/milwaukee`
+- `npx tsx scripts/seo/export-route-manifest.ts`
+- `curl http://localhost:3000/api/seo/manifest`
+- `npx tsx scripts/releases/export-content-manifest.ts`
+- `curl http://localhost:3000/api/seo/release-manifest`
+
+## What the manifest now tracks
+- route family (`hub`, `city`, `area`, `near-me`)
+- operator route family (`operator-hub`, `operator-city`, `operator-guide`)
+- page kind
+- service slug
+- city slug
+- service-area label when relevant
+- operator role when relevant
+
+## Release-content automation budget
+KicksDB pricing currently lists:
+- Free: 1,000 requests/month
+- Starter: 50,000 requests/month
+- Pro: 250,000 requests/month
+
+ShoeGlitch should still publish more conservatively than the raw API ceiling, because crawl quality and conversion focus matter more than volume.
+
+Current healthy defaults in the release-content automation layer:
+- Free: 4 release pages/day, 1 worth-restoring page/day, 2 how-to-clean pages/day, 3 release-alert pages/day, 8 refreshes/day
+- Starter: 8 release pages/day, 4 worth-restoring pages/day, 6 how-to-clean pages/day, 8 release-alert pages/day, 18 refreshes/day
+- Pro: 20 release pages/day, 8 worth-restoring pages/day, 12 how-to-clean pages/day, 16 release-alert pages/day, 50 refreshes/day
+
+The release automation now defaults to the conservative `free` tier unless `KICKSDB_PLAN` (or explicit budget overrides) is set, so the system stays safe even when the API tier is unclear.
+
+Optional env overrides:
+- `KICKSDB_PLAN=free|starter|pro|enterprise`
+- `KICKSDB_DAILY_REQUEST_BUDGET=...`
+- `KICKSDB_NEW_RELEASE_PAGES_PER_DAY=...`
+- `KICKSDB_WORTH_RESTORING_PAGES_PER_DAY=...`
+- `KICKSDB_HOW_TO_CLEAN_PAGES_PER_DAY=...`
+- `KICKSDB_RELEASE_ALERT_PAGES_PER_DAY=...`
+- `KICKSDB_REFRESHES_PER_DAY=...`
+
+That keeps the content engine active without turning the site into a thin page factory.
+
+## Next automation steps
+1. expand into service-area pages only for active cities with real coverage depth
+2. plug the exported manifest into recurring QA and Search Console workflows
+3. add “designer sneaker cleaning”, “sole whitening”, and other service-intent route families on the same model
+
+## Recommended recurring jobs
+- `SEO Route Refresh`
+  - export `public/seo/route-manifest.json`
+  - compare city, area, and near-me coverage drift
+  - surface missing internal-link or schema issues in new route families
+- `Release Content Refresh`
+  - export `public/seo/release-content-manifest.json`
+  - keep release-family page generation inside the current KicksDB budget
+  - surface new release, worth-restoring, how-to-clean, and release-alert slugs
+- `SEO QA Sweep`
+  - spot-check representative hub, city, release, cleaning, and alert routes
+  - confirm metadata, schema, and CTA surfaces still render after automation updates

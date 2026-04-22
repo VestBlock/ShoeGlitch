@@ -8,7 +8,7 @@ import { buildFeedSchemas, INTELLIGENCE_FAQS } from '@/features/intelligence/sch
 export const metadata: Metadata = {
   title: 'Sneaker Intelligence Feed | Shoe Glitch',
   description:
-    'Track upcoming sneaker releases, cleaning and restoration opportunity scores, and the next best Shoe Glitch service action from one feed.',
+    'Track sneaker releases with cleaning, restoration, market, and collector signals, then move into watchlists or Shoe Glitch service actions from one feed.',
 };
 
 export default async function IntelligencePage() {
@@ -34,7 +34,7 @@ export default async function IntelligencePage() {
               Releases with a <em className="h-italic text-glitch">service angle.</em>
             </h1>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">
-              This is Shoe Glitch&rsquo;s first intelligence layer: upcoming pairs, cleaning and restoration opportunity scores, simple flip signals, and direct booking hooks when the market story turns into a service moment.
+              This is Shoe Glitch&rsquo;s first intelligence layer: upcoming pairs, layered care and market scoring, watchlist hooks, and direct booking paths when the release story turns into a service moment.
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">
@@ -52,7 +52,7 @@ export default async function IntelligencePage() {
                   Quick answer
                 </div>
                 <p className="mt-3 text-sm leading-6 text-ink/70">
-                  Sneaker Intelligence Feed ranks releases by cleaning score, restoration score, urgency, and flip potential so Shoe Glitch can turn interest into bookings.
+                  Sneaker Intelligence Feed ranks releases by cleanability, restoration upside, market strength, collector value, and release pressure so Shoe Glitch can turn interest into bookings and watchlist retention.
                 </p>
               </div>
               <div className="rounded-[1.35rem] border border-ink/10 bg-white p-5">
@@ -62,7 +62,7 @@ export default async function IntelligencePage() {
                 <ul className="mt-3 space-y-2 text-sm leading-6 text-ink/70">
                   <li>Upcoming drops with service hooks</li>
                   <li>Pairs with high cleaning or restoration demand</li>
-                  <li>Resale spread watch candidates</li>
+                  <li>Collector and market-watch candidates</li>
                 </ul>
               </div>
               <div className="rounded-[1.35rem] border border-ink/10 bg-white p-5">
@@ -89,7 +89,7 @@ export default async function IntelligencePage() {
             </h2>
           </div>
           <p className="max-w-xl text-sm leading-6 text-ink/62">
-            Start with release timing, then sort by cleaning opportunity, restoration upside, or flip potential. Every result should either inform a service offer or a future monetization surface.
+            Start with release timing, then sort by care demand, market strength, collector value, or service fit. Every result should either inform a service offer or create a smarter watchlist.
           </p>
         </div>
 

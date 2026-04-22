@@ -1,0 +1,486 @@
+[
+  {
+    "kind": "become-operator",
+    "family": "operator-hub",
+    "path": "/become-an-operator",
+    "title": "Become a ShoeGlitch operator | Sneaker cleaning and local route opportunity",
+    "description": "Become a ShoeGlitch operator and learn what the opportunity includes, who it fits, and how to apply in an active or opening city."
+  },
+  {
+    "kind": "locations-index",
+    "family": "hub",
+    "path": "/locations",
+    "title": "Shoe Glitch locations and service areas | Shoe Glitch",
+    "description": "Explore every active Shoe Glitch city, service area, and booking path for sneaker cleaning, restoration, pickup, and drop-off."
+  },
+  {
+    "kind": "city-hub",
+    "family": "city",
+    "path": "/locations/atlanta",
+    "title": "Shoe cleaning and restoration in Atlanta, GA | Shoe Glitch",
+    "description": "Shoe Glitch in Atlanta, GA. Explore local sneaker cleaning, shoe restoration, and pickup or drop-off options, then move into booking.",
+    "city": "atlanta"
+  },
+  {
+    "kind": "city-hub",
+    "family": "city",
+    "path": "/locations/memphis",
+    "title": "Shoe cleaning and restoration in Memphis, TN | Shoe Glitch",
+    "description": "Shoe Glitch in Memphis, TN. Explore local sneaker cleaning, shoe restoration, and pickup or drop-off options, then move into booking.",
+    "city": "memphis"
+  },
+  {
+    "kind": "city-hub",
+    "family": "city",
+    "path": "/locations/milwaukee",
+    "title": "Shoe cleaning and restoration in Milwaukee, WI | Shoe Glitch",
+    "description": "Shoe Glitch in Milwaukee, WI. Explore local sneaker cleaning, shoe restoration, and pickup or drop-off options, then move into booking.",
+    "city": "milwaukee"
+  },
+  {
+    "kind": "operator-city",
+    "family": "operator-city",
+    "path": "/operator-opportunities/atlanta",
+    "title": "Become a ShoeGlitch operator in Atlanta, GA | Sneaker cleaning opportunity",
+    "description": "Become a ShoeGlitch operator in Atlanta, GA. Learn what operators do, how the city opportunity works, and how to apply or express interest.",
+    "city": "atlanta",
+    "role": "cleaning"
+  },
+  {
+    "kind": "operator-city",
+    "family": "operator-city",
+    "path": "/operator-opportunities/memphis",
+    "title": "Become a ShoeGlitch operator in Memphis, TN | Sneaker cleaning opportunity",
+    "description": "Become a ShoeGlitch operator in Memphis, TN. Learn what operators do, how the city opportunity works, and how to apply or express interest.",
+    "city": "memphis",
+    "role": "cleaning"
+  },
+  {
+    "kind": "operator-city",
+    "family": "operator-city",
+    "path": "/operator-opportunities/milwaukee",
+    "title": "Become a ShoeGlitch operator in Milwaukee, WI | Sneaker cleaning opportunity",
+    "description": "Become a ShoeGlitch operator in Milwaukee, WI. Learn what operators do, how the city opportunity works, and how to apply or express interest.",
+    "city": "milwaukee",
+    "role": "cleaning"
+  },
+  {
+    "kind": "operators-index",
+    "family": "operator-hub",
+    "path": "/operators",
+    "title": "ShoeGlitch operator opportunities | City-by-city operator growth",
+    "description": "Explore ShoeGlitch operator opportunities by city, see what operators do, and move into a real application or waitlist path."
+  },
+  {
+    "kind": "service-hub",
+    "family": "hub",
+    "path": "/pickup-dropoff",
+    "title": "Pickup & Drop-Off | Shoe Glitch",
+    "description": "Pickup & Drop-Off from Shoe Glitch. Understand the service, see supported cities, and move into booking with a clear next step.",
+    "service": "pickup-dropoff"
+  },
+  {
+    "kind": "pickup-operator-city",
+    "family": "operator-city",
+    "path": "/pickup-dropoff-operator/atlanta",
+    "title": "Pickup and drop-off operator in Atlanta, GA | ShoeGlitch local route opportunity",
+    "description": "Pickup and drop-off operator opportunity in Atlanta, GA. Learn what the local logistics role includes and how to apply with ShoeGlitch.",
+    "city": "atlanta",
+    "role": "pickup-dropoff"
+  },
+  {
+    "kind": "pickup-operator-city",
+    "family": "operator-city",
+    "path": "/pickup-dropoff-operator/memphis",
+    "title": "Pickup and drop-off operator in Memphis, TN | ShoeGlitch local route opportunity",
+    "description": "Pickup and drop-off operator opportunity in Memphis, TN. Learn what the local logistics role includes and how to apply with ShoeGlitch.",
+    "city": "memphis",
+    "role": "pickup-dropoff"
+  },
+  {
+    "kind": "pickup-operator-city",
+    "family": "operator-city",
+    "path": "/pickup-dropoff-operator/milwaukee",
+    "title": "Pickup and drop-off operator in Milwaukee, WI | ShoeGlitch local route opportunity",
+    "description": "Pickup and drop-off operator opportunity in Milwaukee, WI. Learn what the local logistics role includes and how to apply with ShoeGlitch.",
+    "city": "milwaukee",
+    "role": "pickup-dropoff"
+  },
+  {
+    "kind": "service-city",
+    "family": "city",
+    "path": "/pickup-dropoff/atlanta",
+    "title": "Pickup & Drop-Off in Atlanta, GA | Shoe Glitch",
+    "description": "Pickup & Drop-Off in Atlanta, GA. coverage-driven fulfillment with less friction before booking Use Shoe Glitch to check coverage, compare services, and start your order.",
+    "city": "atlanta",
+    "service": "pickup-dropoff"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/pickup-dropoff/atlanta/buckhead",
+    "title": "Pickup & Drop-Off in Buckhead, Atlanta | Shoe Glitch",
+    "description": "Pickup & Drop-Off in Buckhead, Atlanta. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "atlanta",
+    "service": "pickup-dropoff",
+    "area": "Buckhead"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/pickup-dropoff/atlanta/midtown-downtown",
+    "title": "Pickup & Drop-Off in Midtown + Downtown, Atlanta | Shoe Glitch",
+    "description": "Pickup & Drop-Off in Midtown + Downtown, Atlanta. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "atlanta",
+    "service": "pickup-dropoff",
+    "area": "Midtown + Downtown"
+  },
+  {
+    "kind": "service-city",
+    "family": "city",
+    "path": "/pickup-dropoff/memphis",
+    "title": "Pickup & Drop-Off in Memphis, TN | Shoe Glitch",
+    "description": "Pickup & Drop-Off in Memphis, TN. coverage-driven fulfillment with less friction before booking Use Shoe Glitch to check coverage, compare services, and start your order.",
+    "city": "memphis",
+    "service": "pickup-dropoff"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/pickup-dropoff/memphis/east-memphis",
+    "title": "Pickup & Drop-Off in East Memphis, Memphis | Shoe Glitch",
+    "description": "Pickup & Drop-Off in East Memphis, Memphis. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "memphis",
+    "service": "pickup-dropoff",
+    "area": "East Memphis"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/pickup-dropoff/memphis/midtown-core",
+    "title": "Pickup & Drop-Off in Midtown Core, Memphis | Shoe Glitch",
+    "description": "Pickup & Drop-Off in Midtown Core, Memphis. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "memphis",
+    "service": "pickup-dropoff",
+    "area": "Midtown Core"
+  },
+  {
+    "kind": "service-city",
+    "family": "city",
+    "path": "/pickup-dropoff/milwaukee",
+    "title": "Pickup & Drop-Off in Milwaukee, WI | Shoe Glitch",
+    "description": "Pickup & Drop-Off in Milwaukee, WI. coverage-driven fulfillment with less friction before booking Use Shoe Glitch to check coverage, compare services, and start your order.",
+    "city": "milwaukee",
+    "service": "pickup-dropoff"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/pickup-dropoff/milwaukee/bay-view-south-side",
+    "title": "Pickup & Drop-Off in Bay View / South Side, Milwaukee | Shoe Glitch",
+    "description": "Pickup & Drop-Off in Bay View / South Side, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "pickup-dropoff",
+    "area": "Bay View / South Side"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/pickup-dropoff/milwaukee/downtown-east-side",
+    "title": "Pickup & Drop-Off in Downtown + East Side, Milwaukee | Shoe Glitch",
+    "description": "Pickup & Drop-Off in Downtown + East Side, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "pickup-dropoff",
+    "area": "Downtown + East Side"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/pickup-dropoff/milwaukee/north-shore",
+    "title": "Pickup & Drop-Off in North Shore, Milwaukee | Shoe Glitch",
+    "description": "Pickup & Drop-Off in North Shore, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "pickup-dropoff",
+    "area": "North Shore"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/pickup-dropoff/milwaukee/wauwatosa-brookfield",
+    "title": "Pickup & Drop-Off in Wauwatosa / Brookfield, Milwaukee | Shoe Glitch",
+    "description": "Pickup & Drop-Off in Wauwatosa / Brookfield, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "pickup-dropoff",
+    "area": "Wauwatosa / Brookfield"
+  },
+  {
+    "kind": "service-near-me",
+    "family": "near-me",
+    "path": "/pickup-dropoff/near-me",
+    "title": "Pickup & Drop-Off near me | Shoe Glitch",
+    "description": "Pickup & Drop-Off near you with Shoe Glitch. Use city-aware coverage, service pages, and booking routes to find the best local path.",
+    "service": "pickup-dropoff"
+  },
+  {
+    "kind": "service-hub",
+    "family": "hub",
+    "path": "/shoe-restoration",
+    "title": "Shoe Restoration | Shoe Glitch",
+    "description": "Shoe Restoration from Shoe Glitch. Understand the service, see supported cities, and move into booking with a clear next step.",
+    "service": "shoe-restoration"
+  },
+  {
+    "kind": "side-hustle-guide",
+    "family": "operator-guide",
+    "path": "/shoe-restoration-side-hustle",
+    "title": "Shoe restoration side hustle | ShoeGlitch operator and restoration path",
+    "description": "Explore shoe restoration as a side hustle, understand when it becomes a real opportunity, and see how ShoeGlitch can support the path.",
+    "role": "restoration"
+  },
+  {
+    "kind": "service-city",
+    "family": "city",
+    "path": "/shoe-restoration/atlanta",
+    "title": "Shoe Restoration in Atlanta, GA | Shoe Glitch",
+    "description": "Shoe Restoration in Atlanta, GA. restoration-first recommendations with booking-ready next steps Use Shoe Glitch to check coverage, compare services, and start your order.",
+    "city": "atlanta",
+    "service": "shoe-restoration"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/shoe-restoration/atlanta/buckhead",
+    "title": "Shoe Restoration in Buckhead, Atlanta | Shoe Glitch",
+    "description": "Shoe Restoration in Buckhead, Atlanta. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "atlanta",
+    "service": "shoe-restoration",
+    "area": "Buckhead"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/shoe-restoration/atlanta/midtown-downtown",
+    "title": "Shoe Restoration in Midtown + Downtown, Atlanta | Shoe Glitch",
+    "description": "Shoe Restoration in Midtown + Downtown, Atlanta. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "atlanta",
+    "service": "shoe-restoration",
+    "area": "Midtown + Downtown"
+  },
+  {
+    "kind": "service-city",
+    "family": "city",
+    "path": "/shoe-restoration/memphis",
+    "title": "Shoe Restoration in Memphis, TN | Shoe Glitch",
+    "description": "Shoe Restoration in Memphis, TN. restoration-first recommendations with booking-ready next steps Use Shoe Glitch to check coverage, compare services, and start your order.",
+    "city": "memphis",
+    "service": "shoe-restoration"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/shoe-restoration/memphis/east-memphis",
+    "title": "Shoe Restoration in East Memphis, Memphis | Shoe Glitch",
+    "description": "Shoe Restoration in East Memphis, Memphis. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "memphis",
+    "service": "shoe-restoration",
+    "area": "East Memphis"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/shoe-restoration/memphis/midtown-core",
+    "title": "Shoe Restoration in Midtown Core, Memphis | Shoe Glitch",
+    "description": "Shoe Restoration in Midtown Core, Memphis. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "memphis",
+    "service": "shoe-restoration",
+    "area": "Midtown Core"
+  },
+  {
+    "kind": "service-city",
+    "family": "city",
+    "path": "/shoe-restoration/milwaukee",
+    "title": "Shoe Restoration in Milwaukee, WI | Shoe Glitch",
+    "description": "Shoe Restoration in Milwaukee, WI. restoration-first recommendations with booking-ready next steps Use Shoe Glitch to check coverage, compare services, and start your order.",
+    "city": "milwaukee",
+    "service": "shoe-restoration"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/shoe-restoration/milwaukee/bay-view-south-side",
+    "title": "Shoe Restoration in Bay View / South Side, Milwaukee | Shoe Glitch",
+    "description": "Shoe Restoration in Bay View / South Side, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "shoe-restoration",
+    "area": "Bay View / South Side"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/shoe-restoration/milwaukee/downtown-east-side",
+    "title": "Shoe Restoration in Downtown + East Side, Milwaukee | Shoe Glitch",
+    "description": "Shoe Restoration in Downtown + East Side, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "shoe-restoration",
+    "area": "Downtown + East Side"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/shoe-restoration/milwaukee/north-shore",
+    "title": "Shoe Restoration in North Shore, Milwaukee | Shoe Glitch",
+    "description": "Shoe Restoration in North Shore, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "shoe-restoration",
+    "area": "North Shore"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/shoe-restoration/milwaukee/wauwatosa-brookfield",
+    "title": "Shoe Restoration in Wauwatosa / Brookfield, Milwaukee | Shoe Glitch",
+    "description": "Shoe Restoration in Wauwatosa / Brookfield, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "shoe-restoration",
+    "area": "Wauwatosa / Brookfield"
+  },
+  {
+    "kind": "service-near-me",
+    "family": "near-me",
+    "path": "/shoe-restoration/near-me",
+    "title": "Shoe Restoration near me | Shoe Glitch",
+    "description": "Shoe Restoration near you with Shoe Glitch. Use city-aware coverage, service pages, and booking routes to find the best local path.",
+    "service": "shoe-restoration"
+  },
+  {
+    "kind": "service-hub",
+    "family": "hub",
+    "path": "/sneaker-cleaning",
+    "title": "Sneaker Cleaning | Shoe Glitch",
+    "description": "Sneaker Cleaning from Shoe Glitch. Understand the service, see supported cities, and move into booking with a clear next step.",
+    "service": "sneaker-cleaning"
+  },
+  {
+    "kind": "service-city",
+    "family": "city",
+    "path": "/sneaker-cleaning/atlanta",
+    "title": "Sneaker Cleaning in Atlanta, GA | Shoe Glitch",
+    "description": "Sneaker Cleaning in Atlanta, GA. tracked intake, city coverage, and a clear booking path Use Shoe Glitch to check coverage, compare services, and start your order.",
+    "city": "atlanta",
+    "service": "sneaker-cleaning"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/sneaker-cleaning/atlanta/buckhead",
+    "title": "Sneaker Cleaning in Buckhead, Atlanta | Shoe Glitch",
+    "description": "Sneaker Cleaning in Buckhead, Atlanta. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "atlanta",
+    "service": "sneaker-cleaning",
+    "area": "Buckhead"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/sneaker-cleaning/atlanta/midtown-downtown",
+    "title": "Sneaker Cleaning in Midtown + Downtown, Atlanta | Shoe Glitch",
+    "description": "Sneaker Cleaning in Midtown + Downtown, Atlanta. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "atlanta",
+    "service": "sneaker-cleaning",
+    "area": "Midtown + Downtown"
+  },
+  {
+    "kind": "service-city",
+    "family": "city",
+    "path": "/sneaker-cleaning/memphis",
+    "title": "Sneaker Cleaning in Memphis, TN | Shoe Glitch",
+    "description": "Sneaker Cleaning in Memphis, TN. tracked intake, city coverage, and a clear booking path Use Shoe Glitch to check coverage, compare services, and start your order.",
+    "city": "memphis",
+    "service": "sneaker-cleaning"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/sneaker-cleaning/memphis/east-memphis",
+    "title": "Sneaker Cleaning in East Memphis, Memphis | Shoe Glitch",
+    "description": "Sneaker Cleaning in East Memphis, Memphis. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "memphis",
+    "service": "sneaker-cleaning",
+    "area": "East Memphis"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/sneaker-cleaning/memphis/midtown-core",
+    "title": "Sneaker Cleaning in Midtown Core, Memphis | Shoe Glitch",
+    "description": "Sneaker Cleaning in Midtown Core, Memphis. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "memphis",
+    "service": "sneaker-cleaning",
+    "area": "Midtown Core"
+  },
+  {
+    "kind": "service-city",
+    "family": "city",
+    "path": "/sneaker-cleaning/milwaukee",
+    "title": "Sneaker Cleaning in Milwaukee, WI | Shoe Glitch",
+    "description": "Sneaker Cleaning in Milwaukee, WI. tracked intake, city coverage, and a clear booking path Use Shoe Glitch to check coverage, compare services, and start your order.",
+    "city": "milwaukee",
+    "service": "sneaker-cleaning"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/sneaker-cleaning/milwaukee/bay-view-south-side",
+    "title": "Sneaker Cleaning in Bay View / South Side, Milwaukee | Shoe Glitch",
+    "description": "Sneaker Cleaning in Bay View / South Side, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "sneaker-cleaning",
+    "area": "Bay View / South Side"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/sneaker-cleaning/milwaukee/downtown-east-side",
+    "title": "Sneaker Cleaning in Downtown + East Side, Milwaukee | Shoe Glitch",
+    "description": "Sneaker Cleaning in Downtown + East Side, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "sneaker-cleaning",
+    "area": "Downtown + East Side"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/sneaker-cleaning/milwaukee/north-shore",
+    "title": "Sneaker Cleaning in North Shore, Milwaukee | Shoe Glitch",
+    "description": "Sneaker Cleaning in North Shore, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "sneaker-cleaning",
+    "area": "North Shore"
+  },
+  {
+    "kind": "service-area",
+    "family": "area",
+    "path": "/sneaker-cleaning/milwaukee/wauwatosa-brookfield",
+    "title": "Sneaker Cleaning in Wauwatosa / Brookfield, Milwaukee | Shoe Glitch",
+    "description": "Sneaker Cleaning in Wauwatosa / Brookfield, Milwaukee. Check local Shoe Glitch coverage, understand the service, and start your order with a city-aware booking path.",
+    "city": "milwaukee",
+    "service": "sneaker-cleaning",
+    "area": "Wauwatosa / Brookfield"
+  },
+  {
+    "kind": "service-near-me",
+    "family": "near-me",
+    "path": "/sneaker-cleaning/near-me",
+    "title": "Sneaker Cleaning near me | Shoe Glitch",
+    "description": "Sneaker Cleaning near you with Shoe Glitch. Use city-aware coverage, service pages, and booking routes to find the best local path.",
+    "service": "sneaker-cleaning"
+  },
+  {
+    "kind": "business-guide",
+    "family": "operator-guide",
+    "path": "/start-a-sneaker-cleaning-business",
+    "title": "How to start a sneaker cleaning business | ShoeGlitch operator path",
+    "description": "Learn how to start a sneaker cleaning business the realistic way and how ShoeGlitch can shorten the path into city-level operator work.",
+    "role": "cleaning"
+  }
+]

@@ -28,7 +28,7 @@ This project uses a provider-to-normalized-model architecture for sneaker data.
 ## Required environment variables
 
 - `KICKS_API_KEY` or `KICKSDB_API_KEY`
-- `KICKSDB_API_BASE_URL` optional, defaults to `https://api.kicks.dev/v3`
+- `KICKSDB_API_BASE_URL` or `KICKSDB_BASE_URL` optional, defaults to `https://api.kicks.dev/v3`
 
 Supabase cache persistence also requires the existing project Supabase variables:
 
@@ -68,3 +68,7 @@ Supabase cache persistence also requires the existing project Supabase variables
 
 The live UI is ready for KicksDB, but cache persistence requires the migration below to be applied before Supabase-backed caching becomes active.
 Sneaks-API is intentionally not part of the public feed dependency chain. It exists for comparison, backup investigation, and normalization checks only.
+
+## Local development fallback
+
+If localhost does not have a usable KicksDB key, the KicksDB provider can fall back to the live ShoeGlitch production API as a dev-only proxy. That keeps local feed development moving while the direct local env is being fixed, without changing the public feed architecture.

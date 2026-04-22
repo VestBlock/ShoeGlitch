@@ -10,6 +10,7 @@ import {
   extractPickupWindowFromNotes,
   pickupWindowLabel,
 } from '@/lib/pickup-window';
+import { extractShoeProfileFromNotes, formatShoeProfile } from '@/lib/shoe-profile';
 import { formatDate } from '@/lib/utils';
 
 export default async function CustomerOrderDetail({ params }: { params: { id: string } }) {
@@ -39,6 +40,11 @@ export default async function CustomerOrderDetail({ params }: { params: { id: st
   const flow = flowFor(order.fulfillmentMethod);
   const currentIdx = flow.indexOf(order.status);
   const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
+  const shoeProfile = extractShoeProfileFromNotes(order.notes);
+  const shoeSummary = formatShoeProfile({
+    brand: shoeProfile.brand,
+    title: shoeProfile.title ?? order.customShoeType,
+  });
 
   return (
     <DashboardShell currentPath="/customer/orders">
@@ -79,6 +85,12 @@ export default async function CustomerOrderDetail({ params }: { params: { id: st
             <Card>
               <div className="font-mono text-xs text-ink/40 mb-1">Pickup window</div>
               <div className="h-display text-2xl">{pickupWindow}</div>
+            </Card>
+          )}
+          {shoeSummary && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-1">Shoe submitted</div>
+              <div className="h-display text-2xl">{shoeSummary}</div>
             </Card>
           )}
           {cleaner && (

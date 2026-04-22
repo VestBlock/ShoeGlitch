@@ -4,10 +4,26 @@ import { submitApplicationAction } from './actions';
 
 const PRICES = { starter: 349, pro: 599, luxury: 899 };
 
-export default async function OperatorApplyPage({ searchParams }: { searchParams: { tier?: string } }) {
+export default async function OperatorApplyPage({
+  searchParams,
+}: {
+  searchParams: { tier?: string; city?: string; focus?: string };
+}) {
   const tier = (searchParams.tier as 'starter' | 'pro' | 'luxury') || 'pro';
   const cities = await db.cities.all();
+  const selectedCity =
+    cities.find((city) => city.slug === searchParams.city) ??
+    cities.find((city) => city.id === searchParams.city) ??
+    cities[0];
   const price = PRICES[tier];
+  const focusLabel =
+    searchParams.focus === 'pickup-dropoff'
+      ? 'Pickup & drop-off focus'
+      : searchParams.focus === 'restoration'
+        ? 'Restoration focus'
+        : searchParams.focus === 'cleaning'
+          ? 'Cleaning focus'
+          : null;
 
   return (
     <section className="container-x pt-10 pb-24 max-w-3xl mx-auto">
@@ -18,6 +34,12 @@ export default async function OperatorApplyPage({ searchParams }: { searchParams
       <p className="text-ink/70 mb-10">
         Selected kit: <strong className="capitalize">{tier}</strong> · <span className="font-mono">${price}</span>.
       </p>
+      {selectedCity ? (
+        <div className="mb-8 rounded-[1.25rem] border border-ink/10 bg-bone-soft px-5 py-4 text-sm text-ink/70">
+          Applying with <strong>{selectedCity.name}, {selectedCity.state}</strong> preselected.
+          {focusLabel ? <> <span className="text-glitch/85">{focusLabel}.</span></> : null}
+        </div>
+      ) : null}
 
       <Card className="p-8">
         <form action={submitApplicationAction} className="space-y-5">
@@ -37,7 +59,7 @@ export default async function OperatorApplyPage({ searchParams }: { searchParams
             </div>
             <div>
               <label className="label">Which city?</label>
-              <select name="cityId" className="input" required>
+              <select name="cityId" className="input" required defaultValue={selectedCity?.id}>
                 {cities.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}, {c.state}{!c.active && ' (pre-launch)'}</option>
                 ))}

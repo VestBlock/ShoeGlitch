@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import IntelligenceSignals from '@/components/intelligence/IntelligenceSignals';
 import { Badge } from '@/components/ui';
 import { buildSneakerDetailSchemas, INTELLIGENCE_FAQS } from '@/features/intelligence/schema';
 import { getSneakerBySlug } from '@/features/intelligence/service';
@@ -22,7 +23,7 @@ export async function generateMetadata({
 
   return {
     title: `${item.name} intelligence | Shoe Glitch`,
-    description: `${item.name}: release timing, cleaning score ${item.scores.cleaning}, restoration score ${item.scores.restoration}, and the next best Shoe Glitch action.`,
+    description: `${item.name}: cleanability ${item.scores.cleaning}, restoration upside ${item.scores.restoration}, market strength ${item.scores.marketStrength}, and the next best Shoe Glitch action.`,
   };
 }
 
@@ -87,23 +88,8 @@ export default async function SneakerDetailPage({
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
                       Score summary
                     </div>
-                    <div className="mt-4 grid grid-cols-2 gap-3">
-                      <div className="rounded-[1rem] border border-ink/10 bg-bone-soft p-3">
-                        <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Cleaning</div>
-                        <div className="mt-2 text-2xl font-semibold text-ink">{item.scores.cleaning}</div>
-                      </div>
-                      <div className="rounded-[1rem] border border-ink/10 bg-bone-soft p-3">
-                        <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Restoration</div>
-                        <div className="mt-2 text-2xl font-semibold text-ink">{item.scores.restoration}</div>
-                      </div>
-                      <div className="rounded-[1rem] border border-ink/10 bg-bone-soft p-3">
-                        <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Flip</div>
-                        <div className="mt-2 text-2xl font-semibold text-ink">{item.scores.flipPotential}</div>
-                      </div>
-                      <div className="rounded-[1rem] border border-ink/10 bg-bone-soft p-3">
-                        <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Urgency</div>
-                        <div className="mt-2 text-2xl font-semibold text-ink">{item.scores.urgency}</div>
-                      </div>
+                    <div className="mt-4">
+                      <IntelligenceSignals item={item} includeConfidence />
                     </div>
                   </div>
 
@@ -142,10 +128,11 @@ export default async function SneakerDetailPage({
                 <h2>Why this pair matters</h2>
                 <p>{item.rankingNote}</p>
                 <ul>
-                  <li>Cleaning score: {item.scores.cleaning} based on light materials, wear profile, and service fit.</li>
-                  <li>Restoration score: {item.scores.restoration} based on materials, collector lean, and long-tail value.</li>
-                  <li>Flip potential: {item.scores.flipPotential} based on transparent spread logic and placeholder handling.</li>
-                  <li>Urgency: {item.scores.urgency} based on how close the release window is today.</li>
+                  <li>Cleanability: {item.scores.cleaning} driven by color visibility, texture, and how quickly the pair will show dirt.</li>
+                  <li>Restoration upside: {item.scores.restoration} driven by rarity, premium materials, age, and sole risk.</li>
+                  <li>Market strength: {item.scores.marketStrength} driven by price spread, rank, and demand flow.</li>
+                  <li>Collector value: {item.scores.rarity} paired with preservation value {item.scores.preservationValue} to show how much this pair deserves long-term care.</li>
+                  <li>Confidence: {item.scores.confidence} based on provider quality, live market completeness, and demand signals.</li>
                 </ul>
               </section>
             </article>
@@ -159,15 +146,22 @@ export default async function SneakerDetailPage({
                 <p className="mt-3 text-sm leading-6 text-ink/66">
                   {item.primaryCta.kind === 'book-restoration'
                     ? 'This one leans restoration-first. Use the feed to capture intent before the pair ages into a harder job.'
-                    : 'This one looks cleaning-first. Turn release energy into a premium service booking before the pair gets away from the customer.'}
+                    : item.primaryCta.kind === 'join-waitlist'
+                      ? 'This one looks more like a watchlist hold. Save it now, then let the release or restock signal bring you back in at the right moment.'
+                      : 'This one looks cleaning-first. Turn release energy into a premium service booking before the pair gets away from the customer.'}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
                   <Link href={item.primaryCta.href} className="btn-glitch">
                     {item.primaryCta.label}
                   </Link>
-                  <Link href="/mail-in" className="btn-outline">
-                    Mail-in option
+                  <Link href={item.secondaryCta.href} className="btn-outline">
+                    {item.secondaryCta.label}
                   </Link>
+                  {item.marketUrl ? (
+                    <Link href={item.marketUrl} className="btn-outline" target="_blank">
+                      Open market
+                    </Link>
+                  ) : null}
                 </div>
               </div>
 

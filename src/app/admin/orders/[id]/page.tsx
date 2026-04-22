@@ -10,7 +10,13 @@ import { STATUS_LABELS, progressPercent, nextAllowedStatuses } from '@/lib/statu
 import {
   extractPickupWindowFromNotes,
   pickupWindowLabel,
+  stripPickupWindowFromNotes,
 } from '@/lib/pickup-window';
+import {
+  extractShoeProfileFromNotes,
+  formatShoeProfile,
+  stripShoeProfileFromNotes,
+} from '@/lib/shoe-profile';
 import { formatDate } from '@/lib/utils';
 import { updateStatusAction, flagIssueAction } from '@/app/cleaner/actions';
 import { assignCleanerAction } from '@/app/city-manager/actions';
@@ -43,6 +49,12 @@ export default async function AdminOrderDetail({ params }: { params: { id: strin
 
   const pct = progressPercent(order.fulfillmentMethod, order.status);
   const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
+  const shoeProfile = extractShoeProfileFromNotes(order.notes);
+  const shoeSummary = formatShoeProfile({
+    brand: shoeProfile.brand,
+    title: shoeProfile.title ?? order.customShoeType,
+  });
+  const customerNotes = stripShoeProfileFromNotes(stripPickupWindowFromNotes(order.notes));
 
   return (
     <DashboardShell currentPath="/admin/orders">
@@ -179,6 +191,12 @@ export default async function AdminOrderDetail({ params }: { params: { id: strin
               <div className="h-display text-xl">{pickupWindow}</div>
             </Card>
           )}
+          {shoeSummary && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-1">Shoe submitted</div>
+              <div className="h-display text-xl">{shoeSummary}</div>
+            </Card>
+          )}
 
           <Card>
             <div className="font-mono text-xs text-ink/40 mb-1">Breakdown</div>
@@ -192,6 +210,12 @@ export default async function AdminOrderDetail({ params }: { params: { id: strin
               <span>Total</span><span className="font-mono">${order.total}</span>
             </div>
           </Card>
+          {customerNotes && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-1">Customer notes</div>
+              <p className="text-sm">{customerNotes}</p>
+            </Card>
+          )}
         </div>
       </div>
     </DashboardShell>

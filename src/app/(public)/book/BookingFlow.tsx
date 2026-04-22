@@ -38,6 +38,19 @@ const SHOE_CATEGORIES = [
   { id: 'other', label: 'Other' },
 ] as const;
 
+const SHOE_BRANDS = [
+  'Nike',
+  'Jordan',
+  'adidas',
+  'New Balance',
+  'ASICS',
+  'Converse',
+  'Puma',
+  'Reebok',
+  'Vans',
+  'Other',
+] as const;
+
 const STEPS = [
   'Location',
   'Fulfillment',
@@ -67,6 +80,9 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
 
   const [shoeCategory, setShoeCategory] =
     useState<(typeof SHOE_CATEGORIES)[number]['id']>('sneakers');
+  const [shoeBrand, setShoeBrand] = useState<string>('Nike');
+  const [customShoeBrand, setCustomShoeBrand] = useState('');
+  const [shoeModelName, setShoeModelName] = useState('');
   const [pairCount, setPairCount] = useState(1);
 
   const initialService = search.get('service');
@@ -88,6 +104,11 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
 
   const currentCity = useMemo(() => cities.find((c) => c.id === cityId), [cities, cityId]);
   const catalog = cityId ? servicesByCity[cityId] : undefined;
+  const resolvedShoeBrand = useMemo(
+    () => (shoeBrand === 'Other' ? customShoeBrand.trim() : shoeBrand.trim()),
+    [customShoeBrand, shoeBrand],
+  );
+  const resolvedShoeTitle = shoeModelName.trim();
 
   // Set a default service once the city is picked (or from URL param)
   useEffect(() => {
@@ -169,7 +190,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
   const canContinue: Record<Step, boolean> = {
     0: Boolean(cityId) || fulfillmentMethod === 'mailin',
     1: Boolean(fulfillmentMethod && cityId),
-    2: Boolean(shoeCategory && pairCount >= 1),
+    2: Boolean(shoeCategory && pairCount >= 1 && resolvedShoeBrand && resolvedShoeTitle),
     3: Boolean(primaryServiceId),
     4:
       fulfillmentMethod !== 'pickup' ||
@@ -193,6 +214,10 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
           serviceAreaId,
           fulfillmentMethod,
           shoeCategory,
+          shoeBrand,
+          customShoeBrand: shoeBrand === 'Other' ? customShoeBrand.trim() : undefined,
+          shoeModelName: resolvedShoeTitle || undefined,
+          customShoeType: resolvedShoeTitle || undefined,
           pairCount,
           primaryServiceId,
           addOnServiceIds,
@@ -333,6 +358,45 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
               <div className="h-display text-5xl min-w-[60px] text-center">{pairCount}</div>
               <button onClick={() => setPairCount((n) => Math.min(10, n + 1))} className="btn-outline w-12 h-12 p-0 text-xl">+</button>
             </div>
+
+            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div>
+                <label className="label">Brand</label>
+                <select
+                  className="input"
+                  value={shoeBrand}
+                  onChange={(e) => setShoeBrand(e.target.value)}
+                >
+                  {SHOE_BRANDS.map((brand) => (
+                    <option key={brand} value={brand}>
+                      {brand}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="label">Shoe title / model</label>
+                <input
+                  className="input"
+                  value={shoeModelName}
+                  onChange={(e) => setShoeModelName(e.target.value)}
+                  placeholder="e.g. Jordan 5, Air Max 95, Foamposite"
+                />
+              </div>
+            </div>
+
+            {shoeBrand === 'Other' && (
+              <div className="mt-6 max-w-xl">
+                <label className="label">Type the brand</label>
+                <input
+                  className="input"
+                  value={customShoeBrand}
+                  onChange={(e) => setCustomShoeBrand(e.target.value)}
+                  placeholder="e.g. Maison Margiela"
+                />
+              </div>
+            )}
           </Panel>
         )}
 
@@ -483,6 +547,8 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
               </div>
               <div className="space-y-1 text-sm">
                 <Row label="Shoes" value={`${pairCount}× ${SHOE_CATEGORIES.find(c => c.id === shoeCategory)?.label}`} />
+                <Row label="Brand" value={resolvedShoeBrand || '—'} />
+                <Row label="Shoe title" value={resolvedShoeTitle || '—'} />
                 {address.line1 && <Row label="Pickup" value={`${address.line1}, ${address.city}`} />}
                 {fulfillmentMethod === 'pickup' && pickupWindow && (
                   <Row label="Pickup window" value={pickupWindowLabel(pickupWindow) ?? '—'} />

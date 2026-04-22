@@ -8,10 +8,39 @@ import type {
   SneakerProvider,
 } from '@/features/intelligence/providers/types';
 
+function sanitizeEnvValue(value: string | undefined) {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  const unquoted = trimmed.replace(/^['"]|['"]$/g, '').trim();
+  if (!unquoted || unquoted === '""' || unquoted === "''") return undefined;
+  return unquoted;
+}
+
+function readEnv(...keys: string[]) {
+  for (const key of keys) {
+    const value = sanitizeEnvValue(process.env[key]);
+    if (value) return value;
+  }
+  return undefined;
+}
+
 const KICKSDB_BASE_URL =
-  process.env.KICKSDB_API_BASE_URL ??
-  process.env.KICKS_API_BASE_URL ??
+  readEnv('KICKSDB_API_BASE_URL', 'KICKSDB_BASE_URL', 'KICKS_API_BASE_URL') ??
   'https://api.kicks.dev/v3';
+
+const KICKSDB_API_KEY = readEnv('KICKSDB_API_KEY', 'KICKS_API_KEY');
+
+function remoteProxyBaseUrl() {
+  const candidate = readEnv('KICKSDB_REMOTE_PROXY_URL', 'NEXT_PUBLIC_SITE_URL');
+  if (candidate && !/localhost|127\.0\.0\.1/.test(candidate)) {
+    return candidate.replace(/\/$/, '');
+  }
+  return 'https://www.shoeglitch.com';
+}
+
+function canUseRemoteProxy() {
+  return !KICKSDB_API_KEY && process.env.VERCEL !== '1';
+}
 
 interface KicksDbListResponse {
   data: KicksDbProductRecord[];
@@ -28,12 +57,29 @@ function buildHeaders() {
     Accept: 'application/json',
   };
 
-  const apiKey = process.env.KICKSDB_API_KEY ?? process.env.KICKS_API_KEY;
-  if (apiKey) {
-    headers.Authorization = `Bearer ${apiKey}`;
+  if (KICKSDB_API_KEY) {
+    headers.Authorization = `Bearer ${KICKSDB_API_KEY}`;
   }
 
   return headers;
+}
+
+async function requestRemoteProxy<T>(path: '/api/intelligence/search' | '/api/intelligence/product', params: Record<string, string | number | undefined>) {
+  const url = new URL(`${remoteProxyBaseUrl()}${path}`);
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== '') url.searchParams.set(key, String(value));
+  }
+
+  const response = await fetch(url.toString(), {
+    headers: { Accept: 'application/json' },
+    next: { revalidate: 60 * 15 },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Remote KicksDB proxy failed with ${response.status}`);
+  }
+
+  return response.json() as Promise<T>;
 }
 
 async function requestJson<T>(path: string, params: Record<string, string | number | undefined>) {
@@ -83,6 +129,19 @@ export const kicksDbProvider: SneakerProvider = {
       };
     }
 
+    if (canUseRemoteProxy()) {
+      const remote = await requestRemoteProxy<ProviderSearchResult>('/api/intelligence/search', {
+        q: input.query,
+        sku: input.sku,
+        limit: input.limit ?? 8,
+      });
+
+      return {
+        ...remote,
+        health: health('healthy', 'Loaded KicksDB search through the live ShoeGlitch proxy.', now),
+      };
+    }
+
     const payload = await requestJson<KicksDbListResponse>('/stockx/products', {
       query: input.sku ? undefined : searchValue,
       sku: input.sku ? searchValue : undefined,
@@ -109,6 +168,17 @@ export const kicksDbProvider: SneakerProvider = {
         raw: cached.payload,
         cached: true,
         health: health('healthy', 'Served KicksDB product detail from cache.', now),
+      };
+    }
+
+    if (canUseRemoteProxy()) {
+      const remote = await requestRemoteProxy<ProviderProductResult>('/api/intelligence/product', {
+        id: idOrSlug,
+      });
+
+      return {
+        ...remote,
+        health: health('healthy', 'Loaded KicksDB product through the live ShoeGlitch proxy.', now),
       };
     }
 

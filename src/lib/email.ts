@@ -448,6 +448,90 @@ export async function sendOperatorOnTheWay(params: {
   }
 }
 
+export async function sendSneakerWatchlistAlert(params: {
+  toEmail: string;
+  customerName: string;
+  sneakerName: string;
+  brand: string;
+  imageUrl?: string;
+  eventType: 'release' | 'restock' | 'price_drop';
+  eventDate: string;
+  price?: number;
+  ctaUrl: string;
+  watchLabel: string;
+}): Promise<boolean> {
+  const resend = getResend();
+  if (!resend) return false;
+
+  const {
+    toEmail,
+    customerName,
+    sneakerName,
+    brand,
+    imageUrl,
+    eventType,
+    eventDate,
+    price,
+    ctaUrl,
+    watchLabel,
+  } = params;
+
+  const eventLabel =
+    eventType === 'release' ? 'Release alert' : eventType === 'restock' ? 'Restock alert' : 'Price drop alert';
+  const subject = `${eventLabel} — ${sneakerName}`;
+  const formattedDate = new Date(eventDate).toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: toEmail,
+      replyTo: REPLY_TO,
+      subject,
+      html: simpleShell({
+        badge: eventLabel,
+        heading: `${escapeHtml(sneakerName)} is live on your watchlist.`,
+        body: `
+          ${imageUrl ? `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(sneakerName)}" style="display:block;width:100%;max-width:440px;border-radius:16px;margin:0 0 20px 0;object-fit:cover;" />` : ''}
+          <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">Hi ${escapeHtml(customerName.split(' ')[0])}, we detected a ${escapeHtml(eventType.replace('_', ' '))} event for <strong>${escapeHtml(sneakerName)}</strong>.</p>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Brand</td><td style="padding:8px 0;text-align:right;">${escapeHtml(brand)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Watch</td><td style="padding:8px 0;text-align:right;">${escapeHtml(watchLabel)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Event date</td><td style="padding:8px 0;text-align:right;">${escapeHtml(formattedDate)}</td></tr>
+            ${price ? `<tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Price</td><td style="padding:8px 0;text-align:right;">$${price}</td></tr>` : ''}
+          </table>
+        `,
+        cta: { href: ctaUrl, label: 'Open sneaker page →' },
+      }),
+      text: [
+        `${eventLabel}: ${sneakerName}`,
+        '',
+        `Brand: ${brand}`,
+        `Watch: ${watchLabel}`,
+        `Event date: ${formattedDate}`,
+        price ? `Price: $${price}` : null,
+        `Open: ${ctaUrl}`,
+        '',
+        '— Shoe Glitch',
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendSneakerWatchlistAlert:', error);
+      throw new Error(error.message);
+    }
+    return true;
+  } catch (err: any) {
+    console.error('[email] exception in sendSneakerWatchlistAlert:', err?.message ?? err);
+    throw err instanceof Error ? err : new Error('Watchlist alert failed.');
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Simple wrapper template used by status, completion, refund emails
 // ---------------------------------------------------------------------------

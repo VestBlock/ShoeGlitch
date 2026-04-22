@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui';
 import type { Role } from '@/types';
 import {
-  Home, Package, Users, Wrench, LogOut, Tag, Building2,
+  Home, Package, Users, Wrench, LogOut, Tag, Building2, Bell,
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: any; }
@@ -16,6 +16,7 @@ const NAVS: Record<Role, { title: string; items: NavItem[] }> = {
     items: [
       { href: '/customer', label: 'Dashboard', icon: Home },
       { href: '/customer/orders', label: 'Orders', icon: Package },
+      { href: '/customer/watchlist', label: 'Watchlist', icon: Bell },
       { href: '/book', label: 'Book a clean', icon: Wrench },
     ],
   },

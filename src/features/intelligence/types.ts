@@ -45,7 +45,33 @@ export interface ScoreRecord {
   restoration: number;
   flipPotential: number;
   urgency: number;
+  releasePressure: number;
   confidence: number;
+  marketStrength: number;
+  liquidity: number;
+  rarity: number;
+  materialSensitivity: number;
+  soleRisk: number;
+  wearVisibility: number;
+  serviceFit: number;
+  marketWatchFit: number;
+  preservationValue: number;
+  reasons: {
+    cleaning: string[];
+    restoration: string[];
+    flipPotential: string[];
+    urgency: string[];
+    confidence: string[];
+    marketStrength: string[];
+    liquidity: string[];
+    rarity: string[];
+    materialSensitivity: string[];
+    soleRisk: string[];
+    wearVisibility: string[];
+    serviceFit: string[];
+    marketWatchFit: string[];
+    preservationValue: string[];
+  };
 }
 
 export interface ServiceHook {
@@ -105,5 +131,5 @@ export interface SneakerFilterState {
   search: string;
   brand: string;
   opportunity: 'all' | SneakerOpportunityKind;
-  sort: 'release' | 'cleaning' | 'restoration' | 'flip' | 'urgency';
+  sort: 'release' | 'cleaning' | 'restoration' | 'market' | 'rarity' | 'service' | 'pressure';
 }
