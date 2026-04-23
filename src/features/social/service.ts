@@ -224,6 +224,7 @@ export async function runDailySocialDraftScan(limit = 8): Promise<SocialQueueSum
     buildSeoAutomationManifest(),
   ]);
 
+  const candidatePoolSize = Math.max(limit * 8, 40);
   const candidatePaths = [
     ...releaseManifest.entries
       .sort((a, b) => {
@@ -231,17 +232,15 @@ export async function runDailySocialDraftScan(limit = 8): Promise<SocialQueueSum
         if (priority !== 0) return priority * -1;
         return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
       })
-      .slice(0, Math.max(4, limit))
+      .slice(0, candidatePoolSize)
       .map((entry) => ({ path: entry.path, sourceUpdatedAt: entry.updatedAt })),
     ...seoManifest
       .filter((entry) => socialEligibleSeoEntry(entry.path))
-      .slice(0, Math.max(2, Math.floor(limit / 2)))
+      .slice(0, Math.max(8, Math.floor(candidatePoolSize / 3)))
       .map((entry) => ({ path: entry.path, sourceUpdatedAt: releaseManifest.generatedAt })),
   ];
 
-  const uniqueCandidates = Array.from(
-    new Map(candidatePaths.map((candidate) => [candidate.path, candidate])).values(),
-  ).slice(0, limit);
+  const uniqueCandidates = Array.from(new Map(candidatePaths.map((candidate) => [candidate.path, candidate])).values());
   const drafts: SocialQueueRecord[] = [];
   const messages: string[] = [];
   let created = 0;
@@ -249,6 +248,7 @@ export async function runDailySocialDraftScan(limit = 8): Promise<SocialQueueSum
   let failed = 0;
 
   for (const candidate of uniqueCandidates) {
+    if (created >= limit) break;
     const result = await createSocialDraftForPath(candidate.path, false, candidate.sourceUpdatedAt);
     if (result.status === 'created' && result.draft) {
       created += 1;
