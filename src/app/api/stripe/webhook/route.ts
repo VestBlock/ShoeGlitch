@@ -21,6 +21,7 @@ import {
 } from '@/lib/email';
 import { recordGrowthEvent } from '@/lib/growth/persistence';
 import { appendEvent } from '@/services/orders';
+import { getOperatorTierDefinition } from '@/features/operators/tiers';
 import type { Order } from '@/types';
 import { createAdminSupabaseClient } from '@/lib/supabase/admin';
 
@@ -136,11 +137,7 @@ export async function POST(req: Request) {
                   .eq('id', app.cityId)
                   .maybeSingle();
 
-                const amountByTier = {
-                  starter: 349,
-                  pro: 599,
-                  luxury: 899,
-                } as const;
+                const tierDefinition = getOperatorTierDefinition(app.tier);
 
                 await sendOperatorKitPaymentConfirmation({
                   applicationId: app.id,
@@ -148,7 +145,7 @@ export async function POST(req: Request) {
                   name: app.name,
                   cityName: city?.name ?? 'your city',
                   tier: app.tier,
-                  amount: amountByTier[app.tier as keyof typeof amountByTier] ?? 0,
+                  amount: tierDefinition.price,
                 });
               }
             } catch (emailErr: any) {

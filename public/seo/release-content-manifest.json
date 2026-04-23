@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-23T16:08:27.877Z",
+  "generatedAt": "2026-04-23T16:45:05.743Z",
   "budget": {
     "plan": "free",
     "monthlyRequests": 1000,
@@ -119,20 +119,6 @@
     },
     {
       "family": "release-alerts",
-      "path": "/release-alerts/new-balance-1906r-triple-black",
-      "slug": "new-balance-1906r-triple-black",
-      "title": "New Balance 1906R Triple Black release alerts",
-      "description": "New Balance 1906R Triple Black is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
-      "brand": "New Balance",
-      "availability": "watch-worthy",
-      "marketStrength": 58,
-      "restoration": 26,
-      "preservationValue": 41,
-      "primaryCta": "Join release alerts",
-      "updatedAt": "2026-04-23T07:08:41Z"
-    },
-    {
-      "family": "release-alerts",
       "path": "/release-alerts/nike-vomero-5-ghost-summit-white-gs",
       "slug": "nike-vomero-5-ghost-summit-white-gs",
       "title": "Nike Vomero 5 Ghost Summit White (GS) release alerts",
@@ -172,6 +158,20 @@
       "preservationValue": 40,
       "primaryCta": "Join release alerts",
       "updatedAt": "2026-04-23T11:05:03Z"
+    },
+    {
+      "family": "release-alerts",
+      "path": "/release-alerts/nike-vomero-5-university-blue-stadium-green-summit-white-magic-ember-gs",
+      "slug": "nike-vomero-5-university-blue-stadium-green-summit-white-magic-ember-gs",
+      "title": "Nike Vomero 5 University Blue Stadium Green Summit White Magic Ember (GS) release alerts",
+      "description": "Nike Vomero 5 University Blue Stadium Green Summit White Magic Ember (GS) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if the service angle remains secondary.",
+      "brand": "Nike",
+      "availability": "watch-worthy",
+      "marketStrength": 33,
+      "restoration": 16,
+      "preservationValue": 33,
+      "primaryCta": "Join release alerts",
+      "updatedAt": "2026-04-23T14:05:01Z"
     },
     {
       "family": "release",
@@ -259,17 +259,17 @@
     },
     {
       "family": "release",
-      "path": "/releases/new-balance-1906r-triple-black",
-      "slug": "new-balance-1906r-triple-black",
-      "title": "New Balance 1906R Triple Black",
-      "description": "New Balance 1906R Triple Black is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
+      "path": "/releases/new-balance-1906r-white-gold",
+      "slug": "new-balance-1906r-white-gold",
+      "title": "New Balance 1906R White Metallic Gold",
+      "description": "New Balance 1906R White Metallic Gold is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
       "brand": "New Balance",
       "availability": "watch-worthy",
-      "marketStrength": 58,
-      "restoration": 26,
-      "preservationValue": 41,
+      "marketStrength": 51,
+      "restoration": 52,
+      "preservationValue": 50,
       "primaryCta": "Watch this release",
-      "updatedAt": "2026-04-23T07:08:41Z"
+      "updatedAt": "2026-04-23T15:05:52Z"
     },
     {
       "family": "release",

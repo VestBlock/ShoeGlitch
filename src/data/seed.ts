@@ -438,7 +438,9 @@ export const seedCustomers: Customer[] = [
   },
 ];
 
-// Cleaners now carry `tier` — starter/pro/luxury gates what they can accept
+// Cleaners now carry `tier` — starter/pro/luxury gates what they can accept.
+// Default payout rates mirror the current platform-fee bands:
+// Basic/starter 60-65%, Pro 75-80%, Luxury 90-95%.
 export const seedCleaners: Cleaner[] = [
   {
     id: 'cln_marcus',
@@ -451,7 +453,7 @@ export const seedCleaners: Cleaner[] = [
     specializations: ['clean', 'specialty', 'restoration'],
     tier: 'pro',
     active: true,
-    payoutRate: 0.6,
+    payoutRate: 0.78,
     rating: 4.9,
     activeJobCount: 2,
     createdAt: '2025-10-05T00:00:00Z',
@@ -467,7 +469,7 @@ export const seedCleaners: Cleaner[] = [
     specializations: ['clean', 'luxury'],
     tier: 'luxury',
     active: true,
-    payoutRate: 0.65,
+    payoutRate: 0.92,
     rating: 5.0,
     activeJobCount: 1,
     createdAt: '2025-11-12T00:00:00Z',
@@ -483,7 +485,7 @@ export const seedCleaners: Cleaner[] = [
     specializations: ['clean', 'luxury', 'restoration'],
     tier: 'luxury',
     active: true,
-    payoutRate: 0.65,
+    payoutRate: 0.92,
     rating: 5.0,
     activeJobCount: 3,
     createdAt: '2026-04-02T00:00:00Z',

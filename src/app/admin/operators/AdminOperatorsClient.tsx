@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { SearchBar } from '@/components/SearchBar';
+import { getOperatorTierDefinition } from '@/features/operators/tiers';
 import { ApprovalActions } from './ApprovalActions';
 
 export function AdminOperatorsClient({
@@ -42,14 +43,17 @@ export function AdminOperatorsClient({
         {filtered.length === 0 && (
           <p className="text-ink/40">No applications found.</p>
         )}
-        {filtered.map((app: any) => (
+        {filtered.map((app: any) => {
+          const tier = getOperatorTierDefinition(app.tier);
+
+          return (
           <div key={app.id} className="p-6 rounded-lg border border-ink/10">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <div className="font-semibold text-lg">{app.name}</div>
                 <div className="text-sm text-ink/60">{app.email} • {app.phone}</div>
                 <div className="text-sm text-ink/60 mt-1">
-                  {app.cities?.name || 'Unknown city'} • {app.tier} tier
+                  {app.cities?.name || 'Unknown city'} • {tier.name} tier • {tier.platformFeeRange} platform fee
                 </div>
               </div>
               <div className="text-right">
@@ -134,7 +138,7 @@ export function AdminOperatorsClient({
               <p className="text-xs text-ink/40 mt-4">Waiting for kit payment...</p>
             )}
           </div>
-        ))}
+        )})}
       </div>
     </>
   );

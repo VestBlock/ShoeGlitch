@@ -12,6 +12,7 @@ import {
   uploadOperatorLicenseDocument,
   validateOperatorLicenseFile,
 } from '@/lib/operator-documents';
+import { getOperatorTierDefinition } from '@/features/operators/tiers';
 
 const ApplicationSchema = z.object({
   name: z.string().min(2),
@@ -22,12 +23,6 @@ const ApplicationSchema = z.object({
   experience: z.string().optional(),
   whyJoin: z.string().optional(),
 });
-
-const TIER_PRICES = {
-  starter: 349,
-  pro: 599,
-  luxury: 899,
-} as const;
 
 export async function submitApplicationAction(formData: FormData) {
   const licenseFile = formData.get('licenseFile');
@@ -46,6 +41,7 @@ export async function submitApplicationAction(formData: FormData) {
     experience: formData.get('experience') || undefined,
     whyJoin: formData.get('whyJoin') || undefined,
   });
+  const tierDefinition = getOperatorTierDefinition(parsed.tier);
 
   const supabase = createServerSupabaseClient();
   
@@ -136,9 +132,9 @@ export async function submitApplicationAction(formData: FormData) {
           currency: 'usd',
           product_data: {
             name: `${parsed.tier.charAt(0).toUpperCase() + parsed.tier.slice(1)} Operator Kit`,
-            description: `One-time kit fee for ${parsed.tier} tier operator`,
+            description: `One-time kit fee for ${tierDefinition.name} operator tier`,
           },
-          unit_amount: TIER_PRICES[parsed.tier] * 100,
+          unit_amount: tierDefinition.price * 100,
         },
         quantity: 1,
       },

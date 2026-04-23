@@ -107,13 +107,15 @@ export async function buildOperatorsIndexPageModel(): Promise<OperatorSeoModel> 
     ],
     whatShoeGlitchProvides: [
       'Operator kit tiers, training, and route-ready standards.',
-      'Brand, customer acquisition, and city-aware operational framing.',
+      'Clear tier economics: Basic carries a 35-40% platform fee, Pro 20-25%, and Luxury 5-10%.',
+      'Luxury-level digital ad support and exclusive territory review for qualified operators.',
       'A clear application path tied to real cities instead of generic “work with us” copy.',
     ],
     operatorResponsibilities: [
       'Show up consistently and follow quality standards.',
       'Handle intake notes, timing, and customer handoff cleanly.',
       'Choose the right tier and role path for the work you can actually deliver.',
+      'Handle local marketing yourself on Basic or Pro; Luxury applicants are reviewed for ShoeGlitch-supported ad spend.',
     ],
     sections: [
       {
@@ -206,7 +208,7 @@ export async function buildBecomeOperatorPageModel(): Promise<OperatorSeoModel> 
     whatShoeGlitchProvides: [
       'Tiered kit system and service certification path.',
       'Brand standards, city-aware routing, and customer acquisition support.',
-      'A cleaner growth path from starter operator to higher-trust restoration or specialty work.',
+      'A cleaner growth path from Basic operator to higher-trust restoration, Pro capability, or Luxury city-partner work.',
     ],
     operatorResponsibilities: [
       'Maintain quality and brand standards.',
@@ -235,7 +237,7 @@ export async function buildBecomeOperatorPageModel(): Promise<OperatorSeoModel> 
       {
         heading: 'How to apply',
         paragraphs: [
-          'The next step is simple: review the opportunity, choose your city or city of interest, understand the tier fit, then move into the live operator application flow already running on ShoeGlitch.',
+          'The next step is simple: review the opportunity, choose your city or city of interest, understand the tier fit, then move into the live operator application flow already running on ShoeGlitch. Basic and Pro are self-marketing paths; Luxury is reviewed more carefully because it can include ad support and exclusive territory.',
         ],
       },
     ],
@@ -312,7 +314,8 @@ export async function buildOperatorCityPageModel(citySlug: string): Promise<Oper
     ],
     whatShoeGlitchProvides: [
       'Brand, demand-generation, and a cleaner route into local customer jobs.',
-      'Operator kit tiers and certification path.',
+      'Operator kit tiers, certification path, and platform-fee bands.',
+      'Luxury territory and ad-spend review for operators who can support a stronger city footprint.',
       `A city-specific recruitment angle tied to real coverage in ${city.name}.`,
     ],
     operatorResponsibilities: [
@@ -336,7 +339,7 @@ export async function buildOperatorCityPageModel(citySlug: string): Promise<Oper
         bullets: [
           'Daily pair intake and service execution.',
           'Customer-ready communication and handoff quality.',
-          'Potential local route and territory support as demand grows.',
+          'Basic or Pro self-marketing, or Luxury territory support if approved.',
         ],
       },
       {
@@ -369,7 +372,7 @@ export async function buildOperatorCityPageModel(citySlug: string): Promise<Oper
     cta: {
       eyebrow: 'Apply in market',
       headline: `If ${city.name} is your city, move from local search intent into a real operator application.`,
-      body: `Use the existing operator application with ${city.name} preselected, or review the current operator kit path before you apply.`,
+      body: `Use the existing operator application with ${city.name} preselected, or review how Basic, Pro, and Luxury differ before you apply.`,
       primaryHref: `/operator/apply?tier=starter&city=${city.slug}`,
       primaryLabel: `Apply in ${city.name}`,
       secondaryHref: '/operator',
@@ -382,7 +385,7 @@ export async function buildOperatorCityPageModel(citySlug: string): Promise<Oper
     role: 'cleaning',
     territorySummary: `${city.name} currently maps to ${areaSummary}. That gives operator acquisition a real local operating story instead of generic expansion copy.`,
     earningsFrame:
-      'Earnings should be framed by territory depth, service mix, consistency, and customer volume rather than guaranteed income claims.',
+      'Earnings should be framed by platform-fee band, territory depth, service mix, consistency, and customer volume rather than guaranteed income claims.',
   };
 }
 
@@ -424,6 +427,7 @@ export async function buildPickupDropoffOperatorCityPageModel(
     ],
     whatShoeGlitchProvides: [
       'City-aware coverage framing and customer demand flow.',
+      'A tier model where Basic and Pro operators market themselves, while Luxury can qualify for ad support and exclusive territory.',
       'A live path into operator application and later role expansion.',
       'Brand standards that make local logistics feel premium instead of improvised.',
     ],
@@ -480,7 +484,7 @@ export async function buildPickupDropoffOperatorCityPageModel(
     cta: {
       eyebrow: 'Local routes',
       headline: `Use the ${city.name} route opportunity as your entry into ShoeGlitch operations.`,
-      body: 'Apply with city context, or review the current operator tiers before you commit.',
+      body: 'Apply with city context, or review the current operator tiers before you commit. Pickup-heavy operators should understand the marketing and territory expectations before choosing a tier.',
       primaryHref: `/operator/apply?tier=starter&city=${city.slug}&focus=pickup-dropoff`,
       primaryLabel: `Apply for ${city.name} routes`,
       secondaryHref: '/operator',
@@ -530,6 +534,7 @@ export async function buildStartSneakerCleaningBusinessPageModel(): Promise<Oper
     ],
     whatShoeGlitchProvides: [
       'Structured operator kits and training.',
+      'Clear tier economics so applicants understand the platform-fee tradeoff before applying.',
       'Brand standards and route-ready systems.',
       'A stronger route from search intent into the real operator application.',
     ],
@@ -537,6 +542,7 @@ export async function buildStartSneakerCleaningBusinessPageModel(): Promise<Oper
       'Take the work seriously as an operating role, not a hobby.',
       'Stay quality-first instead of speed-first.',
       'Use the right tier and city opportunity rather than overpromising.',
+      'Understand that Basic and Pro rely on operator-led marketing, while Luxury adds more ShoeGlitch growth support.',
     ],
     sections: [
       {
@@ -636,6 +642,8 @@ export async function buildShoeRestorationSideHustlePageModel(): Promise<Operato
     whatShoeGlitchProvides: [
       'A path from entry-level operator work toward higher-trust restoration.',
       'Kit tiers and standards that separate routine work from premium work.',
+      'Pro and Luxury kit paths include the ice box for restoration-adjacent care.',
+      'Luxury economics and territory support for operators who can handle higher-trust work.',
       'A city-aware brand that can turn restoration intent into real leads over time.',
     ],
     operatorResponsibilities: [

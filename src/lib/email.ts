@@ -14,6 +14,7 @@ import {
   extractPickupWindowFromNotes,
   pickupWindowLabel,
 } from '@/lib/pickup-window';
+import { getOperatorTierDefinition } from '@/features/operators/tiers';
 import type { Order, Customer, City, Cleaner } from '@/types';
 
 const FROM = 'Shoe Glitch <contact@shoeglitch.com>';
@@ -771,6 +772,7 @@ export async function sendOperatorApplicationAdminAlert(params: {
   if (recipients.length === 0) return;
 
   const { applicationId, name, email, phone, cityName, tier, experience, whyJoin, licenseUploaded } = params;
+  const tierName = getOperatorTierDefinition(tier).name;
   const subject = `New operator application — ${name} · ${cityName}`;
 
   try {
@@ -788,7 +790,7 @@ export async function sendOperatorApplicationAdminAlert(params: {
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Email</td><td style="padding:8px 0;text-align:right;">${escapeHtml(email)}</td></tr>
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Phone</td><td style="padding:8px 0;text-align:right;">${escapeHtml(phone)}</td></tr>
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">City</td><td style="padding:8px 0;text-align:right;">${escapeHtml(cityName)}</td></tr>
-            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;">${escapeHtml(tierName)}</td></tr>
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Driver license</td><td style="padding:8px 0;text-align:right;">${licenseUploaded ? 'Uploaded' : 'Missing'}</td></tr>
           </table>
           ${experience ? `<p style="font-size:14px;color:#4B5563;margin:20px 0 12px 0;"><strong>Experience</strong><br>${escapeHtml(experience)}</p>` : ''}
@@ -803,7 +805,7 @@ export async function sendOperatorApplicationAdminAlert(params: {
         `Email: ${email}`,
         `Phone: ${phone}`,
         `City: ${cityName}`,
-        `Kit tier: ${tier}`,
+        `Kit tier: ${tierName}`,
         `Driver license: ${licenseUploaded ? 'Uploaded' : 'Missing'}`,
         experience ? `Experience: ${experience}` : null,
         whyJoin ? `Why Shoe Glitch: ${whyJoin}` : null,
@@ -835,6 +837,7 @@ export async function sendOperatorApplicationConfirmation(params: {
   if (!resend) return;
 
   const { applicationId, toEmail, name, cityName, tier, licenseUploaded } = params;
+  const tierName = getOperatorTierDefinition(tier).name;
   const subject = `Application received — Shoe Glitch operator path`;
 
   try {
@@ -850,7 +853,7 @@ export async function sendOperatorApplicationConfirmation(params: {
           <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">Your Shoe Glitch operator application is in for <strong>${escapeHtml(cityName)}</strong>.</p>
           <table style="width:100%;border-collapse:collapse;">
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(applicationId)}</td></tr>
-            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;">${escapeHtml(tierName)}</td></tr>
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Driver license</td><td style="padding:8px 0;text-align:right;">${licenseUploaded ? 'Received' : 'Needed'}</td></tr>
           </table>
           <p style="font-size:14px;color:#6B7280;margin:20px 0 0 0;">Our team will review your application packet, kit payment, and license upload before sending the next step. Keep an eye on your inbox for updates.</p>
@@ -862,7 +865,7 @@ export async function sendOperatorApplicationConfirmation(params: {
         '',
         `Application: ${applicationId}`,
         `City: ${cityName}`,
-        `Kit tier: ${tier}`,
+        `Kit tier: ${tierName}`,
         `Driver license: ${licenseUploaded ? 'Received' : 'Needed'}`,
         '',
         `Status page: ${SITE_URL}/operator/applied?ref=${encodeURIComponent(applicationId)}`,
@@ -890,6 +893,7 @@ export async function sendOperatorKitPaymentConfirmation(params: {
   if (!resend) return;
 
   const { applicationId, toEmail, name, cityName, tier, amount } = params;
+  const tierName = getOperatorTierDefinition(tier).name;
   const subject = `Kit payment received — Shoe Glitch operator application`;
 
   try {
@@ -902,11 +906,11 @@ export async function sendOperatorKitPaymentConfirmation(params: {
         badge: 'Kit payment received',
         heading: `Your operator kit payment is in, ${escapeHtml(name.split(' ')[0])}.`,
         body: `
-          <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">We received your <strong>$${amount}</strong> kit payment for the <strong>${escapeHtml(tier)}</strong> tier in <strong>${escapeHtml(cityName)}</strong>.</p>
+          <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">We received your <strong>$${amount}</strong> kit payment for the <strong>${escapeHtml(tierName)}</strong> tier in <strong>${escapeHtml(cityName)}</strong>.</p>
           <table style="width:100%;border-collapse:collapse;">
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(applicationId)}</td></tr>
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Status</td><td style="padding:8px 0;text-align:right;">Pending review</td></tr>
-            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;">${escapeHtml(tierName)}</td></tr>
           </table>
           <p style="font-size:14px;color:#6B7280;margin:20px 0 0 0;">Next, our team reviews your application and follows up with the approval decision and onboarding details.</p>
         `,
@@ -917,7 +921,7 @@ export async function sendOperatorKitPaymentConfirmation(params: {
         '',
         `Application: ${applicationId}`,
         `City: ${cityName}`,
-        `Kit tier: ${tier}`,
+        `Kit tier: ${tierName}`,
         `Amount: $${amount}`,
         `Status: Pending review`,
         '',
@@ -945,6 +949,7 @@ export async function sendOperatorApplicationApproved(params: {
   if (!resend) return;
 
   const { applicationId, toEmail, name, cityName, tier } = params;
+  const tierName = getOperatorTierDefinition(tier).name;
   const subject = `Application approved — Shoe Glitch operator path`;
 
   try {
@@ -960,7 +965,7 @@ export async function sendOperatorApplicationApproved(params: {
           <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">Your Shoe Glitch operator application for <strong>${escapeHtml(cityName)}</strong> has been approved.</p>
           <table style="width:100%;border-collapse:collapse;">
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(applicationId)}</td></tr>
-            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;">${escapeHtml(tierName)}</td></tr>
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Status</td><td style="padding:8px 0;text-align:right;">Approved</td></tr>
           </table>
           <p style="font-size:14px;color:#6B7280;margin:20px 0 0 0;">Watch your inbox for your Shoe Glitch sign-in invite plus the onboarding, training, and territory activation details. If you already paid your kit fee, no further payment action is needed right now.</p>
@@ -972,7 +977,7 @@ export async function sendOperatorApplicationApproved(params: {
         '',
         `Application: ${applicationId}`,
         `City: ${cityName}`,
-        `Kit tier: ${tier}`,
+        `Kit tier: ${tierName}`,
         `Status: Approved`,
         '',
         'Watch your inbox for your Shoe Glitch sign-in invite and next-step onboarding details.',
@@ -1000,6 +1005,7 @@ export async function sendOperatorApplicationRejected(params: {
   if (!resend) return;
 
   const { applicationId, toEmail, name, cityName, tier } = params;
+  const tierName = getOperatorTierDefinition(tier).name;
   const subject = `Application update — Shoe Glitch operator path`;
 
   try {
@@ -1015,7 +1021,7 @@ export async function sendOperatorApplicationRejected(params: {
           <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">Thanks again for applying to operate with Shoe Glitch in <strong>${escapeHtml(cityName)}</strong>.</p>
           <table style="width:100%;border-collapse:collapse;">
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(applicationId)}</td></tr>
-            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;">${escapeHtml(tierName)}</td></tr>
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Status</td><td style="padding:8px 0;text-align:right;">Not moving forward right now</td></tr>
           </table>
           <p style="font-size:14px;color:#6B7280;margin:20px 0 0 0;">We are not moving forward with this application at the moment. If your city opens more capacity or the fit changes, our team may reach back out.</p>
@@ -1027,7 +1033,7 @@ export async function sendOperatorApplicationRejected(params: {
         '',
         `Application: ${applicationId}`,
         `City: ${cityName}`,
-        `Kit tier: ${tier}`,
+        `Kit tier: ${tierName}`,
         `Status: Not moving forward right now`,
         '',
         'We are not moving forward with this application at the moment, but we may reach back out if capacity or fit changes.',

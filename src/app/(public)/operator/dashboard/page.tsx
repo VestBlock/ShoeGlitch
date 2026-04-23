@@ -11,7 +11,7 @@ export default async function OperatorDashboard() {
   // Check if user is approved operator
   const { data: cleaner } = await supabase
     .from('cleaners')
-    .select('id, name')
+    .select('id, name, payoutRate')
     .eq('userId', session.userId)
     .maybeSingle();
 
@@ -35,7 +35,9 @@ export default async function OperatorDashboard() {
     .limit(20);
 
   // Calculate earnings
-  const totalEarnings = orders?.reduce((sum, o) => sum + (o.total * 0.60), 0) || 0;
+  const payoutRate = Number(cleaner.payoutRate ?? 0.62);
+  const payoutPercent = Math.round(payoutRate * 100);
+  const totalEarnings = orders?.reduce((sum, o) => sum + (o.total * payoutRate), 0) || 0;
 
   return (
     <div className="container max-w-6xl mx-auto px-4 py-12">
@@ -69,8 +71,8 @@ export default async function OperatorDashboard() {
               <div className="text-sm text-ink/60">{order.status.replace(/_/g, ' ')}</div>
             </div>
             <div className="text-right">
-              <div className="font-semibold">${(order.total * 0.60).toFixed(2)}</div>
-              <div className="text-xs text-ink/40">Your cut (60%)</div>
+              <div className="font-semibold">${(order.total * payoutRate).toFixed(2)}</div>
+              <div className="text-xs text-ink/40">Your cut ({payoutPercent}%)</div>
             </div>
           </div>
         ))}

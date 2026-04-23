@@ -8,6 +8,7 @@ import {
 } from '@/lib/email';
 import { getSession } from '@/lib/session';
 import { hasOperatorLicenseDocument } from '@/lib/operator-documents';
+import { getOperatorTierDefinition } from '@/features/operators/tiers';
 
 async function requireSuperAdmin() {
   const session = await getSession();
@@ -34,6 +35,7 @@ export async function approveOperatorAction(applicationId: string) {
   if (!(await hasOperatorLicenseDocument(applicationId))) {
     throw new Error('Driver license upload is required before approval');
   }
+  const tierDefinition = getOperatorTierDefinition(app.tier);
 
   let userId = null;
   const { data: existingUser } = await admin
@@ -85,6 +87,7 @@ export async function approveOperatorAction(applicationId: string) {
         name: app.name,
         phone: app.phone,
         tier: app.tier,
+        payoutRate: tierDefinition.defaultPayoutRate,
         active: true,
       });
 
@@ -97,6 +100,7 @@ export async function approveOperatorAction(applicationId: string) {
         name: app.name,
         phone: app.phone,
         tier: app.tier,
+        payoutRate: tierDefinition.defaultPayoutRate,
         active: true,
       })
       .eq('id', existingCleaner.id);

@@ -201,7 +201,7 @@ export default async function HomePage() {
                 Become a Shoe Glitch operator.
               </h3>
               <p className="text-ink/70 max-w-lg">
-                Certified training. Branded equipment kit. Exclusive territory. Top operator tiers include the steam cleaner brush setup used on the deeper packages.
+                Certified training. Branded equipment kit. Basic and Pro operators market themselves locally, while Luxury operators can qualify for digital ad spend, exclusive territory, and the steam cleaner brush setup used on deeper packages.
               </p>
             </div>
             <Link href="/operator" className="btn-glitch shrink-0">Apply now →</Link>

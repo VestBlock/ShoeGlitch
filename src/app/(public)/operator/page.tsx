@@ -1,57 +1,6 @@
 import Link from 'next/link';
 import { Badge, Card } from '@/components/ui';
-
-const TIERS = [
-  {
-    id: 'starter',
-    name: 'Starter',
-    price: 349,
-    tagline: 'Basic cleaning jobs.',
-    includes: [
-      'Branded apron + 3 towels',
-      'Brush set (horsehair, soft, stiff)',
-      'Cleaning solution (60-day supply)',
-      'Cleaner app access',
-      'Fresh Start + Full Reset certification',
-      '30 days priority routing',
-    ],
-    unlocks: ['Fresh Start', 'Full Reset', 'Lace Lab', 'Detail Fix'],
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    price: 599,
-    tagline: 'Most popular. Full clean, steam-assisted work, and restoration.',
-    includes: [
-      'Everything in Starter',
-      'Steam brush + steamer',
-      'Fabric-specific tools (suede, mesh, knit)',
-      'Ice Recovery lamp + solution',
-      'Material-safe chemistry pack',
-      'Revival certification training',
-      '60 days priority routing',
-    ],
-    unlocks: ['All Starter services', 'Fabric Rescue', 'Revival Package', 'Ice Recovery', 'Fresh Core', 'Street Shield'],
-    featured: true,
-  },
-  {
-    id: 'luxury',
-    name: 'Luxury',
-    price: 899,
-    tagline: 'Sole color + premium work.',
-    includes: [
-      'Everything in Pro',
-      'Commercial steam cleaner brush system for premium/high-volume jobs',
-      'Fine detail brush set (sizes 0-6)',
-      'Louboutin-matched red lacquer + black/custom',
-      'Sole prep solution + masking tape',
-      'Curing lamp',
-      'Drying rack',
-      'Sole color certification + mentorship',
-    ],
-    unlocks: ['All Pro services', 'Sole Color', 'Red Bottom Touch-Up', 'Full Sole Repaint'],
-  },
-];
+import { OPERATOR_TIER_LIST } from '@/features/operators/tiers';
 
 export default function OperatorPage() {
   return (
@@ -63,18 +12,19 @@ export default function OperatorPage() {
           <em className="h-italic text-glitch">We&rsquo;ll send the gear.</em>
         </h1>
         <p className="text-ink/70 max-w-2xl text-lg mb-10">
-          Join the Shoe Glitch network as a certified operator. Pick your tier, get a branded kit shipped to you, complete training, and start getting real jobs routed to you in your city. Steam-assisted cleaning is part of the customer experience above the entry tier, and the highest operator package includes the commercial steam cleaner brush setup used on those deeper jobs.
+          Join the Shoe Glitch network as a certified operator. Pick your tier, get a branded kit shipped to you, complete training, and build inside your city. Basic and Pro operators handle their own local marketing; Luxury operators qualify for ShoeGlitch-supported digital ad spend and exclusive territory review.
         </p>
         <div className="flex flex-wrap gap-3 mb-12">
-          <div className="px-4 py-2 bg-bone-soft rounded-full text-sm">🎯 Exclusive territory rights for 90 days</div>
-          <div className="px-4 py-2 bg-bone-soft rounded-full text-sm">💰 60-65% operator payout rate</div>
-          <div className="px-4 py-2 bg-bone-soft rounded-full text-sm">📦 Discounted refill chemistry</div>
+          <div className="px-4 py-2 bg-bone-soft rounded-full text-sm">Luxury: 5-10% platform fee</div>
+          <div className="px-4 py-2 bg-bone-soft rounded-full text-sm">Pro: 20-25% platform fee</div>
+          <div className="px-4 py-2 bg-bone-soft rounded-full text-sm">Basic: 35-40% platform fee</div>
+          <div className="px-4 py-2 bg-bone-soft rounded-full text-sm">Pro + Luxury include the ice box</div>
         </div>
       </section>
 
       <section className="container-x pb-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {TIERS.map((tier) => (
+          {OPERATOR_TIER_LIST.map((tier) => (
             <Card
               key={tier.id}
               className={`p-8 flex flex-col ${
@@ -95,6 +45,17 @@ export default function OperatorPage() {
               </div>
               <div className={`text-xs uppercase tracking-widest mb-6 ${tier.featured ? 'text-white/60' : 'text-ink/40'}`}>
                 One-time kit fee
+              </div>
+
+              <div className={`grid grid-cols-2 gap-2 mb-6 text-xs ${tier.featured ? 'text-white/80' : 'text-ink/70'}`}>
+                <div className={`rounded-[1rem] px-3 py-3 ${tier.featured ? 'bg-white/10' : 'bg-bone-soft'}`}>
+                  <div className="uppercase tracking-widest opacity-60">Platform fee</div>
+                  <div className="mt-1 font-semibold">{tier.platformFeeRange}</div>
+                </div>
+                <div className={`rounded-[1rem] px-3 py-3 ${tier.featured ? 'bg-white/10' : 'bg-bone-soft'}`}>
+                  <div className="uppercase tracking-widest opacity-60">Operator share</div>
+                  <div className="mt-1 font-semibold">{tier.payoutRange}</div>
+                </div>
               </div>
 
               <div className={`text-xs uppercase tracking-widest mb-3 ${tier.featured ? 'text-cyan' : 'text-ink/50'}`}>
@@ -124,6 +85,11 @@ export default function OperatorPage() {
                 ))}
               </div>
 
+              <div className={`space-y-2 mb-8 text-xs ${tier.featured ? 'text-white/80' : 'text-ink/65'}`}>
+                <div><strong>Marketing:</strong> {tier.marketingSupport}</div>
+                <div><strong>Territory:</strong> {tier.territory}</div>
+              </div>
+
               <Link
                 href={`/operator/apply?tier=${tier.id}`}
                 className={`mt-auto ${tier.featured ? 'btn bg-white text-glitch hover:bg-cyan' : 'btn-glitch'}`}
@@ -139,10 +105,10 @@ export default function OperatorPage() {
         <h2 className="h-display text-3xl mb-8">What you get as an operator</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
-            { t: 'Exclusive territory', d: '90 days of priority lead routing in your assigned service area, so you build a book of business without fighting for jobs.' },
+            { t: 'Tiered platform fee', d: 'Basic starts with a higher platform fee because support is lighter. Pro lowers the fee with stronger tools. Luxury has the lowest fee because it is treated like a city-partner path.' },
             { t: 'Real training', d: 'Video certification modules per service, including when to use steam-assisted cleaning versus a lighter exterior-only pass. Submit a test pair before luxury jobs route to you.' },
             { t: 'Consumables at cost+10%', d: 'Refill your oxidation solution, paints, and protectants through the operator portal at near-wholesale prices.' },
-            { t: 'Marketing support', d: 'Branded boxes, before/after photography standards, and social content templates. We handle customer acquisition while your kit matches the services you are cleared to perform.' },
+            { t: 'Marketing and territory', d: 'Basic and Pro operators market themselves locally. Luxury operators can qualify for ShoeGlitch-supported digital ad spend and an exclusive territory with clear performance standards.' },
           ].map((f) => (
             <Card key={f.t} className="p-6">
               <h3 className="h-display text-2xl mb-2">{f.t}</h3>
@@ -160,7 +126,7 @@ export default function OperatorPage() {
               Ready to run your own territory?
             </h3>
             <p className="text-bone/70 max-w-xl mb-8">
-              Limited spots per city. Milwaukee operators are actively taking jobs right now. Memphis and Atlanta are onboarding their founding cohorts.
+              Limited spots per city. Luxury territory is reviewed carefully so exclusivity stays fair, measurable, and tied to real local performance.
             </p>
             <Link href="/operator/apply" className="btn bg-cyan text-ink hover:bg-white">
               Start your application →

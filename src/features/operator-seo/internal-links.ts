@@ -114,7 +114,7 @@ export function buildGuideLinks(cities: City[]): OperatorSeoLinkSuggestion[] {
     {
       href: '/operator',
       label: 'See operator kits',
-      description: 'Review the current Starter, Pro, and Luxury operator paths.',
+      description: 'Review the current Basic, Pro, and Luxury operator paths.',
     },
     ...cityLinks,
   ].slice(0, 7);

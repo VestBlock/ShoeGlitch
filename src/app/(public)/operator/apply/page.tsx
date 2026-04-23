@@ -1,8 +1,7 @@
 import { db } from '@/lib/db';
 import { Badge, Card } from '@/components/ui';
+import { getOperatorTierDefinition } from '@/features/operators/tiers';
 import { submitApplicationAction } from './actions';
-
-const PRICES = { starter: 349, pro: 599, luxury: 899 };
 
 export default async function OperatorApplyPage({
   searchParams,
@@ -10,12 +9,12 @@ export default async function OperatorApplyPage({
   searchParams: { tier?: string; city?: string; focus?: string; availability?: string };
 }) {
   const tier = (searchParams.tier as 'starter' | 'pro' | 'luxury') || 'pro';
+  const tierDefinition = getOperatorTierDefinition(tier);
   const cities = await db.cities.all();
   const selectedCity =
     cities.find((city) => city.slug === searchParams.city) ??
     cities.find((city) => city.id === searchParams.city) ??
     cities[0];
-  const price = PRICES[tier];
   const focusLabel =
     searchParams.focus === 'pickup-dropoff'
       ? 'Pickup & drop-off focus'
@@ -40,7 +39,8 @@ export default async function OperatorApplyPage({
         Apply to join Shoe Glitch.
       </h1>
       <p className="text-ink/70 mb-10">
-        Selected kit: <strong className="capitalize">{tier}</strong> · <span className="font-mono">${price}</span>.
+        Selected kit: <strong>{tierDefinition.name}</strong> · <span className="font-mono">${tierDefinition.price}</span>
+        {' '}· platform fee <span className="font-mono">{tierDefinition.platformFeeRange}</span>.
       </p>
       {selectedCity ? (
         <div className="mb-8 rounded-[1.25rem] border border-ink/10 bg-bone-soft px-5 py-4 text-sm text-ink/70">
@@ -49,6 +49,21 @@ export default async function OperatorApplyPage({
           {availabilityLabel ? <> <span className="text-ink/65">{availabilityLabel}.</span></> : null}
         </div>
       ) : null}
+
+      <div className="mb-8 grid gap-3 md:grid-cols-3">
+        <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm">
+          <div className="text-xs uppercase tracking-widest text-ink/45">Operator share</div>
+          <div className="mt-1 font-semibold text-ink">{tierDefinition.payoutRange}</div>
+        </div>
+        <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm">
+          <div className="text-xs uppercase tracking-widest text-ink/45">Marketing</div>
+          <div className="mt-1 text-ink/70">{tierDefinition.marketingSupport}</div>
+        </div>
+        <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm">
+          <div className="text-xs uppercase tracking-widest text-ink/45">Territory</div>
+          <div className="mt-1 text-ink/70">{tierDefinition.territory}</div>
+        </div>
+      </div>
 
       <Card className="p-8">
         <form action={submitApplicationAction} encType="multipart/form-data" className="space-y-5">
