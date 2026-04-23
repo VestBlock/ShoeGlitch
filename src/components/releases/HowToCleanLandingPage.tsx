@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import GrowthTracker from '@/components/growth/GrowthTracker';
 import { Badge, Card } from '@/components/ui';
 import IntelligenceSignals from '@/components/intelligence/IntelligenceSignals';
 import { buildReleaseSchemas } from '@/features/releases/schema';
@@ -10,6 +11,8 @@ export default function HowToCleanLandingPage({ model }: { model: ReleasePageMod
 
   return (
     <>
+      <GrowthTracker routePath={model.path} pageTitle={model.title} />
+
       {schemas.map((schema, index) => (
         <script
           key={`how-to-clean-schema-${index}`}
@@ -53,13 +56,13 @@ export default function HowToCleanLandingPage({ model }: { model: ReleasePageMod
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href={`/book?intent=cleaning&pair=${model.item.slug}`} className="btn-glitch">
+                <Link href={`/book?intent=cleaning&pair=${model.item.slug}`} className="btn-glitch" data-growth-cta="Book cleaning">
                   Book cleaning
                 </Link>
-                <Link href={`/releases/${model.item.slug}`} className="btn-outline">
+                <Link href={`/releases/${model.item.slug}`} className="btn-outline" data-growth-cta="Open release brief">
                   Open release brief
                 </Link>
-                <Link href={`/customer/watchlist?sku=${encodeURIComponent(model.item.sku)}&brand=${encodeURIComponent(model.item.brand)}&model=${encodeURIComponent(model.item.silhouette)}&colorway=${encodeURIComponent(model.item.colorway)}`} className="btn-outline">
+                <Link href={`/customer/watchlist?sku=${encodeURIComponent(model.item.sku)}&brand=${encodeURIComponent(model.item.brand)}&model=${encodeURIComponent(model.item.silhouette)}&colorway=${encodeURIComponent(model.item.colorway)}`} className="btn-outline" data-growth-cta="Track this pair">
                   Track this pair
                 </Link>
               </div>
@@ -174,6 +177,7 @@ export default function HowToCleanLandingPage({ model }: { model: ReleasePageMod
                   <Link
                     key={link.href}
                     href={link.href}
+                    data-growth-cta={link.label}
                     className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                   >
                     <div className="font-semibold text-ink">{link.label}</div>

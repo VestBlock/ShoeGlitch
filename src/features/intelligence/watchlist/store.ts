@@ -88,6 +88,17 @@ export const watchlistStore = {
     return (data ?? []).map(mapWatchlist);
   },
 
+  async listActiveByUser() {
+    const items = await this.listActive();
+    const grouped = new Map<string, WatchlistItemRecord[]>();
+    for (const item of items) {
+      const current = grouped.get(item.userId) ?? [];
+      current.push(item);
+      grouped.set(item.userId, current);
+    }
+    return grouped;
+  },
+
   async byId(id: string) {
     const { data, error } = await admin().from('watchlist_items').select('*').eq('id', id).maybeSingle();
     if (error) throw error;

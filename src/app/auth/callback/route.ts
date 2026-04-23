@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { createAdminSupabaseClient } from '@/lib/supabase/admin';
+import { findOrProvisionAppUserForAuth } from '@/lib/auth-provisioning';
+import { sendCustomerWelcomeEmail } from '@/lib/email';
 import { ROLE_HOME } from '@/lib/rbac';
 import type { Role } from '@/types';
 
@@ -18,16 +19,21 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?error=auth_failed', request.url));
   }
 
-  // Look up this user's role so we can send them to the right dashboard.
-  // Uses admin client so this works regardless of RLS policies.
-  const admin = createAdminSupabaseClient();
-  const { data: userRow } = await admin
-    .from('users')
-    .select('role')
-    .eq('authUserId', data.user.id)
-    .maybeSingle();
+  const provisioned = await findOrProvisionAppUserForAuth({
+    authUserId: data.user.id,
+    email: data.user.email ?? '',
+    name: data.user.user_metadata?.full_name ?? data.user.user_metadata?.name ?? data.user.email ?? 'Shoe Glitch customer',
+    defaultRole: 'customer',
+  });
 
-  const role = (userRow?.role ?? 'customer') as Role;
+  if (provisioned.wasCreated && provisioned.user.role === 'customer' && data.user.email) {
+    await sendCustomerWelcomeEmail({
+      toEmail: data.user.email,
+      name: provisioned.user.name,
+    });
+  }
+
+  const role = (provisioned.user.role ?? 'customer') as Role;
   const destination = ROLE_HOME[role] ?? '/customer';
 
   return NextResponse.redirect(new URL(destination, request.url));

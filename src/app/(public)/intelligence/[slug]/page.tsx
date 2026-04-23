@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import GrowthTracker from '@/components/growth/GrowthTracker';
 import IntelligenceSignals from '@/components/intelligence/IntelligenceSignals';
 import { Badge } from '@/components/ui';
 import { buildSneakerDetailSchemas, INTELLIGENCE_FAQS } from '@/features/intelligence/schema';
@@ -43,6 +44,8 @@ export default async function SneakerDetailPage({
 
   return (
     <>
+      <GrowthTracker routePath={`/intelligence/${item.slug}`} pageTitle={`${item.name} intelligence`} />
+
       {schemas.map((schema, index) => (
         <script
           key={`detail-schema-${index}`}
@@ -115,7 +118,7 @@ export default async function SneakerDetailPage({
                     </div>
                     {item.marketUrl ? (
                       <div className="mt-4">
-                        <Link href={item.marketUrl} className="btn-outline" target="_blank">
+                        <Link href={item.marketUrl} className="btn-outline" target="_blank" data-growth-cta="Open market page">
                           Open market page
                         </Link>
                       </div>
@@ -151,14 +154,14 @@ export default async function SneakerDetailPage({
                       : 'This one looks cleaning-first. Turn release energy into a premium service booking before the pair gets away from the customer.'}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
-                  <Link href={item.primaryCta.href} className="btn-glitch">
+                  <Link href={item.primaryCta.href} className="btn-glitch" data-growth-cta={item.primaryCta.label}>
                     {item.primaryCta.label}
                   </Link>
-                  <Link href={item.secondaryCta.href} className="btn-outline">
+                  <Link href={item.secondaryCta.href} className="btn-outline" data-growth-cta={item.secondaryCta.label}>
                     {item.secondaryCta.label}
                   </Link>
                   {item.marketUrl ? (
-                    <Link href={item.marketUrl} className="btn-outline" target="_blank">
+                    <Link href={item.marketUrl} className="btn-outline" target="_blank" data-growth-cta="Open market">
                       Open market
                     </Link>
                   ) : null}

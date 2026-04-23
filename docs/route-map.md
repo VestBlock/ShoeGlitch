@@ -29,6 +29,10 @@ Use this file before exploring `src/app` broadly.
 - `/api/intelligence/search` -> provider-backed search endpoint
 - `/api/intelligence/product` -> provider-backed product endpoint
 - `/api/watchlist/*` -> watchlist CRUD and processing
+- `/api/social/queue` -> internal social draft listing and creation
+- `/api/social/queue/[id]` -> internal social draft review updates
+- `/api/social/scan` -> internal social draft generation sweep
+- `/api/social/publish` -> internal Buffer scheduling and sync
 
 ## SEO/AEO route families
 - `/sneaker-cleaning`
@@ -55,6 +59,10 @@ Generated under the city routes for supported areas. Check `src/features/seo/rou
 - `/cleaner/*`
 - `/city-manager/*`
 - `/admin/*`
+- `/admin/seo` -> SEO and automation reporting
+- `/admin/automation` -> manual automation runs and recent run history
+- `/admin/analytics` -> growth event and lead reporting
+- `/admin/social` -> social queue and Buffer publishing visibility
 
 These are role-gated by `src/middleware.ts`. Do not change these routes casually.
 

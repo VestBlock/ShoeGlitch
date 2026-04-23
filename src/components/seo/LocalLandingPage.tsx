@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import GrowthTracker from '@/components/growth/GrowthTracker';
 import { Badge, Card } from '@/components/ui';
 import { buildSeoSchemas } from '@/features/seo/schema';
 import type { SeoPageModel } from '@/features/seo/types';
@@ -9,6 +10,8 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
 
   return (
     <>
+      <GrowthTracker routePath={model.path} pageTitle={model.title} />
+
       {schemas.map((schema, index) => (
         <script
           key={`seo-schema-${index}`}
@@ -29,10 +32,10 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
               <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">{model.intro}</p>
 
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch">
+                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline">
+                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>
@@ -109,6 +112,7 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
                     <Link
                       key={link.href}
                       href={link.href}
+                      data-growth-cta={link.label}
                       className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                     >
                       <div className="font-semibold text-ink">{link.label}</div>
@@ -155,6 +159,7 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
               <div className="mt-4 space-y-3">
                 <Link
                   href="/coverage"
+                  data-growth-cta="Check your ZIP first"
                   className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                 >
                   <div className="font-semibold text-ink">Check your ZIP first</div>
@@ -162,6 +167,7 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
                 </Link>
                 <Link
                   href="/services"
+                  data-growth-cta="Compare services"
                   className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                 >
                   <div className="font-semibold text-ink">Compare services</div>
@@ -179,10 +185,10 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
               </h2>
               <p className="mt-4 text-sm leading-7 text-ink/66">{model.cta.body}</p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch">
+                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline">
+                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>

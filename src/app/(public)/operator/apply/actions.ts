@@ -5,6 +5,9 @@ import { z } from 'zod';
 import { headers } from 'next/headers';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getStripe } from '@/lib/stripe';
+import { sendOperatorApplicationAdminAlert, sendOperatorApplicationConfirmation } from '@/lib/email';
+import { db } from '@/lib/db';
+import { recordGrowthEvent } from '@/lib/growth/persistence';
 
 const ApplicationSchema = z.object({
   name: z.string().min(2),
@@ -54,6 +57,44 @@ export async function submitApplicationAction(formData: FormData) {
 
   if (error) throw error;
 
+  await recordGrowthEvent({
+    routePath: '/become-an-operator',
+    eventName: 'operator_interest',
+    metadata: {
+      applicationId: app.id,
+      cityId: parsed.cityId,
+      tier: parsed.tier,
+    },
+  });
+
+  try {
+    const cities = await db.cities.all();
+    const cityName =
+      cities.find((city) => city.id === parsed.cityId)?.name ?? 'your city';
+
+    await Promise.all([
+      sendOperatorApplicationAdminAlert({
+        applicationId: app.id,
+        name: parsed.name,
+        email: parsed.email,
+        phone: parsed.phone,
+        cityName,
+        tier: parsed.tier,
+        experience: parsed.experience ?? null,
+        whyJoin: parsed.whyJoin ?? null,
+      }),
+      sendOperatorApplicationConfirmation({
+        applicationId: app.id,
+        toEmail: parsed.email,
+        name: parsed.name,
+        cityName,
+        tier: parsed.tier,
+      }),
+    ]);
+  } catch (emailError) {
+    console.error('[email] operator application notification failed:', emailError);
+  }
+
   // Create Stripe checkout for kit payment
   const stripe = getStripe();
   const headersList = headers();
@@ -76,7 +117,7 @@ export async function submitApplicationAction(formData: FormData) {
         quantity: 1,
       },
     ],
-    success_url: `${origin}/operator/applied?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${origin}/operator/applied?session_id={CHECKOUT_SESSION_ID}&ref=${encodeURIComponent(app.id)}&paid=1&tier=${parsed.tier}`,
     cancel_url: `${origin}/operator/apply?tier=${parsed.tier}`,
     customer_email: parsed.email,
     metadata: {

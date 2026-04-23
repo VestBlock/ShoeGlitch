@@ -15,6 +15,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Not authorized to process watchlist alerts.' }, { status: 401 });
   }
 
-  const result = await runMockWatchlistScan();
-  return NextResponse.json(result);
+  try {
+    const result = await runMockWatchlistScan();
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error('[watchlist] process unavailable:', error instanceof Error ? error.message : error);
+    return NextResponse.json(
+      {
+        error: 'Watchlist processing storage is not ready yet.',
+        migration: 'supabase/migrations/20260422_watchlist_alerts.sql',
+      },
+      { status: 503 },
+    );
+  }
 }

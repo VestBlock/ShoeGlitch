@@ -77,14 +77,27 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
             <div className="mt-1 text-xs text-ink/50">{item.rankingNote}</div>
           </div>
           <div className="flex flex-wrap justify-end gap-2">
-            <Link href={item.secondaryCta.href} className="btn-outline min-h-[2.9rem] px-4 text-xs">
+            <Link
+              href={item.secondaryCta.href}
+              className="btn-outline min-h-[2.9rem] px-4 text-xs"
+              data-growth-cta={item.secondaryCta.label}
+            >
               {item.secondaryCta.label}
             </Link>
-            <Link href={item.primaryCta.href} className="btn-glitch min-h-[2.9rem] px-4 text-xs">
+            <Link
+              href={item.primaryCta.href}
+              className="btn-glitch min-h-[2.9rem] px-4 text-xs"
+              data-growth-cta={item.primaryCta.label}
+            >
               {item.primaryCta.label}
             </Link>
             {item.marketUrl ? (
-              <Link href={item.marketUrl} className="btn-outline min-h-[2.9rem] px-4 text-xs" target="_blank">
+              <Link
+                href={item.marketUrl}
+                className="btn-outline min-h-[2.9rem] px-4 text-xs"
+                target="_blank"
+                data-growth-cta="View market"
+              >
                 View market
               </Link>
             ) : null}

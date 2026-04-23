@@ -89,8 +89,8 @@ export default async function OperatorApplyPage({
             <textarea name="whyJoin" className="input min-h-[80px]" />
           </div>
           <div className="pt-4 border-t border-ink/10 flex items-center justify-between">
-            <div className="text-sm text-ink/60">Kit fee charged only after approval.</div>
-            <button className="btn-glitch">Submit application →</button>
+            <div className="text-sm text-ink/60">Your application is submitted first, then you continue to the one-time kit payment so the review can move forward.</div>
+            <button className="btn-glitch">Continue to kit payment →</button>
           </div>
         </form>
       </Card>

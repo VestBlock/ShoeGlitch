@@ -70,11 +70,44 @@ The release content system lives in `src/features/releases` and powers:
 
 Key rule: release pages are not generic sneaker-blog pages. They combine structured release data, ShoeGlitch service intelligence, and conversion paths.
 
+### 6. Admin reporting and automation visibility
+The admin reporting layer lives in `src/features/admin` and powers:
+- `/admin/seo`
+- `/admin/automation`
+- `/admin/analytics`
+- manifest freshness reporting
+- route and release-family counts
+- funnel activity summaries from growth events and leads
+- manual automation runs and recent run history
+- database readiness checks for required automation tables
+
+Key rule: dashboards should read from safe summaries and normalized reporting inputs, not raw operational payloads.
+
+### 7. Social syndication automation
+The social automation layer lives in `src/features/social` and powers:
+- extraction from existing SEO and release page families
+- internal social queue routes under `/api/social/*`
+- draft, approval, scheduling, publishing, and failure states
+- Buffer as the first scheduling provider for Instagram
+
+Key rule: the site content engines stay the source of truth. Social automation should syndicate existing content, not fork it into a disconnected publishing system.
+
 ## Shared infrastructure
 - Supabase: auth, application data, and some persistence/caching.
 - Stripe: booking/payment workflows.
 - Resend/email layer: transactional notifications and alerts.
+- Buffer: Instagram scheduling for approved social queue items.
 - Vercel: deployment and environment management.
+
+## Email lifecycle
+Email delivery is centralized in `src/lib/email.ts`.
+Current live families:
+- customer transactional email and first-login welcome
+- operator booking alerts
+- operator application admin + applicant email
+- sneaker watchlist alerts and digest batching
+
+Any new email work should extend the shared delivery layer and keep trigger logic at durable server-side event boundaries.
 
 ## Change-routing guidance
 - Booking or checkout changes: start in `src/app/(public)/book` and related `src/lib/*`.

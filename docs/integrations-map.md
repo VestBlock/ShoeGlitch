@@ -42,15 +42,20 @@ Purpose:
 - booking notifications
 - operator notifications
 - watchlist alerts
+- customer welcome and abandoned booking recovery
+- watchlist digest emails
+- admin application alerts
 
 Main files:
 - `src/lib/email.ts`
+- `docs/email-flows.md`
 - watchlist/alert handlers in `src/features/intelligence/watchlist/*`
 
 Watch for:
 - env configuration
 - duplicate sends
 - non-idempotent retry behavior
+- copy that conflicts with the live product flow
 
 ## Sneaker data providers
 Purpose:
@@ -78,6 +83,7 @@ Purpose:
 - schema
 - programmatic city/service pages
 - operator acquisition pages
+- admin visibility into route and release manifest health
 
 Main files:
 - `src/features/seo/*`
@@ -90,6 +96,46 @@ Watch for:
 - generating routes without real coverage support
 - thin pages with weak conversion intent
 - breaking the live `/operator/apply` conversion path while adding recruitment pages
+
+## Buffer social publishing
+Purpose:
+- schedule approved Instagram posts from existing SEO and release pages
+- sync scheduled, published, and failed post state back into the queue
+
+Main files:
+- `src/features/social/*`
+- `src/app/api/social/*`
+- `scripts/social/run-automation.ts`
+- `docs/social-automation.md`
+
+Watch for:
+- missing Buffer env configuration
+- duplicate social candidates when source timestamps are unstable
+- queue records bypassing review and getting scheduled too early
+- provider-specific publishing payloads leaking beyond the adapter
+
+## Growth events and reporting
+Purpose:
+- page-view and CTA tracking
+- lead capture summaries
+- booking, watchlist, operator-interest, and automation-run event summaries
+- admin analytics dashboards
+
+Main files:
+- `src/app/api/growth/events/route.ts`
+- `src/app/api/growth/leads/route.ts`
+- `src/lib/growth/persistence.ts`
+- `src/components/growth/GrowthTracker.tsx`
+- `src/features/admin/analytics-reporting.ts`
+- `src/features/admin/seo-reporting.ts`
+- `src/features/admin/db-health.ts`
+- `scripts/db/check-required-tables.ts`
+
+Watch for:
+- inconsistent event names
+- missing `data-growth-cta` attributes on key templates
+- dashboards assuming data exists when the tables are empty or unavailable
+- new automation features that require migrations not yet applied in Supabase
 
 ## Deployment / runtime
 Platform:

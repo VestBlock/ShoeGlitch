@@ -33,9 +33,12 @@ This repo now includes a reusable automation layer for ShoeGlitch city and servi
 - powers alert-intent retention pages at `/release-alerts/[slug]`
 - exposes a release-content manifest endpoint at `/api/seo/release-manifest`
 - exports a static release-content manifest snapshot to `public/seo/release-content-manifest.json`
+- feeds those existing SEO and release page families into the social automation queue for review-first Instagram scheduling
 
 ## Core files
 - `src/features/seo/routes.ts`
+- `src/features/seo/data.ts`
+- `src/features/seo/fallback-data.ts`
 - `src/features/seo/content.ts`
 - `src/features/seo/schema.ts`
 - `src/features/seo/internal-links.ts`
@@ -59,6 +62,9 @@ This repo now includes a reusable automation layer for ShoeGlitch city and servi
 - `src/components/releases/ReleaseAlertsLandingPage.tsx`
 - `src/app/api/seo/manifest/route.ts`
 - `src/app/api/seo/release-manifest/route.ts`
+- `src/features/social/extract.ts`
+- `src/features/social/service.ts`
+- `src/app/api/social/*`
 - `scripts/seo/export-route-manifest.ts`
 - `scripts/releases/export-content-manifest.ts`
 
@@ -83,6 +89,11 @@ This repo now includes a reusable automation layer for ShoeGlitch city and servi
 - city slug
 - service-area label when relevant
 - operator role when relevant
+
+## Data fallback behavior
+- Live Supabase city and service-area records remain the source of truth.
+- `src/features/seo/fallback-data.ts` preserves the current published city and service-area route families when Supabase is unavailable during offline automation runs.
+- The fallback exists to prevent route-manifest exports from shrinking during transient DB or sandbox network failures; it should be updated whenever active SEO city coverage changes intentionally.
 
 ## Release-content automation budget
 KicksDB pricing currently lists:

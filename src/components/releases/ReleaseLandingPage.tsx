@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import GrowthTracker from '@/components/growth/GrowthTracker';
 import { Badge, Card } from '@/components/ui';
 import IntelligenceSignals from '@/components/intelligence/IntelligenceSignals';
 import { buildReleaseSchemas } from '@/features/releases/schema';
@@ -23,6 +24,8 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
 
   return (
     <>
+      <GrowthTracker routePath={model.path} pageTitle={model.title} />
+
       {schemas.map((schema, index) => (
         <script
           key={`release-schema-${index}`}
@@ -80,13 +83,13 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href={model.item.primaryCta.href} className="btn-glitch">
+                <Link href={model.item.primaryCta.href} className="btn-glitch" data-growth-cta={model.item.primaryCta.label}>
                   {model.item.primaryCta.label}
                 </Link>
-                <Link href={model.item.secondaryCta.href} className="btn-outline">
+                <Link href={model.item.secondaryCta.href} className="btn-outline" data-growth-cta={model.item.secondaryCta.label}>
                   {model.item.secondaryCta.label}
                 </Link>
-                <Link href="/book" className="btn-outline">
+                <Link href="/book" className="btn-outline" data-growth-cta="Book a service">
                   Book a service
                 </Link>
               </div>
@@ -183,6 +186,7 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                       <Link
                         key={link.href}
                         href={link.href}
+                        data-growth-cta={link.label}
                         className="rounded-[1.15rem] border border-ink/10 bg-white p-4 transition hover:border-glitch/20 hover:shadow-[0_16px_45px_rgba(10,15,31,0.08)]"
                       >
                         <div className="font-semibold text-ink">{link.label}</div>
@@ -338,10 +342,10 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                 watchlists, or service education.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link href={model.item.primaryCta.href} className="btn-glitch">
+                <Link href={model.item.primaryCta.href} className="btn-glitch" data-growth-cta={model.item.primaryCta.label}>
                   {model.item.primaryCta.label}
                 </Link>
-                <Link href={model.item.secondaryCta.href} className="btn-outline">
+                <Link href={model.item.secondaryCta.href} className="btn-outline" data-growth-cta={model.item.secondaryCta.label}>
                   {model.item.secondaryCta.label}
                 </Link>
               </div>

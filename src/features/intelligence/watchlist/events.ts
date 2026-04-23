@@ -2,21 +2,12 @@ import { buildFeaturedSneakerSet } from '@/features/intelligence/provider-servic
 import type { NormalizedSneaker } from '@/features/intelligence/providers/types';
 import type { SneakerEventRecord, SneakerEventType } from '@/features/intelligence/watchlist/types';
 
-function buildEventType(item: NormalizedSneaker): SneakerEventType {
-  if (item.availability === 'upcoming') return 'release';
-  if (item.priceSummary.lowestAsk && item.retailPrice && item.priceSummary.lowestAsk <= item.retailPrice * 0.92) {
-    return 'price_drop';
-  }
-  return 'restock';
-}
-
 function makeEventId(item: NormalizedSneaker, eventType: SneakerEventType) {
   const seed = `${item.provider}:${item.externalId}:${item.sku || item.slug}:${eventType}:${item.releaseDate ?? item.updatedAt}`;
   return seed.toLowerCase().replace(/[^a-z0-9:.-]+/g, '-');
 }
 
-function toSneakerEvent(item: NormalizedSneaker): SneakerEventRecord {
-  const eventType = buildEventType(item);
+function baseEvent(item: NormalizedSneaker, eventType: SneakerEventType): SneakerEventRecord {
   return {
     id: makeEventId(item, eventType),
     source: item.provider,
@@ -42,6 +33,30 @@ function toSneakerEvent(item: NormalizedSneaker): SneakerEventRecord {
   };
 }
 
+function toSneakerEvents(item: NormalizedSneaker): SneakerEventRecord[] {
+  const events: SneakerEventRecord[] = [];
+
+  if (item.availability === 'upcoming') {
+    events.push(baseEvent(item, 'release'));
+  }
+
+  const hasSizes = item.sizes.length > 0;
+  const releasedOrLive = item.availability === 'released' || hasSizes;
+  if (releasedOrLive) {
+    events.push(baseEvent(item, 'restock'));
+  }
+
+  if (item.priceSummary.lowestAsk && item.retailPrice && item.priceSummary.lowestAsk <= item.retailPrice * 0.92) {
+    events.push(baseEvent(item, 'price_drop'));
+  }
+
+  if (events.length === 0) {
+    events.push(baseEvent(item, 'restock'));
+  }
+
+  return events;
+}
+
 function uniqueEvents(events: SneakerEventRecord[]) {
   const seen = new Set<string>();
   return events.filter((event) => {
@@ -53,7 +68,7 @@ function uniqueEvents(events: SneakerEventRecord[]) {
 
 export async function loadCurrentSneakerEvents(limit = 24) {
   const featured = await buildFeaturedSneakerSet();
-  return uniqueEvents(featured.items.slice(0, limit).map(toSneakerEvent));
+  return uniqueEvents(featured.items.slice(0, limit).flatMap(toSneakerEvents));
 }
 
 export function buildMockSneakerEvents(now = new Date()): SneakerEventRecord[] {

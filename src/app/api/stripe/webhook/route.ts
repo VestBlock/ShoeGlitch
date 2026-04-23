@@ -12,12 +12,16 @@ import Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
 import { db } from '@/lib/db';
 import {
+  sendAbandonedBookingFollowUp,
   sendOperatorBookingAlert,
+  sendOperatorKitPaymentConfirmation,
   sendOrderConfirmation,
   sendRefundConfirmation,
 } from '@/lib/email';
+import { recordGrowthEvent } from '@/lib/growth/persistence';
 import { appendEvent } from '@/services/orders';
 import type { Order } from '@/types';
+import { createAdminSupabaseClient } from '@/lib/supabase/admin';
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -73,6 +77,16 @@ export async function POST(req: Request) {
             undefined,
             `Payment received — Stripe session ${session.id}`,
           );
+          await recordGrowthEvent({
+            routePath: '/book',
+            eventName: 'booking_complete',
+            metadata: {
+              orderId: order.id,
+              cityId: order.cityId,
+              total: updated.total,
+              fulfillmentMethod: updated.fulfillmentMethod,
+            },
+          });
           console.log(`Order ${orderId} marked as paid`);
 
           // Fire order confirmation email
@@ -94,8 +108,8 @@ export async function POST(req: Request) {
           }
         } else if (applicationId) {
           // Kit payment flow
-          const supabase = (await import('@/lib/supabase/server')).createServerSupabaseClient();
-          const { error } = await supabase
+          const admin = createAdminSupabaseClient();
+          const { error } = await admin
             .from('operator_applications')
             .update({
               kitPaymentStatus: 'paid',
@@ -107,6 +121,38 @@ export async function POST(req: Request) {
             console.error('Failed to update kit payment:', error);
           } else {
             console.log(`Application ${applicationId} kit payment confirmed`);
+            try {
+              const { data: app } = await admin
+                .from('operator_applications')
+                .select('id, name, email, cityId, tier')
+                .eq('id', applicationId)
+                .maybeSingle();
+
+              if (app?.email) {
+                const { data: city } = await admin
+                  .from('cities')
+                  .select('name')
+                  .eq('id', app.cityId)
+                  .maybeSingle();
+
+                const amountByTier = {
+                  starter: 349,
+                  pro: 599,
+                  luxury: 899,
+                } as const;
+
+                await sendOperatorKitPaymentConfirmation({
+                  applicationId: app.id,
+                  toEmail: app.email,
+                  name: app.name,
+                  cityName: city?.name ?? 'your city',
+                  tier: app.tier,
+                  amount: amountByTier[app.tier as keyof typeof amountByTier] ?? 0,
+                });
+              }
+            } catch (emailErr: any) {
+              console.error('[email] operator kit payment confirmation failed:', emailErr?.message ?? emailErr);
+            }
           }
         }
 
@@ -127,6 +173,21 @@ export async function POST(req: Request) {
         };
         await db.orders.upsert(updated);
         await appendEvent(order.id, 'cancelled', 'system', undefined, 'Checkout session expired');
+        try {
+          const customer = await db.customers.byId(order.customerId);
+          const serviceName = order.items.find((item) => !item.isAddOn)?.serviceName ?? null;
+          if (customer?.email) {
+            await sendAbandonedBookingFollowUp({
+              toEmail: customer.email,
+              name: customer.name,
+              orderCode: order.code,
+              orderId: order.id,
+              serviceName,
+            });
+          }
+        } catch (emailErr: any) {
+          console.error('[email] abandoned booking follow-up failed:', emailErr?.message ?? emailErr);
+        }
         break;
       }
 

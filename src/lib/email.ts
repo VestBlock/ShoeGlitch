@@ -20,6 +20,14 @@ const FROM = 'Shoe Glitch <contact@shoeglitch.com>';
 const REPLY_TO = 'contact@shoeglitch.com';
 const SITE_URL = 'https://shoeglitch.com';
 
+function getAdminAlertRecipients() {
+  const raw = process.env.ADMIN_ALERT_EMAILS ?? process.env.ADMIN_ALERT_EMAIL ?? 'contact@shoeglitch.com';
+  return raw
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
 let _resend: Resend | null = null;
 function getResend(): Resend | null {
   if (_resend) return _resend;
@@ -337,6 +345,98 @@ export async function sendRefundConfirmation(params: {
   }
 }
 
+export async function sendCustomerWelcomeEmail(params: {
+  toEmail: string;
+  name: string;
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  const firstName = params.name.split(' ')[0] || 'there';
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: params.toEmail,
+      replyTo: REPLY_TO,
+      subject: 'Welcome to Shoe Glitch',
+      html: simpleShell({
+        badge: 'Welcome',
+        heading: `You’re in, ${escapeHtml(firstName)}.`,
+        body: `
+          <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">Your Shoe Glitch account is ready. You can book a clean, track orders, and save pairs to your sneaker watchlist from one place.</p>
+          <div style="font-size:14px;line-height:1.7;color:#4B5563;">
+            <strong>What to do next</strong><br>
+            Book your first clean, upload intake photos, or start a watchlist if you want release and price alerts tied to pairs you care about.
+          </div>
+        `,
+        cta: { href: `${SITE_URL}/customer`, label: 'Open my dashboard →' },
+      }),
+      text: [
+        `Welcome to Shoe Glitch, ${firstName}.`,
+        '',
+        'Your account is ready. You can now book a clean, track orders, and save sneakers to your watchlist.',
+        '',
+        `Dashboard: ${SITE_URL}/customer`,
+        '',
+        '— Shoe Glitch',
+      ].join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendCustomerWelcomeEmail:', error);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendCustomerWelcomeEmail:', err?.message ?? err);
+  }
+}
+
+export async function sendAbandonedBookingFollowUp(params: {
+  toEmail: string;
+  name: string;
+  orderCode: string;
+  orderId: string;
+  serviceName?: string | null;
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  const firstName = params.name.split(' ')[0] || 'there';
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: params.toEmail,
+      replyTo: REPLY_TO,
+      subject: `Still want to book your clean? — ${params.orderCode}`,
+      html: simpleShell({
+        badge: 'Booking reminder',
+        heading: `Your booking wasn’t finished, ${escapeHtml(firstName)}.`,
+        body: `
+          <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">We saved the start of your Shoe Glitch booking for <strong>${escapeHtml(params.orderCode)}</strong>, but checkout expired before payment went through.</p>
+          <div style="font-size:14px;line-height:1.7;color:#4B5563;">
+            ${params.serviceName ? `<strong>Service</strong><br>${escapeHtml(params.serviceName)}<br><br>` : ''}
+            If you still want us to handle the pair, come back in and finish the booking.
+          </div>
+        `,
+        cta: { href: `${SITE_URL}/book`, label: 'Return to booking →' },
+      }),
+      text: [
+        `Your booking for ${params.orderCode} was not completed.`,
+        '',
+        params.serviceName ? `Service: ${params.serviceName}` : null,
+        `Resume here: ${SITE_URL}/book`,
+        '',
+        '— Shoe Glitch',
+      ].filter(Boolean).join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendAbandonedBookingFollowUp:', error);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendAbandonedBookingFollowUp:', err?.message ?? err);
+  }
+}
+
 export async function sendOperatorBookingAlert(params: {
   order: Order;
   city: City | null;
@@ -529,6 +629,368 @@ export async function sendSneakerWatchlistAlert(params: {
   } catch (err: any) {
     console.error('[email] exception in sendSneakerWatchlistAlert:', err?.message ?? err);
     throw err instanceof Error ? err : new Error('Watchlist alert failed.');
+  }
+}
+
+export async function sendSneakerDigestEmail(params: {
+  toEmail: string;
+  customerName: string;
+  items: Array<{
+    sneakerName: string;
+    eventType: 'release' | 'restock' | 'price_drop';
+    eventDate: string;
+    price?: number | null;
+    ctaUrl: string;
+  }>;
+}): Promise<boolean> {
+  const resend = getResend();
+  if (!resend) return false;
+  if (params.items.length === 0) return false;
+
+  const firstName = params.customerName.split(' ')[0] || 'there';
+  const rows = params.items
+    .map((item) => {
+      const label =
+        item.eventType === 'release' ? 'Release' : item.eventType === 'restock' ? 'Restock' : 'Price drop';
+      const formattedDate = new Date(item.eventDate).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+      return `
+        <tr>
+          <td style="padding:10px 0;color:#0A0F1F;font-weight:600;">${escapeHtml(item.sneakerName)}</td>
+          <td style="padding:10px 0;text-align:right;color:#4B5563;">${escapeHtml(label)}</td>
+          <td style="padding:10px 0;text-align:right;color:#4B5563;">${escapeHtml(formattedDate)}</td>
+          <td style="padding:10px 0;text-align:right;color:#4B5563;">${item.price ? `$${item.price}` : 'Watch now'}</td>
+        </tr>
+      `;
+    })
+    .join('');
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: params.toEmail,
+      replyTo: REPLY_TO,
+      subject: `Your Sneaker Watchlist Digest — ${params.items.length} updates`,
+      html: simpleShell({
+        badge: 'Watchlist digest',
+        heading: `${escapeHtml(firstName)}, here’s what moved on your list.`,
+        body: `
+          <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">We pulled together the newest release, restock, and price-drop signals we found for pairs you’re watching.</p>
+          <table style="width:100%;border-collapse:collapse;">
+            ${rows}
+          </table>
+        `,
+        cta: { href: `${SITE_URL}/customer/watchlist`, label: 'Open my watchlist →' },
+      }),
+      text: [
+        `Sneaker Watchlist Digest for ${firstName}`,
+        '',
+        ...params.items.map((item) => {
+          const label =
+            item.eventType === 'release' ? 'Release' : item.eventType === 'restock' ? 'Restock' : 'Price drop';
+          return `${item.sneakerName} — ${label}${item.price ? ` — $${item.price}` : ''}`;
+        }),
+        '',
+        `Watchlist: ${SITE_URL}/customer/watchlist`,
+        '',
+        '— Shoe Glitch',
+      ].join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendSneakerDigestEmail:', error);
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.error('[email] exception in sendSneakerDigestEmail:', err?.message ?? err);
+    return false;
+  }
+}
+
+export async function sendOperatorApplicationAdminAlert(params: {
+  applicationId: string;
+  name: string;
+  email: string;
+  phone: string;
+  cityName: string;
+  tier: 'starter' | 'pro' | 'luxury';
+  experience?: string | null;
+  whyJoin?: string | null;
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  const recipients = getAdminAlertRecipients();
+  if (recipients.length === 0) return;
+
+  const { applicationId, name, email, phone, cityName, tier, experience, whyJoin } = params;
+  const subject = `New operator application — ${name} · ${cityName}`;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: recipients,
+      replyTo: email,
+      subject,
+      html: simpleShell({
+        badge: 'New operator lead',
+        heading: `${escapeHtml(name)} just applied in ${escapeHtml(cityName)}.`,
+        body: `
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(applicationId)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Email</td><td style="padding:8px 0;text-align:right;">${escapeHtml(email)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Phone</td><td style="padding:8px 0;text-align:right;">${escapeHtml(phone)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">City</td><td style="padding:8px 0;text-align:right;">${escapeHtml(cityName)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+          </table>
+          ${experience ? `<p style="font-size:14px;color:#4B5563;margin:20px 0 12px 0;"><strong>Experience</strong><br>${escapeHtml(experience)}</p>` : ''}
+          ${whyJoin ? `<p style="font-size:14px;color:#4B5563;margin:12px 0 0 0;"><strong>Why Shoe Glitch</strong><br>${escapeHtml(whyJoin)}</p>` : ''}
+        `,
+        cta: { href: `${SITE_URL}/admin/operators`, label: 'Review applications →' },
+      }),
+      text: [
+        `New operator application from ${name}`,
+        '',
+        `Application: ${applicationId}`,
+        `Email: ${email}`,
+        `Phone: ${phone}`,
+        `City: ${cityName}`,
+        `Kit tier: ${tier}`,
+        experience ? `Experience: ${experience}` : null,
+        whyJoin ? `Why Shoe Glitch: ${whyJoin}` : null,
+        '',
+        `Review: ${SITE_URL}/admin/operators`,
+        '',
+        '— Shoe Glitch',
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendOperatorApplicationAdminAlert:', error);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendOperatorApplicationAdminAlert:', err?.message ?? err);
+  }
+}
+
+export async function sendOperatorApplicationConfirmation(params: {
+  applicationId: string;
+  toEmail: string;
+  name: string;
+  cityName: string;
+  tier: 'starter' | 'pro' | 'luxury';
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  const { applicationId, toEmail, name, cityName, tier } = params;
+  const subject = `Application received — Shoe Glitch operator path`;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: toEmail,
+      replyTo: REPLY_TO,
+      subject,
+      html: simpleShell({
+        badge: 'Application received',
+        heading: `We received your operator application, ${escapeHtml(name.split(' ')[0])}.`,
+        body: `
+          <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">Your Shoe Glitch operator application is in for <strong>${escapeHtml(cityName)}</strong>.</p>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(applicationId)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+          </table>
+          <p style="font-size:14px;color:#6B7280;margin:20px 0 0 0;">Our team will review your application and follow up with the next step. Keep an eye on your inbox for updates.</p>
+        `,
+        cta: { href: `${SITE_URL}/operator/applied?ref=${encodeURIComponent(applicationId)}`, label: 'View application status →' },
+      }),
+      text: [
+        `We received your Shoe Glitch operator application.`,
+        '',
+        `Application: ${applicationId}`,
+        `City: ${cityName}`,
+        `Kit tier: ${tier}`,
+        '',
+        `Status page: ${SITE_URL}/operator/applied?ref=${encodeURIComponent(applicationId)}`,
+        '',
+        '— Shoe Glitch',
+      ].join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendOperatorApplicationConfirmation:', error);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendOperatorApplicationConfirmation:', err?.message ?? err);
+  }
+}
+
+export async function sendOperatorKitPaymentConfirmation(params: {
+  applicationId: string;
+  toEmail: string;
+  name: string;
+  cityName: string;
+  tier: 'starter' | 'pro' | 'luxury';
+  amount: number;
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  const { applicationId, toEmail, name, cityName, tier, amount } = params;
+  const subject = `Kit payment received — Shoe Glitch operator application`;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: toEmail,
+      replyTo: REPLY_TO,
+      subject,
+      html: simpleShell({
+        badge: 'Kit payment received',
+        heading: `Your operator kit payment is in, ${escapeHtml(name.split(' ')[0])}.`,
+        body: `
+          <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">We received your <strong>$${amount}</strong> kit payment for the <strong>${escapeHtml(tier)}</strong> tier in <strong>${escapeHtml(cityName)}</strong>.</p>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(applicationId)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Status</td><td style="padding:8px 0;text-align:right;">Pending review</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+          </table>
+          <p style="font-size:14px;color:#6B7280;margin:20px 0 0 0;">Next, our team reviews your application and follows up with the approval decision and onboarding details.</p>
+        `,
+        cta: { href: `${SITE_URL}/operator/applied?ref=${encodeURIComponent(applicationId)}&paid=1`, label: 'View application status →' },
+      }),
+      text: [
+        `We received your Shoe Glitch operator kit payment.`,
+        '',
+        `Application: ${applicationId}`,
+        `City: ${cityName}`,
+        `Kit tier: ${tier}`,
+        `Amount: $${amount}`,
+        `Status: Pending review`,
+        '',
+        `Status page: ${SITE_URL}/operator/applied?ref=${encodeURIComponent(applicationId)}&paid=1`,
+        '',
+        '— Shoe Glitch',
+      ].join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendOperatorKitPaymentConfirmation:', error);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendOperatorKitPaymentConfirmation:', err?.message ?? err);
+  }
+}
+
+export async function sendOperatorApplicationApproved(params: {
+  applicationId: string;
+  toEmail: string;
+  name: string;
+  cityName: string;
+  tier: 'starter' | 'pro' | 'luxury';
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  const { applicationId, toEmail, name, cityName, tier } = params;
+  const subject = `Application approved — Shoe Glitch operator path`;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: toEmail,
+      replyTo: REPLY_TO,
+      subject,
+      html: simpleShell({
+        badge: 'Application approved',
+        heading: `You’re approved for the next step, ${escapeHtml(name.split(' ')[0])}.`,
+        body: `
+          <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">Your Shoe Glitch operator application for <strong>${escapeHtml(cityName)}</strong> has been approved.</p>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(applicationId)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Status</td><td style="padding:8px 0;text-align:right;">Approved</td></tr>
+          </table>
+          <p style="font-size:14px;color:#6B7280;margin:20px 0 0 0;">Watch your inbox for your Shoe Glitch sign-in invite plus the onboarding, training, and territory activation details. If you already paid your kit fee, no further payment action is needed right now.</p>
+        `,
+        cta: { href: `${SITE_URL}/operator/applied?ref=${encodeURIComponent(applicationId)}&status=approved`, label: 'Review next steps →' },
+      }),
+      text: [
+        `Your Shoe Glitch operator application has been approved.`,
+        '',
+        `Application: ${applicationId}`,
+        `City: ${cityName}`,
+        `Kit tier: ${tier}`,
+        `Status: Approved`,
+        '',
+        'Watch your inbox for your Shoe Glitch sign-in invite and next-step onboarding details.',
+        `Status page: ${SITE_URL}/operator/applied?ref=${encodeURIComponent(applicationId)}&status=approved`,
+        '',
+        '— Shoe Glitch',
+      ].join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendOperatorApplicationApproved:', error);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendOperatorApplicationApproved:', err?.message ?? err);
+  }
+}
+
+export async function sendOperatorApplicationRejected(params: {
+  applicationId: string;
+  toEmail: string;
+  name: string;
+  cityName: string;
+  tier: 'starter' | 'pro' | 'luxury';
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  const { applicationId, toEmail, name, cityName, tier } = params;
+  const subject = `Application update — Shoe Glitch operator path`;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: toEmail,
+      replyTo: REPLY_TO,
+      subject,
+      html: simpleShell({
+        badge: 'Application update',
+        heading: `We reviewed your application, ${escapeHtml(name.split(' ')[0])}.`,
+        body: `
+          <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">Thanks again for applying to operate with Shoe Glitch in <strong>${escapeHtml(cityName)}</strong>.</p>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(applicationId)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Status</td><td style="padding:8px 0;text-align:right;">Not moving forward right now</td></tr>
+          </table>
+          <p style="font-size:14px;color:#6B7280;margin:20px 0 0 0;">We are not moving forward with this application at the moment. If your city opens more capacity or the fit changes, our team may reach back out.</p>
+        `,
+        cta: { href: `${SITE_URL}/become-an-operator`, label: 'Review operator opportunities →' },
+      }),
+      text: [
+        `We reviewed your Shoe Glitch operator application.`,
+        '',
+        `Application: ${applicationId}`,
+        `City: ${cityName}`,
+        `Kit tier: ${tier}`,
+        `Status: Not moving forward right now`,
+        '',
+        'We are not moving forward with this application at the moment, but we may reach back out if capacity or fit changes.',
+        `Operator opportunities: ${SITE_URL}/become-an-operator`,
+        '',
+        '— Shoe Glitch',
+      ].join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendOperatorApplicationRejected:', error);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendOperatorApplicationRejected:', err?.message ?? err);
   }
 }
 

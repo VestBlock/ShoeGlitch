@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import GrowthTracker from '@/components/growth/GrowthTracker';
 import SneakerFeedClient from '@/components/intelligence/SneakerFeedClient';
 import { Badge } from '@/components/ui';
 import { getSneakerFeed } from '@/features/intelligence/service';
@@ -17,6 +18,8 @@ export default async function IntelligencePage() {
 
   return (
     <>
+      <GrowthTracker routePath="/intelligence" pageTitle="Sneaker Intelligence Feed" />
+
       {schemas.map((schema, index) => (
         <script
           key={`intelligence-schema-${index}`}
@@ -38,10 +41,10 @@ export default async function IntelligencePage() {
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/book" className="btn-glitch">
+              <Link href="/book" className="btn-glitch" data-growth-cta="Book a pair">
                 Book a pair →
               </Link>
-              <Link href="/services" className="btn-outline">
+              <Link href="/services" className="btn-outline" data-growth-cta="Compare services">
                 Compare services
               </Link>
             </div>

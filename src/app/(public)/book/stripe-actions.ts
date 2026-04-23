@@ -13,6 +13,7 @@ import {
   attachPickupWindowToNotes,
 } from '@/lib/pickup-window';
 import { attachShoeProfileToNotes } from '@/lib/shoe-profile';
+import { recordGrowthEvent } from '@/lib/growth/persistence';
 import type { Order } from '@/types';
 
 const BookingSchema = z.object({
@@ -108,6 +109,18 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
     pickupAddress,
     scheduledPickupAt: parsed.scheduledPickupAt,
     beforeImages: parsed.beforeImages ?? [],
+  });
+
+  await recordGrowthEvent({
+    routePath: '/book',
+    eventName: 'booking_start',
+    metadata: {
+      orderId: order.id,
+      cityId: order.cityId,
+      fulfillmentMethod: order.fulfillmentMethod,
+      pairCount: order.pairCount,
+      primaryServiceId: parsed.primaryServiceId,
+    },
   });
 
   // 2. Build Stripe line items from the order

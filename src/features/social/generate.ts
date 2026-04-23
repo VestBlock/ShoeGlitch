@@ -1,0 +1,122 @@
+import type {
+  SocialContentAngle,
+  SocialPageType,
+  SocialPayloadDraft,
+  SocialSourceExtract,
+} from '@/features/social/types';
+
+function hashtagify(value: string) {
+  return value
+    .replace(/[^a-zA-Z0-9]+/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .map((token) => token.charAt(0).toUpperCase() + token.slice(1).toLowerCase())
+    .join('');
+}
+
+function contentAngleForPageType(pageType: SocialPageType): SocialContentAngle {
+  if (pageType === 'release') return 'release-radar';
+  if (pageType === 'how-to-clean') return 'care-guide';
+  if (pageType === 'worth-restoring') return 'restoration-read';
+  if (pageType === 'release-alerts') return 'release-alert';
+  return 'local-service';
+}
+
+function buildHook(source: SocialSourceExtract) {
+  const brand = typeof source.metadata.brand === 'string' ? source.metadata.brand : null;
+  const city = typeof source.metadata.city === 'string' ? source.metadata.city : null;
+
+  switch (source.pageType) {
+    case 'release':
+      return `${brand ?? 'Sneaker'} drop radar: ${source.title}`;
+    case 'how-to-clean':
+      return `Before you wear them out, here is the care read on ${source.title}.`;
+    case 'worth-restoring':
+      return `This pair might deserve restoration more than a basic wipe-down.`;
+    case 'release-alerts':
+      return `This release is worth tracking before your size disappears.`;
+    case 'service-city':
+    case 'service-area':
+      return city ? `Local sneaker care in ${hashtagify(city)} starts here.` : `Local sneaker care starts here.`;
+    default:
+      return `Fresh ShoeGlitch insight from the feed and service engine.`;
+  }
+}
+
+function buildHashtags(source: SocialSourceExtract) {
+  const tags = new Set<string>(['#ShoeGlitch', '#SneakerCare', '#SneakerCleaning']);
+  const brand = typeof source.metadata.brand === 'string' ? source.metadata.brand : null;
+  const city = typeof source.metadata.city === 'string' ? source.metadata.city : null;
+  const service = typeof source.metadata.service === 'string' ? source.metadata.service : null;
+
+  if (brand) tags.add(`#${hashtagify(brand)}`);
+  if (city) tags.add(`#${hashtagify(city)}`);
+  if (service === 'shoe-restoration' || source.pageType === 'worth-restoring') tags.add('#ShoeRestoration');
+  if (source.pageType === 'release' || source.pageType === 'release-alerts') tags.add('#SneakerRelease');
+  if (source.pageType === 'how-to-clean') tags.add('#HowToCleanShoes');
+  if (service === 'pickup-dropoff') tags.add('#PickupDropoff');
+
+  return Array.from(tags).slice(0, 8);
+}
+
+function nextRecommendedScheduleAt(source: SocialSourceExtract) {
+  const now = new Date();
+  const releaseDate = source.publishDate ? new Date(source.publishDate) : null;
+  const schedule = new Date(now);
+
+  if (source.pageType === 'release' || source.pageType === 'release-alerts') {
+    const base = releaseDate && releaseDate.getTime() > now.getTime() ? releaseDate : now;
+    schedule.setTime(base.getTime());
+    schedule.setHours(11, 15, 0, 0);
+    if (schedule.getTime() <= now.getTime()) schedule.setDate(schedule.getDate() + 1);
+    return schedule.toISOString();
+  }
+
+  schedule.setHours(18, 30, 0, 0);
+  if (schedule.getTime() <= now.getTime()) schedule.setDate(schedule.getDate() + 1);
+  return schedule.toISOString();
+}
+
+function buildCaption(source: SocialSourceExtract, hashtags: string[]) {
+  const actionLine =
+    source.pageType === 'release-alerts'
+      ? 'Save the pair, track the drop, and move before the best window closes.'
+      : source.pageType === 'how-to-clean'
+        ? 'Use the guide, then book the clean before the wear sets in.'
+        : source.pageType === 'worth-restoring'
+          ? 'Read the restoration case, then decide if the pair deserves deeper work.'
+          : 'Open the full page and take the next ShoeGlitch action from there.';
+
+  return [
+    buildHook(source),
+    '',
+    source.shortSummary,
+    '',
+    actionLine,
+    `Read more: ${source.canonicalUrl}`,
+    '',
+    hashtags.join(' '),
+  ].join('\n');
+}
+
+export function buildSocialPayload(source: SocialSourceExtract): SocialPayloadDraft {
+  const contentAngle = contentAngleForPageType(source.pageType);
+  const hashtags = buildHashtags(source);
+
+  return {
+    contentAngle,
+    hook: buildHook(source),
+    caption: buildCaption(source, hashtags),
+    hashtags,
+    imageUrl: source.imageUrl,
+    canonicalLink: source.canonicalUrl,
+    recommendedScheduleAt: nextRecommendedScheduleAt(source),
+    socialPlatformTarget: 'instagram',
+    postStatus: 'draft',
+    metadata: {
+      routePath: source.routePath,
+      sourceKind: source.sourceKind,
+      publishDate: source.publishDate ?? null,
+    },
+  };
+}

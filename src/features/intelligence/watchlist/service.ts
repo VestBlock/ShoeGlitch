@@ -1,4 +1,4 @@
-import { sendSneakerWatchlistAlert } from '@/lib/email';
+import { sendSneakerDigestEmail, sendSneakerWatchlistAlert } from '@/lib/email';
 import { buildAlertDeliveryKey } from '@/features/intelligence/watchlist/dedupe';
 import { loadCurrentSneakerEvents, buildMockSneakerEvents } from '@/features/intelligence/watchlist/events';
 import { matchWatchlistItemToEvent } from '@/features/intelligence/watchlist/match';
@@ -147,4 +147,96 @@ export async function runMockWatchlistScan() {
   const liveEvents = await loadCurrentSneakerEvents(18);
   const events = liveEvents.length > 0 ? liveEvents : buildMockSneakerEvents();
   return processSneakerEvents(events);
+}
+
+export async function sendWatchlistDigestBatch(limitUsers = 20, itemsPerUser = 5) {
+  const groupedItems = await watchlistStore.listActiveByUser();
+  const liveEvents = await loadCurrentSneakerEvents(24);
+  const events = liveEvents.length > 0 ? liveEvents : buildMockSneakerEvents();
+  const users = Array.from(groupedItems.entries()).slice(0, limitUsers);
+  const todayKey = new Date().toISOString().slice(0, 10);
+
+  const results = {
+    processedUsers: 0,
+    sentDigests: 0,
+    skippedUsers: 0,
+    failedDigests: 0,
+  };
+
+  for (const [userId, items] of users) {
+    results.processedUsers += 1;
+    const user = await watchlistStore.getUserProfile(userId);
+    if (!user) {
+      results.failedDigests += 1;
+      continue;
+    }
+
+    const matches = items
+      .flatMap((item) =>
+        events
+          .map((event) => ({ item, event, match: matchWatchlistItemToEvent(item, event) }))
+          .filter((entry) => entry.match.matched),
+      )
+      .sort((a, b) => b.match.score - a.match.score)
+      .slice(0, itemsPerUser);
+
+    if (matches.length === 0) {
+      results.skippedUsers += 1;
+      continue;
+    }
+
+    const uniqueMatches = [];
+    for (const entry of matches) {
+      const digestKey = `digest:${todayKey}:${entry.item.id}:${entry.event.id}`;
+      const existing = await watchlistStore.findDeliveryByKey(digestKey);
+      if (existing) continue;
+      uniqueMatches.push({ ...entry, digestKey });
+    }
+
+    if (uniqueMatches.length === 0) {
+      results.skippedUsers += 1;
+      continue;
+    }
+
+    const sent = await sendSneakerDigestEmail({
+      toEmail: user.email,
+      customerName: user.name,
+      items: uniqueMatches.map(({ event }) => ({
+        sneakerName: event.name,
+        eventType: event.eventType,
+        eventDate: event.eventDate,
+        price: event.price,
+        ctaUrl: event.marketUrl ?? 'https://shoeglitch.com/intelligence',
+      })),
+    });
+
+    if (!sent) {
+      results.failedDigests += 1;
+      continue;
+    }
+
+    for (const entry of uniqueMatches) {
+      await watchlistStore.upsertEvent(entry.event);
+      await watchlistStore.createDelivery({
+        watchlistItemId: entry.item.id,
+        sneakerEventId: entry.event.id,
+        userId,
+        channel: 'email',
+        provider: 'resend',
+        deliveryKey: entry.digestKey,
+        status: 'sent',
+        errorMessage: null,
+        payload: {
+          digest: true,
+          eventType: entry.event.eventType,
+          matchExplanation: entry.match.explanation,
+        },
+        sentAt: new Date().toISOString(),
+      });
+    }
+
+    results.sentDigests += 1;
+  }
+
+  return results;
 }

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import GrowthTracker from '@/components/growth/GrowthTracker';
 import { Badge, Card } from '@/components/ui';
 import { buildOperatorSeoSchemas } from '@/features/operator-seo/schema';
 import type { OperatorSeoModel } from '@/features/operator-seo/types';
@@ -10,6 +11,8 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
 
   return (
     <>
+      <GrowthTracker routePath={model.path} pageTitle={model.title} />
+
       {schemas.map((schema, index) => (
         <script
           key={`operator-seo-schema-${index}`}
@@ -31,10 +34,10 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
               <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">{model.intro}</p>
 
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch">
+                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline">
+                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>
@@ -92,10 +95,10 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
                 </h2>
                 <p className="mt-4 text-sm leading-7 text-ink/66">{model.cta.body}</p>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <Link href={model.cta.primaryHref} className="btn-glitch">
+                  <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
                     {model.cta.primaryLabel}
                   </Link>
-                  <Link href={model.cta.secondaryHref} className="btn-outline">
+                  <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
                     {model.cta.secondaryLabel}
                   </Link>
                 </div>
@@ -190,10 +193,11 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
               </div>
               <div className="mt-4 space-y-3">
                 {model.links.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      data-growth-cta={link.label}
+                      className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                   >
                     <div className="font-semibold text-ink">{link.label}</div>
                     <div className="mt-1 text-sm text-ink/60">{link.description}</div>
@@ -212,6 +216,7 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
                     <Link
                       key={city.id}
                       href={`/operator-opportunities/${city.slug}`}
+                      data-growth-cta={`Operator city ${city.name}`}
                       className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                     >
                       <div className="font-semibold text-ink">{city.name}</div>

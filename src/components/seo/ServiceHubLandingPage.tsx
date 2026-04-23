@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import GrowthTracker from '@/components/growth/GrowthTracker';
 import { Badge, Card } from '@/components/ui';
 import { buildServiceHubSchemas } from '@/features/seo/schema';
 import type { SeoServiceHubModel } from '@/features/seo/types';
@@ -9,6 +10,8 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
 
   return (
     <>
+      <GrowthTracker routePath={model.path} pageTitle={model.title} />
+
       {schemas.map((schema, index) => (
         <script
           key={`service-hub-schema-${index}`}
@@ -29,10 +32,10 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
               <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">{model.intro}</p>
 
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch">
+                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline">
+                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>
@@ -88,6 +91,7 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
                     <Link
                       key={city.id}
                       href={`/${model.service.slug}/${city.slug}`}
+                      data-growth-cta={`City market ${city.name}`}
                       className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                     >
                       <div className="font-semibold text-ink">{city.name}</div>
@@ -106,6 +110,7 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
                     <Link
                       key={link.href}
                       href={link.href}
+                      data-growth-cta={link.label}
                       className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                     >
                       <div className="font-semibold text-ink">{link.label}</div>
@@ -149,6 +154,7 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
               <div className="mt-4 space-y-3">
                 <Link
                   href="/coverage"
+                  data-growth-cta="Need local coverage first?"
                   className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                 >
                   <div className="font-semibold text-ink">Need local coverage first?</div>
@@ -156,6 +162,7 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
                 </Link>
                 <Link
                   href="/services"
+                  data-growth-cta="Need the right service first?"
                   className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                 >
                   <div className="font-semibold text-ink">Need the right service first?</div>
@@ -171,10 +178,10 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
               <h2 className="h-display mt-4 text-[clamp(2rem,4vw,3rem)] leading-[0.95]">{model.cta.headline}</h2>
               <p className="mt-4 text-sm leading-7 text-ink/66">{model.cta.body}</p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch">
+                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline">
+                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>

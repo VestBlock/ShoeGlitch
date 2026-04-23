@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import GrowthTracker from '@/components/growth/GrowthTracker';
 import { Badge, Card } from '@/components/ui';
 import { buildLocationsIndexSchemas } from '@/features/seo/schema';
 import type { SeoLocationsIndexModel } from '@/features/seo/types';
@@ -8,6 +9,8 @@ export default function LocationsIndexLandingPage({ model }: { model: SeoLocatio
 
   return (
     <>
+      <GrowthTracker routePath={model.path} pageTitle={model.title} />
+
       {schemas.map((schema, index) => (
         <script
           key={`locations-index-schema-${index}`}
@@ -26,10 +29,10 @@ export default function LocationsIndexLandingPage({ model }: { model: SeoLocatio
               <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">{model.intro}</p>
 
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch">
+                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline">
+                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>
@@ -61,6 +64,7 @@ export default function LocationsIndexLandingPage({ model }: { model: SeoLocatio
                     <Link
                       key={city.id}
                       href={`/locations/${city.slug}`}
+                      data-growth-cta={`Locations city ${city.name}`}
                       className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                     >
                       <div className="font-semibold text-ink">{city.name}</div>
@@ -77,6 +81,7 @@ export default function LocationsIndexLandingPage({ model }: { model: SeoLocatio
                     <Link
                       key={link.href}
                       href={link.href}
+                      data-growth-cta={link.label}
                       className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                     >
                       <div className="font-semibold text-ink">{link.label}</div>
@@ -113,14 +118,14 @@ export default function LocationsIndexLandingPage({ model }: { model: SeoLocatio
           </article>
 
           <Card className="p-6">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">Conversion path</div>
+            <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">Best next step</div>
             <h2 className="h-display mt-4 text-[clamp(2rem,4vw,3rem)] leading-[0.95]">{model.cta.headline}</h2>
             <p className="mt-4 text-sm leading-7 text-ink/66">{model.cta.body}</p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href={model.cta.primaryHref} className="btn-glitch">
+              <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
                 {model.cta.primaryLabel}
               </Link>
-              <Link href={model.cta.secondaryHref} className="btn-outline">
+              <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
                 {model.cta.secondaryLabel}
               </Link>
             </div>

@@ -8,6 +8,7 @@
 
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createAdminSupabaseClient } from '@/lib/supabase/admin';
+import { findOrProvisionAppUserForAuth } from '@/lib/auth-provisioning';
 import type { Session, Role } from '@/types';
 
 /**
@@ -20,16 +21,13 @@ export async function getSession(): Promise<Session | null> {
   if (error || !user?.id) return null;
 
   const admin = createAdminSupabaseClient();
-
-  // Link via authUserId (the auth.users UUID), not email.
-  // This is stable across email changes and matches the schema's FK link.
-  const { data: userRow } = await admin
-    .from('users')
-    .select('id, email, name, role')
-    .eq('authUserId', user.id)
-    .maybeSingle();
-
-  if (!userRow) return null;
+  const provisioned = await findOrProvisionAppUserForAuth({
+    authUserId: user.id,
+    email: user.email ?? '',
+    name: user.user_metadata?.full_name ?? user.user_metadata?.name ?? user.email ?? 'Shoe Glitch customer',
+    defaultRole: 'customer',
+  });
+  const userRow = provisioned.user;
 
   let cityId: string | undefined;
   if (userRow.role === 'cleaner') {

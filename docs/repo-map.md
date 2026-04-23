@@ -47,6 +47,24 @@ Sneaker release content engine.
 - cleaning-intent and alert-intent content families for the same sneaker records
 - automation budget and manifest builders for release-family pages
 
+### `src/features/admin`
+Admin reporting and dashboard aggregation layer.
+- SEO and automation summaries
+- analytics summaries
+- automation run visibility and manual controls
+- manifest freshness and family rollups
+- safe server-side reporting helpers for protected admin pages
+
+### `src/features/social`
+Social syndication and publishing queue.
+- extraction from existing release and SEO content pages
+- caption, hook, hashtag, and schedule generation
+- review-first queue persistence
+- Buffer publishing and post-status sync
+
+## Shared operational docs
+- `docs/email-flows.md`: live versus incomplete email lifecycle coverage for customers, operators, intelligence members, and admin alerts.
+
 ## App route zones
 
 ### `src/app/(public)`
@@ -68,10 +86,16 @@ Alert-intent content route family that turns release data into watchlist and ret
 Operator-acquisition SEO route families tied to the live `/operator/apply` conversion path.
 
 ### `src/app/api`
-Server route handlers for booking, SEO manifests, intelligence search/product, growth tooling, watchlist, and Stripe webhooks.
+Server route handlers for booking, SEO manifests, intelligence search/product, growth tooling, watchlist, social automation, and Stripe webhooks.
 
 ### `src/app/customer`, `src/app/cleaner`, `src/app/city-manager`, `src/app/admin`
 Protected operational surfaces. These are role-gated and should be treated as production-sensitive.
+
+### `src/app/admin/seo`, `src/app/admin/analytics`, `src/app/admin/automation`
+Protected reporting surfaces for automation visibility and funnel analytics.
+
+### `src/app/admin/social`
+Protected social automation visibility surface for queue state, Buffer config, and publishing readiness.
 
 ### `src/app/[primary]/[secondary]/[[...rest]]`
 Generic growth/programmatic route family. Only touch this when working on the growth engine or route generation systems.
