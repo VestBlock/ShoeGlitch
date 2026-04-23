@@ -1,4 +1,4 @@
-import type { BufferChannelSummary, SocialQueueRecord } from '@/features/social/types';
+import type { BufferChannelSummary, SocialPlatformTarget, SocialQueueRecord } from '@/features/social/types';
 
 const BUFFER_ENDPOINT = 'https://api.buffer.com';
 
@@ -32,12 +32,13 @@ function getConfig() {
   const accessToken = cleanEnvValue(process.env.BUFFER_ACCESS_TOKEN ?? process.env.BUFFER_API_TOKEN);
   const organizationId = cleanEnvValue(process.env.BUFFER_ORGANIZATION_ID);
   const instagramChannelId = cleanEnvValue(process.env.BUFFER_INSTAGRAM_CHANNEL_ID);
+  const tiktokChannelId = cleanEnvValue(process.env.BUFFER_TIKTOK_CHANNEL_ID);
 
   if (!accessToken) {
     return null;
   }
 
-  return { accessToken, organizationId, instagramChannelId };
+  return { accessToken, organizationId, instagramChannelId, tiktokChannelId };
 }
 
 async function bufferRequest<T>(query: string): Promise<T> {
@@ -89,6 +90,16 @@ function buildInstagramMetadataBlock() {
       }`;
 }
 
+function buildTikTokMetadataBlock(title: string) {
+  return `
+      metadata: {
+        tiktok: {
+          type: post
+          title: ${gqlString(title.slice(0, 140))}
+        }
+      }`;
+}
+
 function resolveDueAt(value: string) {
   const requested = new Date(value);
   const fallback = new Date(Date.now() + 15 * 60 * 1000);
@@ -134,7 +145,7 @@ async function resolveOrganizationId() {
   return organizations[0]?.id ?? null;
 }
 
-export async function getBufferInstagramChannels(): Promise<BufferChannelSummary[]> {
+async function getBufferChannelsByService(service: SocialPlatformTarget): Promise<BufferChannelSummary[]> {
   const organizationId = await resolveOrganizationId();
   if (!organizationId) return [];
 
@@ -154,33 +165,50 @@ export async function getBufferInstagramChannels(): Promise<BufferChannelSummary
   `;
 
   const data = await bufferRequest<{ channels: BufferChannelSummary[] }>(query);
-  return (data.channels ?? []).filter((channel) => channel.service?.toLowerCase() === 'instagram');
+  return (data.channels ?? []).filter((channel) => channel.service?.toLowerCase() === service);
 }
 
-async function resolveInstagramChannelId() {
+export async function getBufferInstagramChannels(): Promise<BufferChannelSummary[]> {
+  return getBufferChannelsByService('instagram');
+}
+
+export async function getBufferTikTokChannels(): Promise<BufferChannelSummary[]> {
+  return getBufferChannelsByService('tiktok');
+}
+
+async function resolveChannelId(platform: SocialPlatformTarget) {
   const config = getConfig();
   if (!config) return null;
-  if (isBufferObjectId(config.instagramChannelId)) return config.instagramChannelId;
+  const configuredId = platform === 'instagram' ? config.instagramChannelId : config.tiktokChannelId;
+  if (isBufferObjectId(configuredId)) return configuredId;
 
-  const channels = await getBufferInstagramChannels();
+  const channels = platform === 'instagram' ? await getBufferInstagramChannels() : await getBufferTikTokChannels();
   return channels[0]?.id ?? null;
 }
 
-export async function scheduleBufferInstagramPost(record: SocialQueueRecord): Promise<{
+export async function scheduleBufferPost(record: SocialQueueRecord): Promise<{
   externalPostId: string;
   scheduledAt: string;
   metadata: Record<string, unknown>;
 }> {
   if (!record.imageUrl) {
-    throw new Error('Instagram posts require at least one image.');
+    throw new Error(`${record.targetPlatform} posts require at least one image.`);
   }
 
-  const channelId = await resolveInstagramChannelId();
+  const channelId = await resolveChannelId(record.targetPlatform);
   if (!channelId) {
-    throw new Error('No Instagram channel is available in Buffer. Add BUFFER_INSTAGRAM_CHANNEL_ID or connect an Instagram channel.');
+    throw new Error(
+      record.targetPlatform === 'instagram'
+        ? 'No Instagram channel is available in Buffer. Add BUFFER_INSTAGRAM_CHANNEL_ID or connect an Instagram channel.'
+        : 'No TikTok channel is available in Buffer. Add BUFFER_TIKTOK_CHANNEL_ID or connect a TikTok channel.',
+    );
   }
 
   const dueAt = resolveDueAt(record.recommendedScheduleAt);
+  const metadataBlock =
+    record.targetPlatform === 'instagram'
+      ? buildInstagramMetadataBlock()
+      : buildTikTokMetadataBlock(record.title);
 
   const query = `
     mutation CreatePost {
@@ -189,7 +217,7 @@ export async function scheduleBufferInstagramPost(record: SocialQueueRecord): Pr
         channelId: ${gqlString(channelId)}
         schedulingType: automatic
         mode: customScheduled
-        dueAt: ${gqlString(dueAt)}${buildAssetsBlock(record.imageUrl)}${buildInstagramMetadataBlock()}
+        dueAt: ${gqlString(dueAt)}${buildAssetsBlock(record.imageUrl)}${metadataBlock}
       }) {
         ... on PostActionSuccess {
           post {
@@ -223,12 +251,13 @@ export async function scheduleBufferInstagramPost(record: SocialQueueRecord): Pr
   }
 
   return {
-    externalPostId: result.post.id,
-    scheduledAt: result.post.dueAt ?? dueAt,
-    metadata: {
-      bufferStatus: result.post.status ?? 'scheduled',
-      bufferChannelId: result.post.channelId ?? channelId,
-    },
+      externalPostId: result.post.id,
+      scheduledAt: result.post.dueAt ?? dueAt,
+      metadata: {
+        bufferStatus: result.post.status ?? 'scheduled',
+        bufferChannelId: result.post.channelId ?? channelId,
+        platform: record.targetPlatform,
+      },
   };
 }
 
@@ -237,8 +266,12 @@ export async function syncBufferPostStatuses(externalIds: string[]) {
   if (!config || externalIds.length === 0) return [];
 
   const organizationId = await resolveOrganizationId();
-  const channelId = await resolveInstagramChannelId();
-  if (!channelId || !organizationId) return [];
+  const [instagramChannelId, tiktokChannelId] = await Promise.all([
+    resolveChannelId('instagram'),
+    resolveChannelId('tiktok'),
+  ]);
+  const channelIds = [instagramChannelId, tiktokChannelId].filter((id): id is string => Boolean(id));
+  if (channelIds.length === 0 || !organizationId) return [];
 
   const query = `
     query GetPostsForChannels {
@@ -248,7 +281,7 @@ export async function syncBufferPostStatuses(externalIds: string[]) {
           organizationId: ${gqlString(organizationId)},
           filter: {
             status: [scheduled, sent, error],
-            channelIds: [${gqlString(channelId)}]
+            channelIds: [${channelIds.map((id) => gqlString(id)).join(', ')}]
           }
         }
       ) {

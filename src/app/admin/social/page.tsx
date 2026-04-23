@@ -50,7 +50,8 @@ export default async function AdminSocialPage({
           <StatusDot tone={tone(summary.queueStatus)} /> Queue {summary.queueStatus}
         </Badge>
         <Badge>{summary.buffer.organizationCount} orgs</Badge>
-        <Badge>{summary.buffer.channelCount} Instagram channels</Badge>
+        <Badge>{summary.buffer.instagramChannelCount} Instagram</Badge>
+        <Badge>{summary.buffer.tiktokChannelCount} TikTok</Badge>
       </div>
 
       {summary.queueMessage ? (
@@ -146,7 +147,7 @@ export default async function AdminSocialPage({
         <Card>
           <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Instagram channels</div>
           <div className="mt-5 space-y-3">
-            {summary.buffer.channels.length > 0 ? summary.buffer.channels.map((channel) => (
+            {summary.buffer.instagramChannels.length > 0 ? summary.buffer.instagramChannels.map((channel) => (
               <div key={channel.id} className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
@@ -166,6 +167,29 @@ export default async function AdminSocialPage({
           </div>
         </Card>
       </div>
+
+      <Card className="mb-10">
+        <div className="font-mono text-xs uppercase tracking-widest text-ink/45">TikTok channels</div>
+        <div className="mt-5 space-y-3">
+          {summary.buffer.tiktokChannels.length > 0 ? summary.buffer.tiktokChannels.map((channel) => (
+            <div key={channel.id} className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="font-semibold text-ink">{channel.displayName ?? channel.name}</div>
+                  <div className="mt-1 text-xs text-ink/48">{channel.id}</div>
+                </div>
+                <Badge tone={channel.paused ? 'default' : 'acid'}>
+                  <StatusDot tone={channel.paused ? 'warn' : 'ok'} /> {channel.paused ? 'paused' : 'ready'}
+                </Badge>
+              </div>
+            </div>
+          )) : (
+            <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm text-ink/62">
+              TikTok channels will appear here once Buffer discovery succeeds.
+            </div>
+          )}
+        </div>
+      </Card>
 
       <Card>
         <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Active queue items</div>

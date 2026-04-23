@@ -18,7 +18,7 @@ export type SocialContentAngle =
   | 'release-alert'
   | 'local-service';
 
-export type SocialPlatformTarget = 'instagram';
+export type SocialPlatformTarget = 'instagram' | 'tiktok';
 export type SocialPostStatus = 'draft' | 'approved' | 'scheduled' | 'published' | 'failed';
 
 export interface SocialSourceExtract {

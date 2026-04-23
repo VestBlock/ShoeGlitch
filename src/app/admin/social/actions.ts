@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { cleanupSocialQueueDuplicates, publishApprovedSocialQueue, runDailySocialDraftScan } from '@/features/social/service';
-import { getBufferAvailability, scheduleBufferInstagramPost } from '@/features/social/buffer';
+import { getBufferAvailability, scheduleBufferPost } from '@/features/social/buffer';
 import { socialStore } from '@/features/social/store';
 import { recordAutomationRun } from '@/features/admin/automation-reporting';
 import { getSession } from '@/lib/session';
@@ -106,7 +106,7 @@ export async function scheduleSocialDraftNowAction(formData: FormData) {
   }
 
   try {
-    const scheduled = await scheduleBufferInstagramPost(staged);
+    const scheduled = await scheduleBufferPost(staged);
     await socialStore.markScheduled(staged.id, {
       externalPostId: scheduled.externalPostId,
       provider: 'buffer',
@@ -124,7 +124,7 @@ export async function scheduleSocialDraftNowAction(formData: FormData) {
   }
 
   revalidatePath('/admin/social');
-  finish('Social post scheduled to Buffer.');
+  finish(`Social ${staged.targetPlatform} post scheduled to Buffer.`);
 }
 
 export async function returnSocialDraftAction(formData: FormData) {

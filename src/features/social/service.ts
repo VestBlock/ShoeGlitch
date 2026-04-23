@@ -2,12 +2,13 @@ import { buildReleaseAutomationManifest } from '@/features/releases/automation';
 import { checkRequiredOperationalTables } from '@/features/admin/db-health';
 import { getIntelligenceRouteIndex } from '@/features/intelligence/service';
 import { buildSeoAutomationManifest } from '@/features/seo/automation';
-import { scheduleBufferInstagramPost, syncBufferPostStatuses } from '@/features/social/buffer';
+import { scheduleBufferPost, syncBufferPostStatuses } from '@/features/social/buffer';
 import { extractSocialSourceFromPath } from '@/features/social/extract';
 import { buildSocialPayload } from '@/features/social/generate';
 import { socialStore } from '@/features/social/store';
 import type {
   SocialPageType,
+  SocialPlatformTarget,
   SocialPublishSummary,
   SocialQueueRecord,
   SocialQueueSummary,
@@ -75,93 +76,125 @@ export async function createSocialDraftForPath(path: string, force = false, sour
     return { status: 'skipped' as const, reason: `No social extraction model exists for ${path}.`, draft: null };
   }
 
-  const payload = buildSocialPayload(source);
-  const latest = await socialStore.latestForRouteAngle(
-    source.routePath,
-    payload.contentAngle,
-    payload.socialPlatformTarget,
-  );
+  const platforms: SocialPlatformTarget[] = ['instagram', 'tiktok'];
+  let primaryDraft: SocialQueueRecord | null = null;
+  let createdAny = false;
+  let duplicateOnly = true;
+  const reasons: string[] = [];
 
-  if (!force && latest) {
-    const sameOrNewer = compareIso(latest.sourceUpdatedAt, source.sourceUpdatedAt) >= 0;
-    if (latest.status === 'scheduled' || latest.status === 'published') {
-      return {
-        status: 'duplicate' as const,
-        reason: `A ${latest.status} candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`,
-        draft: latest,
-      };
-    }
+  for (const platform of platforms) {
+    const payload = buildSocialPayload(source, platform);
+    const latest = await socialStore.latestForRouteAngle(
+      source.routePath,
+      payload.contentAngle,
+      payload.socialPlatformTarget,
+    );
 
-    if (sameOrNewer || latest.status === 'draft' || latest.status === 'approved' || latest.status === 'failed') {
-      if (latest.status === 'draft' || latest.status === 'failed' || latest.status === 'approved') {
-        const refreshed = await socialStore.updateContent(latest.id, {
-          hook: payload.hook,
-          caption: payload.caption,
-          hashtags: payload.hashtags,
-          recommendedScheduleAt: payload.recommendedScheduleAt,
-          approvalNotes: latest.approvalNotes ?? null,
-        });
-        const recycled =
-          latest.status === 'failed' || latest.status === 'approved'
-            ? await socialStore.updateForReview(latest.id, {
-                status: latest.status === 'approved' ? 'approved' : 'draft',
-                recommendedScheduleAt: payload.recommendedScheduleAt,
-                approvalNotes: latest.approvalNotes ?? null,
-              })
-            : refreshed;
-        return {
-          status: 'duplicate' as const,
-          reason: recycled
-            ? latest.status === 'failed'
-              ? latest.status === 'failed'
-                ? `Recycled failed social candidate for ${source.routePath} back into draft status.`
-                : `Refreshed approved candidate for ${source.routePath} without creating a duplicate.`
-              : `Refreshed draft candidate for ${source.routePath} and angle ${payload.contentAngle}.`
-            : `A draft candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`,
-          draft: recycled ?? refreshed ?? latest,
-        };
+    if (!force && latest) {
+      const sameOrNewer = compareIso(latest.sourceUpdatedAt, source.sourceUpdatedAt) >= 0;
+      if (latest.status === 'scheduled' || latest.status === 'published') {
+        reasons.push(
+          `A ${latest.status} ${platform} candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`,
+        );
+        primaryDraft ??= latest;
+        continue;
       }
 
-      return {
-        status: 'duplicate' as const,
-        reason: `A ${latest.status} candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`,
-        draft: latest,
-      };
+      if (sameOrNewer || latest.status === 'draft' || latest.status === 'approved' || latest.status === 'failed') {
+        if (latest.status === 'draft' || latest.status === 'failed' || latest.status === 'approved') {
+          const refreshed = await socialStore.updateContent(latest.id, {
+            hook: payload.hook,
+            caption: payload.caption,
+            hashtags: payload.hashtags,
+            recommendedScheduleAt: payload.recommendedScheduleAt,
+            approvalNotes: latest.approvalNotes ?? null,
+          });
+          const recycled =
+            latest.status === 'failed' || latest.status === 'approved'
+              ? await socialStore.updateForReview(latest.id, {
+                  status: latest.status === 'approved' ? 'approved' : 'draft',
+                  recommendedScheduleAt: payload.recommendedScheduleAt,
+                  approvalNotes: latest.approvalNotes ?? null,
+                })
+              : refreshed;
+          reasons.push(
+            recycled
+              ? latest.status === 'failed'
+                ? `Recycled failed ${platform} candidate for ${source.routePath} back into draft status.`
+                : latest.status === 'approved'
+                  ? `Refreshed approved ${platform} candidate for ${source.routePath} without creating a duplicate.`
+                  : `Refreshed draft ${platform} candidate for ${source.routePath} and angle ${payload.contentAngle}.`
+              : `A draft ${platform} candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`,
+          );
+          primaryDraft ??= recycled ?? refreshed ?? latest;
+          continue;
+        }
+
+        reasons.push(`A ${latest.status} ${platform} candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`);
+        primaryDraft ??= latest;
+        continue;
+      }
+    }
+
+    const contentKey = buildContentKey(
+      source.routePath,
+      payload.contentAngle,
+      payload.socialPlatformTarget,
+      source.sourceUpdatedAt,
+    );
+
+    const draft = await socialStore.createDraft({
+      source,
+      contentKey,
+      contentAngle: payload.contentAngle,
+      targetPlatform: payload.socialPlatformTarget,
+      title: source.title,
+      shortSummary: source.shortSummary,
+      hook: payload.hook,
+      caption: payload.caption,
+      hashtags: payload.hashtags,
+      imageUrl: payload.imageUrl,
+      canonicalLink: payload.canonicalLink,
+      recommendedScheduleAt: payload.recommendedScheduleAt,
+      metadata: {
+        ...source.metadata,
+        ...payload.metadata,
+      },
+    });
+
+    if (draft) {
+      createdAny = true;
+      duplicateOnly = false;
+      primaryDraft ??= draft;
+      reasons.push(`Created ${platform} draft for ${source.routePath}.`);
+    } else {
+      duplicateOnly = false;
+      reasons.push(
+        `Failed to create ${platform} social draft for ${source.routePath}. Confirm the social_post_queue table exists and Supabase admin access is configured.`,
+      );
     }
   }
 
-  const contentKey = buildContentKey(
-    source.routePath,
-    payload.contentAngle,
-    payload.socialPlatformTarget,
-    source.sourceUpdatedAt,
-  );
+  if (createdAny) {
+    return {
+      status: 'created' as const,
+      reason: reasons.join(' '),
+      draft: primaryDraft,
+    };
+  }
 
-  const draft = await socialStore.createDraft({
-    source,
-    contentKey,
-    contentAngle: payload.contentAngle,
-    targetPlatform: payload.socialPlatformTarget,
-    title: source.title,
-    shortSummary: source.shortSummary,
-    hook: payload.hook,
-    caption: payload.caption,
-    hashtags: payload.hashtags,
-    imageUrl: payload.imageUrl,
-    canonicalLink: payload.canonicalLink,
-    recommendedScheduleAt: payload.recommendedScheduleAt,
-    metadata: {
-      ...source.metadata,
-      ...payload.metadata,
-    },
-  });
+  if (duplicateOnly) {
+    return {
+      status: 'duplicate' as const,
+      reason: reasons.join(' '),
+      draft: primaryDraft,
+    };
+  }
 
   return {
-    status: draft ? ('created' as const) : ('failed' as const),
-    reason: draft
-      ? `Created draft for ${source.routePath}.`
-      : `Failed to create social draft for ${source.routePath}. Confirm the social_post_queue table exists and Supabase admin access is configured.`,
-    draft,
+    status: 'failed' as const,
+    reason: reasons.join(' '),
+    draft: primaryDraft,
   };
 }
 
@@ -282,14 +315,8 @@ export async function publishApprovedSocialQueue(limit = 5): Promise<SocialPubli
   };
 
   for (const record of approved) {
-    if (record.targetPlatform !== 'instagram') {
-      summary.skipped += 1;
-      summary.messages.push(`Skipped ${record.routePath}: unsupported platform ${record.targetPlatform}.`);
-      continue;
-    }
-
     try {
-      const scheduled = await scheduleBufferInstagramPost(record);
+      const scheduled = await scheduleBufferPost(record);
       await socialStore.markScheduled(record.id, {
         externalPostId: scheduled.externalPostId,
         provider: 'buffer',

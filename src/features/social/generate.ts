@@ -2,6 +2,7 @@ import type {
   SocialContentAngle,
   SocialPageType,
   SocialPayloadDraft,
+  SocialPlatformTarget,
   SocialSourceExtract,
 } from '@/features/social/types';
 
@@ -143,7 +144,10 @@ function buildCaption(source: SocialSourceExtract, hashtags: string[]) {
   ].join('\n');
 }
 
-export function buildSocialPayload(source: SocialSourceExtract): SocialPayloadDraft {
+export function buildSocialPayload(
+  source: SocialSourceExtract,
+  socialPlatformTarget: SocialPlatformTarget,
+): SocialPayloadDraft {
   const contentAngle = contentAngleForPageType(source.pageType);
   const hashtags = buildHashtags(source);
 
@@ -155,12 +159,13 @@ export function buildSocialPayload(source: SocialSourceExtract): SocialPayloadDr
     imageUrl: source.imageUrl,
     canonicalLink: source.canonicalUrl,
     recommendedScheduleAt: nextRecommendedScheduleAt(source),
-    socialPlatformTarget: 'instagram',
+    socialPlatformTarget,
     postStatus: 'draft',
     metadata: {
       routePath: source.routePath,
       sourceKind: source.sourceKind,
       publishDate: source.publishDate ?? null,
+      platform: socialPlatformTarget,
     },
   };
 }

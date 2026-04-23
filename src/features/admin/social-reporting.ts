@@ -2,6 +2,7 @@ import {
   getBufferAvailability,
   getBufferInstagramChannels,
   getBufferOrganizations,
+  getBufferTikTokChannels,
 } from '@/features/social/buffer';
 import { socialStore } from '@/features/social/store';
 
@@ -12,9 +13,11 @@ export interface AdminSocialSummary {
     configured: boolean;
     reason?: string;
     organizationCount: number;
-    channelCount: number;
+    instagramChannelCount: number;
+    tiktokChannelCount: number;
     organizations: Array<{ id: string; name: string }>;
-    channels: Array<{ id: string; name: string; displayName?: string | null; paused?: boolean | null }>;
+    instagramChannels: Array<{ id: string; name: string; displayName?: string | null; paused?: boolean | null }>;
+    tiktokChannels: Array<{ id: string; name: string; displayName?: string | null; paused?: boolean | null }>;
     error?: string;
   };
   totals: {
@@ -31,14 +34,25 @@ export async function buildAdminSocialSummary(): Promise<AdminSocialSummary> {
   const availability = getBufferAvailability();
 
   let organizations: Array<{ id: string; name: string }> = [];
-  let channels: Array<{ id: string; name: string; displayName?: string | null; paused?: boolean | null }> = [];
+  let instagramChannels: Array<{ id: string; name: string; displayName?: string | null; paused?: boolean | null }> = [];
+  let tiktokChannels: Array<{ id: string; name: string; displayName?: string | null; paused?: boolean | null }> = [];
   let bufferError: string | undefined;
 
   if (availability.configured) {
     try {
-      const [orgs, rawChannels] = await Promise.all([getBufferOrganizations(), getBufferInstagramChannels()]);
+      const [orgs, rawInstagramChannels, rawTikTokChannels] = await Promise.all([
+        getBufferOrganizations(),
+        getBufferInstagramChannels(),
+        getBufferTikTokChannels(),
+      ]);
       organizations = orgs;
-      channels = rawChannels.map((channel) => ({
+      instagramChannels = rawInstagramChannels.map((channel) => ({
+        id: channel.id,
+        name: channel.name,
+        displayName: channel.displayName,
+        paused: channel.isQueuePaused,
+      }));
+      tiktokChannels = rawTikTokChannels.map((channel) => ({
         id: channel.id,
         name: channel.name,
         displayName: channel.displayName,
@@ -72,9 +86,11 @@ export async function buildAdminSocialSummary(): Promise<AdminSocialSummary> {
         configured: availability.configured,
         reason: availability.reason,
         organizationCount: organizations.length,
-        channelCount: channels.length,
+        instagramChannelCount: instagramChannels.length,
+        tiktokChannelCount: tiktokChannels.length,
         organizations,
-        channels,
+        instagramChannels,
+        tiktokChannels,
         error: bufferError,
       },
       totals,
@@ -88,9 +104,11 @@ export async function buildAdminSocialSummary(): Promise<AdminSocialSummary> {
         configured: availability.configured,
         reason: availability.reason,
         organizationCount: organizations.length,
-        channelCount: channels.length,
+        instagramChannelCount: instagramChannels.length,
+        tiktokChannelCount: tiktokChannels.length,
         organizations,
-        channels,
+        instagramChannels,
+        tiktokChannels,
         error: bufferError,
       },
       totals: { drafts: 0, approved: 0, scheduled: 0, published: 0, failed: 0 },
