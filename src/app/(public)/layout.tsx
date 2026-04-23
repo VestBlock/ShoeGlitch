@@ -1,5 +1,6 @@
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import SitewideGrowthTracker from '@/components/growth/SitewideGrowthTracker';
 
 // Force dynamic rendering on all public pages.
 // These pages read cookies (via Nav -> getSession), so they cannot be
@@ -10,6 +11,7 @@ export const dynamic = 'force-dynamic';
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <SitewideGrowthTracker />
       <Nav />
       <main>{children}</main>
       <Footer />

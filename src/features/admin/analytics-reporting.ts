@@ -79,6 +79,16 @@ function classifyRouteFamily(routePath: string) {
   if (routePath.startsWith('/book') || routePath.startsWith('/services') || routePath === '/') {
     return 'conversion-core';
   }
+  if (
+    routePath.startsWith('/coverage') ||
+    routePath.startsWith('/mail-in') ||
+    routePath.startsWith('/operator') ||
+    routePath.startsWith('/privacy') ||
+    routePath.startsWith('/terms') ||
+    routePath.startsWith('/refund-policy')
+  ) {
+    return 'public-site';
+  }
   return 'other';
 }
 

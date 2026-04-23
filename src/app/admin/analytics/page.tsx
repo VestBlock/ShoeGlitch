@@ -112,15 +112,13 @@ export default async function AdminAnalyticsPage() {
           <div className="mt-5 space-y-3 text-sm leading-6 text-ink/66">
             <p>Tracked by the current growth event system:</p>
             <ul className="list-disc pl-5">
-              <li>page views on growth, SEO, operator, and release templates</li>
+              <li>sitewide public page views, including homepage, services, booking, coverage, mail-in, operator, SEO, release, and intelligence pages</li>
               <li>CTA clicks on tagged links and buttons</li>
               <li>lead captures from growth lead forms</li>
               <li>booking starts and completed checkouts</li>
               <li>watchlist saves and operator application interest</li>
             </ul>
-            <p className="pt-2">
-              Homepage-wide, booking-wide, and product analytics can be added next, but this dashboard now gives a real view into the SEO/AEO and operator-acquisition layer.
-            </p>
+            <p className="pt-2">This dashboard is the main admin view for website traffic, lead capture, booking, watchlist, operator, and automation activity.</p>
           </div>
         </Card>
       </div>
