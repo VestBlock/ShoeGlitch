@@ -32,21 +32,10 @@ function brandModelLabel(brand: string | null, model: string | null) {
 }
 
 function sneakerHashtagCandidates(source: SocialSourceExtract) {
-  const shoeName = typeof source.metadata.shoeName === 'string' ? source.metadata.shoeName : null;
-  const title = source.title
-    .replace(/^how to clean\s+/i, '')
-    .replace(/^release alerts? for\s+/i, '')
-    .replace(/^is\s+/i, '')
-    .replace(/\s+worth restoring\??$/i, '')
-    .replace(/\s+\|\s+.*$/i, '')
-    .trim();
   const brand = typeof source.metadata.brand === 'string' ? source.metadata.brand : null;
   const model = typeof source.metadata.model === 'string' ? source.metadata.model : null;
-  const sku = typeof source.metadata.sku === 'string' ? source.metadata.sku : null;
 
   return [
-    shoeName,
-    title,
     brandModelLabel(brand, model),
     model,
   ].filter((value): value is string => Boolean(value));
