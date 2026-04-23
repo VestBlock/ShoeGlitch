@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { publishApprovedSocialQueue, runDailySocialDraftScan } from '@/features/social/service';
+import { getBufferAvailability, scheduleBufferInstagramPost } from '@/features/social/buffer';
 import { socialStore } from '@/features/social/store';
 import { recordAutomationRun } from '@/features/admin/automation-reporting';
 import { getSession } from '@/lib/session';
@@ -14,7 +15,11 @@ async function requireSuperAdmin() {
   }
 }
 
-function finish(message: string) {
+function finish(message: string): never {
+  redirect(`/admin/social?notice=${encodeURIComponent(message)}`);
+}
+
+function finishError(message: string): never {
   redirect(`/admin/social?notice=${encodeURIComponent(message)}`);
 }
 
@@ -71,7 +76,55 @@ export async function approveSocialDraftAction(formData: FormData) {
   });
 
   revalidatePath('/admin/social');
-  finish(item ? 'Social draft approved. It will schedule when the publish job runs.' : 'Unable to approve that social draft.');
+  finish(item ? 'Social draft approved. Use “Send to Buffer now” on the row or “Schedule approved” at the top to push it into Buffer.' : 'Unable to approve that social draft.');
+}
+
+export async function scheduleSocialDraftNowAction(formData: FormData) {
+  await requireSuperAdmin();
+
+  const id = String(formData.get('id') ?? '');
+  if (!id) finishError('Missing social draft id.');
+
+  const buffer = getBufferAvailability();
+  if (!buffer.configured) {
+    finishError('Buffer is not configured yet. Add the Buffer token before scheduling.');
+  }
+
+  const item = await socialStore.getById(id);
+  if (!item) {
+    finishError('That social post could not be found.');
+  }
+
+  const staged = await socialStore.updateForReview(id, {
+    status: 'approved',
+    recommendedScheduleAt: normalizeScheduleInput(formData.get('recommendedScheduleAt')) ?? item.recommendedScheduleAt,
+    approvalNotes: String(formData.get('approvalNotes') ?? '').trim() || null,
+  });
+
+  if (!staged) {
+    finishError('Unable to stage that post for scheduling.');
+  }
+
+  try {
+    const scheduled = await scheduleBufferInstagramPost(staged);
+    await socialStore.markScheduled(staged.id, {
+      externalPostId: scheduled.externalPostId,
+      provider: 'buffer',
+      scheduledAt: scheduled.scheduledAt,
+      metadata: {
+        ...staged.metadata,
+        ...scheduled.metadata,
+      },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Buffer scheduling failed.';
+    await socialStore.markFailed(staged.id, message);
+    revalidatePath('/admin/social');
+    finishError(`Buffer rejected that post: ${message}`);
+  }
+
+  revalidatePath('/admin/social');
+  finish('Social post scheduled to Buffer.');
 }
 
 export async function returnSocialDraftAction(formData: FormData) {

@@ -10,6 +10,7 @@ import {
   returnSocialDraftAction,
   saveSocialDraftAction,
   scanSocialDraftsAction,
+  scheduleSocialDraftNowAction,
 } from '@/app/admin/social/actions';
 import { getSession } from '@/lib/session';
 
@@ -76,7 +77,7 @@ export default async function AdminSocialPage({
           <div>
             <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Review workflow</div>
             <div className="mt-2 text-sm leading-6 text-ink/66">
-              Drafts are review-first. Scan pages into drafts, edit the caption, approve the best ones, then publish approved posts when Buffer is ready.
+              Drafts are review-first. “Approve only” keeps a post in the internal queue. “Send to Buffer now” schedules it immediately if Buffer is ready.
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -247,7 +248,15 @@ export default async function AdminSocialPage({
                     type="submit"
                     disabled={item.status === 'scheduled' || item.status === 'published'}
                   >
-                    Approve
+                    Approve only
+                  </button>
+                  <button
+                    className="btn-primary"
+                    formAction={scheduleSocialDraftNowAction}
+                    type="submit"
+                    disabled={item.status === 'scheduled' || item.status === 'published'}
+                  >
+                    Send to Buffer now
                   </button>
                   <button className="btn-glitch-ghost" formAction={returnSocialDraftAction} type="submit">
                     Return to draft
