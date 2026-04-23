@@ -6,10 +6,22 @@ import { db } from '@/lib/db';
 import { createCityAction, toggleCityActiveAction, updateCityFeesAction } from '../actions';
 import { formatDateOnly } from '@/lib/utils';
 
-export default async function AdminCities() {
+function getParam(params: Record<string, string | string[] | undefined>, key: string) {
+  const value = params[key];
+  return typeof value === 'string' ? value : null;
+}
+
+export default async function AdminCities({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const session = await getSession();
   if (!session || session.role !== 'super_admin') redirect('/login');
 
+  const params = (await searchParams) ?? {};
+  const notice = getParam(params, 'notice');
+  const error = getParam(params, 'error');
   const cities = await db.cities.all();
 
   // Preload per-city stats in parallel
@@ -30,6 +42,24 @@ export default async function AdminCities() {
       <p className="text-ink/60 mb-8 max-w-xl">
         Every row is a market. Add new cities, launch or pause coverage, and tune local fees.
       </p>
+
+      {notice ? (
+        <Card className="mb-6 border-emerald-400/40 bg-emerald-50/80">
+          <div className="flex items-start gap-3 text-sm leading-6 text-emerald-950">
+            <StatusDot tone="ok" />
+            <div>{notice}</div>
+          </div>
+        </Card>
+      ) : null}
+
+      {error ? (
+        <Card className="mb-6 border-red-400/40 bg-red-50/80">
+          <div className="flex items-start gap-3 text-sm leading-6 text-red-950">
+            <StatusDot tone="error" />
+            <div>{error}</div>
+          </div>
+        </Card>
+      ) : null}
 
       <Card className="p-6 mb-6">
         <div className="flex flex-col gap-2 mb-5">
