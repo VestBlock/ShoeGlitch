@@ -1,5 +1,6 @@
 import { buildReleaseAutomationManifest } from '@/features/releases/automation';
 import { checkRequiredOperationalTables } from '@/features/admin/db-health';
+import { getIntelligenceRouteIndex } from '@/features/intelligence/service';
 import { buildSeoAutomationManifest } from '@/features/seo/automation';
 import { scheduleBufferInstagramPost, syncBufferPostStatuses } from '@/features/social/buffer';
 import { extractSocialSourceFromPath } from '@/features/social/extract';
@@ -223,6 +224,7 @@ export async function runDailySocialDraftScan(limit = 8): Promise<SocialQueueSum
     buildReleaseAutomationManifest(),
     buildSeoAutomationManifest(),
   ]);
+  const intelligenceIndex = await getIntelligenceRouteIndex();
 
   const candidatePoolSize = Math.max(limit * 8, 40);
   const candidatePaths = [
@@ -238,6 +240,10 @@ export async function runDailySocialDraftScan(limit = 8): Promise<SocialQueueSum
       .filter((entry) => socialEligibleSeoEntry(entry.path))
       .slice(0, Math.max(8, Math.floor(candidatePoolSize / 3)))
       .map((entry) => ({ path: entry.path, sourceUpdatedAt: releaseManifest.generatedAt })),
+    ...intelligenceIndex
+      .filter((entry) => entry.provider === 'nike-public')
+      .slice(0, Math.max(8, Math.floor(candidatePoolSize / 2)))
+      .map((entry) => ({ path: entry.path, sourceUpdatedAt: entry.updatedAt })),
   ];
 
   const uniqueCandidates = Array.from(new Map(candidatePaths.map((candidate) => [candidate.path, candidate])).values());

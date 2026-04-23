@@ -1,12 +1,6 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Shoe Glitch social preview';
-export const size = {
-  width: 1200,
-  height: 1200,
-};
-export const contentType = 'image/png';
 
 function getParam(searchParams: URLSearchParams, key: string, fallback: string) {
   const value = searchParams.get(key)?.trim();
@@ -156,6 +150,9 @@ export async function GET(request: Request) {
         </div>
       </div>
     ),
-    size,
+    {
+      width: 1200,
+      height: 1200,
+    },
   );
 }

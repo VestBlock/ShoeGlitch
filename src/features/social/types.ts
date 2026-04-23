@@ -1,4 +1,5 @@
 export type SocialPageType =
+  | 'intelligence'
   | 'release'
   | 'how-to-clean'
   | 'worth-restoring'
@@ -24,7 +25,7 @@ export interface SocialSourceExtract {
   routePath: string;
   canonicalUrl: string;
   pageType: SocialPageType;
-  sourceKind: 'release-engine' | 'seo-engine';
+  sourceKind: 'release-engine' | 'seo-engine' | 'intelligence-feed';
   title: string;
   shortSummary: string;
   imageUrl: string | null;

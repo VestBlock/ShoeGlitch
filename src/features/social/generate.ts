@@ -42,6 +42,7 @@ function sneakerHashtagCandidates(source: SocialSourceExtract) {
 }
 
 function contentAngleForPageType(pageType: SocialPageType): SocialContentAngle {
+  if (pageType === 'intelligence') return 'release-radar';
   if (pageType === 'release') return 'release-radar';
   if (pageType === 'how-to-clean') return 'care-guide';
   if (pageType === 'worth-restoring') return 'restoration-read';
@@ -54,6 +55,8 @@ function buildHook(source: SocialSourceExtract) {
   const city = typeof source.metadata.city === 'string' ? source.metadata.city : null;
 
   switch (source.pageType) {
+    case 'intelligence':
+      return `${brand ?? 'SNKRS'} watch radar: ${source.title}`;
     case 'release':
       return `${brand ?? 'Sneaker'} drop radar: ${source.title}`;
     case 'how-to-clean':

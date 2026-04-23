@@ -272,8 +272,8 @@ function mapNormalizedToFeedItem(item: NormalizedSneaker): SneakerFeedItem {
   };
 }
 
-export async function getSneakerFeed(): Promise<SneakerFeedResult> {
-  const featured = await buildFeaturedSneakerSet();
+export async function getSneakerFeed(options?: { includeNikePublic?: boolean }): Promise<SneakerFeedResult> {
+  const featured = await buildFeaturedSneakerSet({ includeNikePublic: options?.includeNikePublic ?? true });
   const merged = mergeUnique(featured.items.map(mapNormalizedToFeedItem));
   const items = mixProviders(sortByPriority(merged));
   const usedFallbackData = featured.usedFallbackData;
@@ -286,12 +286,13 @@ export async function getSneakerFeed(): Promise<SneakerFeedResult> {
   };
 }
 
-export async function getSneakerBySlug(slug: string) {
-  const feed = await getSneakerFeed();
+export async function getSneakerBySlug(slug: string, options?: { includeNikePublic?: boolean }) {
+  const includeNikePublic = options?.includeNikePublic ?? true;
+  const feed = await getSneakerFeed({ includeNikePublic });
   const feedItem = feed.items.find((item) => item.slug === slug || item.externalId === slug);
   if (feedItem) return feedItem;
 
-  const product = await getSneakerProduct(slug);
+  const product = await getSneakerProduct(slug, { includeNikePublic });
   if (product.item) return mapNormalizedToFeedItem(product.item);
 
   return undefined;
@@ -302,5 +303,6 @@ export async function getIntelligenceRouteIndex() {
   return feed.items.map((item) => ({
     path: `/intelligence/${item.slug}`,
     updatedAt: item.lastUpdatedAt,
+    provider: item.provider,
   }));
 }

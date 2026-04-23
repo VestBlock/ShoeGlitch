@@ -35,7 +35,7 @@ function buildAlertFaqs(item: ReleasePageModel['item']): ReleaseFaq[] {
 }
 
 export async function buildReleaseAlertsPageModel(slug: string): Promise<ReleasePageModel | undefined> {
-  const item = await getSneakerBySlug(slug);
+  const item = await getSneakerBySlug(slug, { includeNikePublic: false });
   if (!item || !isAlertCandidate(item)) return undefined;
 
   const cities = (await getActiveSeoCities()).slice(0, 2);
@@ -143,7 +143,7 @@ export async function buildReleaseAlertsMetadata(slug: string): Promise<Metadata
 
 export async function getReleaseAlertsRouteIndex() {
   const { getSneakerFeed } = await import('@/features/intelligence/service');
-  const feed = await getSneakerFeed();
+  const feed = await getSneakerFeed({ includeNikePublic: false });
   return feed.items
     .filter(isAlertCandidate)
     .map((item) => ({

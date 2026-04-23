@@ -35,7 +35,7 @@ function buildCleaningFaqs(item: ReleasePageModel['item']): ReleaseFaq[] {
 }
 
 export async function buildHowToCleanPageModel(slug: string): Promise<ReleasePageModel | undefined> {
-  const item = await getSneakerBySlug(slug);
+  const item = await getSneakerBySlug(slug, { includeNikePublic: false });
   if (!item || !isCleaningCandidate(item)) return undefined;
 
   const cities = (await getActiveSeoCities()).slice(0, 2);
@@ -143,7 +143,7 @@ export async function buildHowToCleanMetadata(slug: string): Promise<Metadata> {
 
 export async function getHowToCleanRouteIndex() {
   const { getSneakerFeed } = await import('@/features/intelligence/service');
-  const feed = await getSneakerFeed();
+  const feed = await getSneakerFeed({ includeNikePublic: false });
   return feed.items
     .filter(isCleaningCandidate)
     .map((item) => ({

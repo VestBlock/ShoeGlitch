@@ -14,6 +14,7 @@ import {
 } from '@/features/seo/content';
 import { parseSeoRoute } from '@/features/seo/automation';
 import { SITE_URL } from '@/features/seo/catalog';
+import { getSneakerBySlug } from '@/features/intelligence/service';
 import type { ReleasePageModel } from '@/features/releases/types';
 import type { SeoLocationsIndexModel, SeoPageModel, SeoServiceHubModel } from '@/features/seo/types';
 import type { SocialPageType, SocialSourceExtract } from '@/features/social/types';
@@ -72,6 +73,37 @@ function extractFromReleaseModel(pageType: SocialPageType, model: ReleasePageMod
   };
 }
 
+async function extractFromIntelligencePath(path: string): Promise<SocialSourceExtract | null> {
+  const slug = path.replace('/intelligence/', '');
+  const item = await getSneakerBySlug(slug);
+  if (!item) return null;
+
+  return {
+    routePath: `/intelligence/${item.slug}`,
+    canonicalUrl: `${SITE_URL}/intelligence/${item.slug}`,
+    pageType: 'intelligence',
+    sourceKind: 'intelligence-feed',
+    title: `${item.name} intelligence`,
+    shortSummary: item.rankingNote,
+    imageUrl: item.media.thumbnailUrl || fallbackImageUrl(),
+    publishDate: item.release.date ?? null,
+    sourceUpdatedAt: isoOrNow(item.lastUpdatedAt),
+    metadata: {
+      shoeName: item.name,
+      brand: item.brand,
+      model: item.silhouette,
+      colorway: item.colorway,
+      sku: item.sku,
+      availability: item.availability,
+      retailPrice: item.release.retailPrice,
+      provider: item.provider,
+      marketStrength: item.scores.marketStrength,
+      cleaningScore: item.scores.cleaning,
+      restorationScore: item.scores.restoration,
+    },
+  };
+}
+
 function extractFromSeoModel(
   pageType: SocialPageType,
   model: SeoPageModel | SeoServiceHubModel | SeoLocationsIndexModel,
@@ -104,6 +136,11 @@ export async function extractSocialSourceFromPath(
   path: string,
   sourceUpdatedAtOverride?: string,
 ): Promise<SocialSourceExtract | null> {
+  if (path.startsWith('/intelligence/')) {
+    const source = await extractFromIntelligencePath(path);
+    return sourceUpdatedAtOverride && source ? { ...source, sourceUpdatedAt: sourceUpdatedAtOverride } : source;
+  }
+
   if (path.startsWith('/releases/')) {
     const slug = path.replace('/releases/', '');
     const model = await buildReleasePageModel(slug);

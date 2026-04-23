@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getSneakerBySlug, getIntelligenceRouteIndex } from '@/features/intelligence/service';
+import { getSneakerBySlug } from '@/features/intelligence/service';
 import { getActiveSeoCities } from '@/features/seo/data';
 import { SITE_URL } from '@/features/seo/catalog';
 import { getReleaseEditorialBySlug } from '@/features/releases/editorial';
@@ -168,7 +168,7 @@ function buildFaqs(model: ReleasePageModel['item']): ReleaseFaq[] {
 }
 
 export async function buildReleasePageModel(slug: string): Promise<ReleasePageModel | undefined> {
-  const item = await getSneakerBySlug(slug);
+  const item = await getSneakerBySlug(slug, { includeNikePublic: false });
   if (!item) return undefined;
 
   const path = `/releases/${item.slug}`;
@@ -243,9 +243,10 @@ export async function buildReleaseMetadata(slug: string): Promise<Metadata> {
 }
 
 export async function getReleaseRouteIndex() {
-  const intelligenceRoutes = await getIntelligenceRouteIndex();
-  return intelligenceRoutes.map((item) => ({
-    path: item.path.replace('/intelligence/', '/releases/'),
-    updatedAt: item.updatedAt,
+  const { getSneakerFeed } = await import('@/features/intelligence/service');
+  const feed = await getSneakerFeed({ includeNikePublic: false });
+  return feed.items.map((item) => ({
+    path: `/releases/${item.slug}`,
+    updatedAt: item.lastUpdatedAt,
   }));
 }

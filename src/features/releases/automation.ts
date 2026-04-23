@@ -143,7 +143,7 @@ function isWorthRestoring(item: Awaited<ReturnType<typeof getSneakerFeed>>['item
 }
 
 export async function buildReleaseAutomationManifest(): Promise<ReleaseAutomationManifest> {
-  const feed = await getSneakerFeed();
+  const feed = await getSneakerFeed({ includeNikePublic: false });
   const plan = detectPlan();
   const budget = buildBudget(plan);
 
