@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import DashboardShell from '@/components/DashboardShell';
 import { OrdersTable, buildLookups } from '@/components/OrdersTable';
+import OperatorTrainingModule from '@/components/OperatorTrainingModule';
 import { Badge, Card, StatusDot } from '@/components/ui';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
@@ -218,6 +219,10 @@ export default async function CleanerDashboard() {
             })}
           </div>
         )}
+      </section>
+
+      <section className="mb-10">
+        <OperatorTrainingModule title="Training library for real pair work" />
       </section>
 
       <section>

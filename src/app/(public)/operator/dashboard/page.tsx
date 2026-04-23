@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import OperatorTrainingModule from '@/components/OperatorTrainingModule';
 import { Badge, Card, StatusDot } from '@/components/ui';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
@@ -192,6 +193,8 @@ export default async function OperatorDashboard() {
           </Card>
         </div>
       </div>
+
+      <OperatorTrainingModule title="Training videos the team expects operators to know" compact />
     </section>
   );
 }
