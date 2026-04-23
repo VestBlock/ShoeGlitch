@@ -57,6 +57,17 @@ This keeps content generation separate from publishing and prevents blind auto-p
 
 That means a page can create a fresh social candidate when the source content actually changes, without re-drafting the same post on every scan.
 
+Unchanged draft candidates are refreshed in place during scans. This keeps editable drafts current when caption or hashtag rules improve without creating duplicate posts.
+
+## Sneaker hashtags
+Sneaker release, cleaning, restoration, and alert drafts include title-aware hashtags from the normalized release source, such as:
+- full shoe title
+- brand + model
+- model
+- SKU when available
+
+The hashtag builder still caps the set so captions remain readable and review-friendly.
+
 ## Internal-only routes
 - `GET /api/social/queue`
 - `POST /api/social/queue`

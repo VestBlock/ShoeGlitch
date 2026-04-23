@@ -3,7 +3,7 @@ import DashboardShell from '@/components/DashboardShell';
 import { Badge, Card, StatusDot } from '@/components/ui';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
-import { toggleCityActiveAction, updateCityFeesAction } from '../actions';
+import { createCityAction, toggleCityActiveAction, updateCityFeesAction } from '../actions';
 import { formatDateOnly } from '@/lib/utils';
 
 export default async function AdminCities() {
@@ -28,8 +28,67 @@ export default async function AdminCities() {
   return (
     <DashboardShell currentPath="/admin/cities" pageTitle="Cities">
       <p className="text-ink/60 mb-8 max-w-xl">
-        Every row is a market. Launch, pause, and tune fees.
+        Every row is a market. Add new cities, launch or pause coverage, and tune local fees.
       </p>
+
+      <Card className="p-6 mb-6">
+        <div className="flex flex-col gap-2 mb-5">
+          <div className="text-xs uppercase tracking-widest text-glitch">Add a city</div>
+          <h2 className="h-display text-3xl">Open the next ShoeGlitch market.</h2>
+          <p className="text-sm text-ink/60 max-w-2xl">
+            Add the city here first, then attach service areas and operators as the market gets ready.
+            SEO pages and public coverage automatically use active cities.
+          </p>
+        </div>
+        <form action={createCityAction} className="grid gap-4 lg:grid-cols-4">
+          <div>
+            <label className="label">City name</label>
+            <input name="name" required placeholder="Chicago" className="input" />
+          </div>
+          <div>
+            <label className="label">State</label>
+            <input name="state" required maxLength={2} placeholder="IL" className="input uppercase" />
+          </div>
+          <div>
+            <label className="label">Slug</label>
+            <input name="slug" placeholder="chicago" className="input" />
+          </div>
+          <div>
+            <label className="label">Timezone</label>
+            <select name="timezone" defaultValue="America/Chicago" className="input">
+              <option value="America/Chicago">Central</option>
+              <option value="America/New_York">Eastern</option>
+              <option value="America/Denver">Mountain</option>
+              <option value="America/Los_Angeles">Pacific</option>
+            </select>
+          </div>
+          <div>
+            <label className="label">Launch date</label>
+            <input name="launchDate" required type="date" defaultValue={new Date().toISOString().slice(0, 10)} className="input" />
+          </div>
+          <div>
+            <label className="label">Pickup fee</label>
+            <input name="pickup" type="number" min={0} defaultValue={10} className="input" />
+          </div>
+          <div>
+            <label className="label">Rush fee</label>
+            <input name="rush" type="number" min={0} defaultValue={25} className="input" />
+          </div>
+          <div>
+            <label className="label">Mail-in return</label>
+            <input name="mailin" type="number" min={0} defaultValue={12} className="input" />
+          </div>
+          <div className="lg:col-span-3">
+            <label className="label">Hub address</label>
+            <input name="hubAddress" placeholder="Optional until the market is ready" className="input" />
+          </div>
+          <label className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-white/60 px-4 py-3 text-sm font-semibold">
+            <input name="active" type="checkbox" className="h-4 w-4 accent-[var(--glitch)]" />
+            Launch immediately
+          </label>
+          <button className="btn-primary lg:col-span-4">Add city</button>
+        </form>
+      </Card>
 
       <div className="space-y-5">
         {cities.map((c) => {

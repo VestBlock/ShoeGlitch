@@ -6,6 +6,59 @@ import { requireRole } from '@/lib/rbac';
 import { db } from '@/lib/db';
 import { shortId } from '@/lib/utils';
 
+function slugifyCity(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export async function createCityAction(formData: FormData) {
+  const session = await getSession();
+  requireRole(session, 'super_admin');
+
+  const name = String(formData.get('name') ?? '').trim();
+  const state = String(formData.get('state') ?? '').trim().toUpperCase();
+  const requestedSlug = String(formData.get('slug') ?? '').trim();
+  const timezone = String(formData.get('timezone') ?? 'America/Chicago').trim();
+  const launchDate = String(formData.get('launchDate') ?? '').trim();
+  const pickup = Number(formData.get('pickup') ?? 0);
+  const rush = Number(formData.get('rush') ?? 0);
+  const mailin = Number(formData.get('mailin') ?? 0);
+  const hubAddress = String(formData.get('hubAddress') ?? '').trim();
+  const active = formData.get('active') === 'on';
+  const slug = slugifyCity(requestedSlug || name);
+
+  if (!name || !state || !slug || !launchDate) {
+    throw new Error('City name, state, slug, and launch date are required.');
+  }
+
+  const existing = await db.cities.bySlug(slug);
+  if (existing) {
+    throw new Error(`A city with slug "${slug}" already exists.`);
+  }
+
+  await db.cities.upsert({
+    id: `city_${slug.replace(/-/g, '_') || shortId('city')}`,
+    name,
+    slug,
+    state,
+    timezone,
+    active,
+    launchDate,
+    defaultPickupFee: Number.isFinite(pickup) ? pickup : 0,
+    defaultRushFee: Number.isFinite(rush) ? rush : 0,
+    defaultMailInReturnFee: Number.isFinite(mailin) ? mailin : 0,
+    hubAddress: hubAddress || undefined,
+  });
+
+  revalidatePath('/admin/cities');
+  revalidatePath('/coverage');
+  revalidatePath('/locations');
+  revalidatePath('/');
+}
+
 export async function toggleCityActiveAction(formData: FormData) {
   const session = await getSession();
   requireRole(session, 'super_admin');

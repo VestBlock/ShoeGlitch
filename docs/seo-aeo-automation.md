@@ -4,6 +4,7 @@ This repo now includes a reusable automation layer for ShoeGlitch city and servi
 
 ## What it does
 - derives indexable city-service routes from live ShoeGlitch city data
+- supports adding new city markets from `/admin/cities`; active cities flow into coverage, booking, SEO city pages, operator pages, and automation manifests
 - derives operator-acquisition routes from live ShoeGlitch city data and the existing operator apply flow
 - builds reusable page models for:
   - `/operators`
@@ -121,6 +122,16 @@ Optional env overrides:
 - `KICKSDB_REFRESHES_PER_DAY=...`
 
 That keeps the content engine active without turning the site into a thin page factory.
+
+## KicksDB batching strategy
+The release/social system intentionally treats normalized ShoeGlitch pages as the source of truth, not raw KicksDB payloads. One KicksDB-backed feed/search response can populate many candidate release records, and those records then fan out into:
+- `/releases/[slug]`
+- `/how-to-clean/[slug]`
+- `/worth-restoring/[slug]`
+- `/release-alerts/[slug]`
+- social draft candidates in `social_post_queue`
+
+This gives ShoeGlitch the efficiency of one useful provider pull while preserving quality gates, duplicate prevention, internal links, CTAs, and review-first social publishing.
 
 ## Next automation steps
 1. expand into service-area pages only for active cities with real coverage depth

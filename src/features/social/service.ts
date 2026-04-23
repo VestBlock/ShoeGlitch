@@ -67,6 +67,23 @@ export async function createSocialDraftForPath(path: string, force = false, sour
   if (!force && latest) {
     const sameOrNewer = compareIso(latest.sourceUpdatedAt, source.sourceUpdatedAt) >= 0;
     if (sameOrNewer) {
+      if (latest.status === 'draft') {
+        const refreshed = await socialStore.updateContent(latest.id, {
+          hook: payload.hook,
+          caption: payload.caption,
+          hashtags: payload.hashtags,
+          recommendedScheduleAt: payload.recommendedScheduleAt,
+          approvalNotes: latest.approvalNotes ?? null,
+        });
+        return {
+          status: 'duplicate' as const,
+          reason: refreshed
+            ? `Refreshed draft candidate for ${source.routePath} and angle ${payload.contentAngle}.`
+            : `A draft candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`,
+          draft: refreshed ?? latest,
+        };
+      }
+
       return {
         status: 'duplicate' as const,
         reason: `A ${latest.status} candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`,

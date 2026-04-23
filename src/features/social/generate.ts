@@ -14,6 +14,36 @@ function hashtagify(value: string) {
     .join('');
 }
 
+function compactHashtag(value: string) {
+  const tag = hashtagify(value);
+  return tag.length >= 2 && tag.length <= 80 ? `#${tag}` : null;
+}
+
+function sneakerHashtagCandidates(source: SocialSourceExtract) {
+  const title = source.title
+    .replace(/^how to clean\s+/i, '')
+    .replace(/^release alerts? for\s+/i, '')
+    .replace(/^is\s+/i, '')
+    .replace(/\s+worth restoring\??$/i, '')
+    .replace(/\s+\|\s+.*$/i, '')
+    .trim();
+  const brand = typeof source.metadata.brand === 'string' ? source.metadata.brand : null;
+  const model = typeof source.metadata.model === 'string' ? source.metadata.model : null;
+  const colorway = typeof source.metadata.colorway === 'string' ? source.metadata.colorway : null;
+  const sku = typeof source.metadata.sku === 'string' ? source.metadata.sku : null;
+  const normalizedTitle =
+    brand && model
+      ? [brand, model, colorway].filter(Boolean).join(' ')
+      : title;
+
+  return [
+    normalizedTitle,
+    brand && model ? `${brand} ${model}` : null,
+    model,
+    sku,
+  ].filter((value): value is string => Boolean(value));
+}
+
 function contentAngleForPageType(pageType: SocialPageType): SocialContentAngle {
   if (pageType === 'release') return 'release-radar';
   if (pageType === 'how-to-clean') return 'care-guide';
@@ -49,14 +79,24 @@ function buildHashtags(source: SocialSourceExtract) {
   const city = typeof source.metadata.city === 'string' ? source.metadata.city : null;
   const service = typeof source.metadata.service === 'string' ? source.metadata.service : null;
 
-  if (brand) tags.add(`#${hashtagify(brand)}`);
-  if (city) tags.add(`#${hashtagify(city)}`);
+  for (const candidate of sneakerHashtagCandidates(source)) {
+    const tag = compactHashtag(candidate);
+    if (tag) tags.add(tag);
+  }
+  if (brand) {
+    const tag = compactHashtag(brand);
+    if (tag) tags.add(tag);
+  }
+  if (city) {
+    const tag = compactHashtag(city);
+    if (tag) tags.add(tag);
+  }
   if (service === 'shoe-restoration' || source.pageType === 'worth-restoring') tags.add('#ShoeRestoration');
   if (source.pageType === 'release' || source.pageType === 'release-alerts') tags.add('#SneakerRelease');
   if (source.pageType === 'how-to-clean') tags.add('#HowToCleanShoes');
   if (service === 'pickup-dropoff') tags.add('#PickupDropoff');
 
-  return Array.from(tags).slice(0, 8);
+  return Array.from(tags).slice(0, 10);
 }
 
 function nextRecommendedScheduleAt(source: SocialSourceExtract) {

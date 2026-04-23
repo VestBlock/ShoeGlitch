@@ -64,6 +64,7 @@ Generated under the city routes for supported areas. Check `src/features/seo/rou
 - `/admin/analytics` -> growth event and lead reporting
 - `/admin/social` -> social queue and Buffer publishing visibility
 - `/admin/operators` -> operator application review, kit payment status, and license document review
+- `/admin/cities` -> city market creation, launch/pause controls, and local fee tuning
 
 These are role-gated by `src/middleware.ts`. Do not change these routes casually.
 
