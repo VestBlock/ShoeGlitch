@@ -64,6 +64,7 @@ export async function buildFeaturedSneakerSet() {
   const now = new Date();
   const sourceHealth: ProviderHealth[] = [];
   const merged = new Map<string, NormalizedSneaker>();
+  const targetPoolSize = 24;
 
   try {
     const results = await Promise.all(FEED_QUERIES.map((entry) => kicksDbProvider.search({ query: entry.query, limit: 5 }, now)));
@@ -79,9 +80,9 @@ export async function buildFeaturedSneakerSet() {
     // Fall through to public provider.
   }
 
-  if (merged.size === 0) {
+  if (merged.size < targetPoolSize) {
     try {
-      const publicResult = await nikePublicProvider.search({ limit: 18 }, now);
+      const publicResult = await nikePublicProvider.search({ limit: Math.max(18, targetPoolSize - merged.size) }, now);
       sourceHealth.push(publicResult.health);
       for (const item of publicResult.items) {
         const key = `${item.provider}:${item.externalId}:${item.sku}`;

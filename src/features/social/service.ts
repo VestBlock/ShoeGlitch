@@ -67,7 +67,7 @@ export async function createSocialDraftForPath(path: string, force = false, sour
   if (!force && latest) {
     const sameOrNewer = compareIso(latest.sourceUpdatedAt, source.sourceUpdatedAt) >= 0;
     if (sameOrNewer) {
-      if (latest.status === 'draft') {
+      if (latest.status === 'draft' || latest.status === 'failed') {
         const refreshed = await socialStore.updateContent(latest.id, {
           hook: payload.hook,
           caption: payload.caption,
@@ -75,12 +75,22 @@ export async function createSocialDraftForPath(path: string, force = false, sour
           recommendedScheduleAt: payload.recommendedScheduleAt,
           approvalNotes: latest.approvalNotes ?? null,
         });
+        const recycled =
+          latest.status === 'failed'
+            ? await socialStore.updateForReview(latest.id, {
+                status: 'draft',
+                recommendedScheduleAt: payload.recommendedScheduleAt,
+                approvalNotes: latest.approvalNotes ?? null,
+              })
+            : refreshed;
         return {
           status: 'duplicate' as const,
-          reason: refreshed
-            ? `Refreshed draft candidate for ${source.routePath} and angle ${payload.contentAngle}.`
+          reason: recycled
+            ? latest.status === 'failed'
+              ? `Recycled failed social candidate for ${source.routePath} back into draft status.`
+              : `Refreshed draft candidate for ${source.routePath} and angle ${payload.contentAngle}.`
             : `A draft candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`,
-          draft: refreshed ?? latest,
+          draft: recycled ?? refreshed ?? latest,
         };
       }
 
