@@ -12,11 +12,13 @@ This file is the source of truth for what ShoeGlitch emails are actually live, w
 ### Customer
 - order confirmation
 - customer welcome email on first authenticated account provisioning
+- admin alert on first authenticated customer signup
 - status update
 - order completed
 - refund confirmation
 - operator on the way
 - abandoned booking follow-up after expired checkout session
+- admin alert on new paid booking
 
 ### Operator / cleaner
 - new order booking alert to cleaners/operators

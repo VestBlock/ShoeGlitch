@@ -105,6 +105,22 @@ export async function POST(req: Request) {
               console.warn(`[email] customer ${order.customerId} not found for order ${order.code}`);
             }
             await sendOperatorBookingAlert({ order: updated, city, cleaners });
+            await sendAdminSystemAlert({
+              subject: 'New paid booking',
+              badge: 'Booking alert',
+              heading: 'A new Shoe Glitch booking was paid and confirmed.',
+              body: `
+                <table style="width:100%;border-collapse:collapse;">
+                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Order</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${updated.code}</td></tr>
+                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Customer</td><td style="padding:8px 0;text-align:right;font-weight:600;">${customer?.name ?? 'Unknown customer'}</td></tr>
+                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Email</td><td style="padding:8px 0;text-align:right;font-weight:600;">${customer?.email ?? 'Unknown'}</td></tr>
+                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">City</td><td style="padding:8px 0;text-align:right;font-weight:600;">${city?.name ?? updated.cityId}</td></tr>
+                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Fulfillment</td><td style="padding:8px 0;text-align:right;font-weight:600;text-transform:capitalize;">${updated.fulfillmentMethod}</td></tr>
+                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Total</td><td style="padding:8px 0;text-align:right;font-weight:600;">$${updated.total}</td></tr>
+                </table>
+              `,
+              cta: { href: `https://shoeglitch.com/admin/orders/${updated.id}`, label: 'Review booking →' },
+            });
           } catch (emailErr: any) {
             console.error('[email] order confirmation failed:', emailErr?.message ?? emailErr);
           }
