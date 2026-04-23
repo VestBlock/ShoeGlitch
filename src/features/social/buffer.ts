@@ -82,15 +82,17 @@ export async function getBufferOrganizations(): Promise<BufferOrganizationSummar
 
   const query = `
     query GetOrganizations {
-      organizations {
-        id
-        name
+      account {
+        organizations {
+          id
+          name
+        }
       }
     }
   `;
 
-  const data = await bufferRequest<{ organizations?: BufferOrganizationSummary[] }>(query);
-  return data.organizations ?? [];
+  const data = await bufferRequest<{ account?: { organizations?: BufferOrganizationSummary[] } }>(query);
+  return data.account?.organizations ?? [];
 }
 
 async function resolveOrganizationId() {

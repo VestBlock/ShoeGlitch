@@ -72,7 +72,14 @@ These routes require:
 - `SOCIAL_CRON_SECRET`
 - `BUFFER_ACCESS_TOKEN` or `BUFFER_API_TOKEN`
 - `BUFFER_ORGANIZATION_ID`
-- `BUFFER_INSTAGRAM_CHANNEL_ID` (optional)
+- `BUFFER_INSTAGRAM_CHANNEL_ID`
+
+Current discovered Buffer ids:
+- organization: `Vestblock` / `6824f713908a500d1955f4d4`
+- ShoeGlitch Instagram channel: `shoeglitch` / `69e98be2031bfa423c32f496`
+- secondary Instagram channel discovered: `vest.block` / `6824faa2f49c987a95cc48b1`
+
+Pin `BUFFER_INSTAGRAM_CHANNEL_ID=69e98be2031bfa423c32f496` so automation schedules to the ShoeGlitch account instead of whichever Instagram channel Buffer returns first.
 
 ## Useful commands
 - `npm run build`
@@ -89,9 +96,9 @@ These routes require:
   - admin review, edit, approve, reject, scan, and publish controls at `/admin/social`
   - review/status workflow backed by `social_post_queue`
   - Buffer publishing adapter
-- requires env to fully activate:
-  - real Buffer scheduling
-  - Buffer organization/channel discovery
+- live once env is present:
+  - real Buffer organization/channel discovery
+  - scheduling approved posts to the pinned ShoeGlitch Instagram channel
 
 ## Best next improvement
-- add Buffer credentials that pass Buffer API authentication so approved posts can move from queue review into scheduled Instagram posts.
+- rotate the temporary Buffer token after verification, then keep the org/channel ids pinned in Vercel so approved posts schedule to `shoeglitch`.
