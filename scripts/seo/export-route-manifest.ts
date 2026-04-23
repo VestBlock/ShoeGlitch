@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { buildSeoAutomationManifest } from '../../src/features/seo/automation';
+import { buildRouteManifestSnapshot } from '../../src/features/admin/seo-reporting';
 
 function loadDotEnv(path: string) {
   if (!existsSync(path)) return;
@@ -19,13 +20,14 @@ function loadDotEnv(path: string) {
 async function main() {
   loadDotEnv(resolve(process.cwd(), '.env.local'));
   const outputArg = process.argv[2];
-  const manifest = await buildSeoAutomationManifest();
+  const entries = await buildSeoAutomationManifest();
+  const manifest = buildRouteManifestSnapshot(entries);
 
   if (outputArg) {
     const outputPath = resolve(process.cwd(), outputArg);
     mkdirSync(dirname(outputPath), { recursive: true });
     writeFileSync(outputPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
-    console.log(`Wrote ${manifest.length} SEO entries to ${outputPath}`);
+    console.log(`Wrote ${manifest.total} SEO entries to ${outputPath}`);
     return;
   }
 

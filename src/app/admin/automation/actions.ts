@@ -8,6 +8,7 @@ import { buildReleaseAutomationManifest } from '@/features/releases/automation';
 import { buildSeoAutomationManifest } from '@/features/seo/automation';
 import { publishApprovedSocialQueue, runDailySocialDraftScan } from '@/features/social/service';
 import { recordAutomationRun } from '@/features/admin/automation-reporting';
+import { buildRouteManifestSnapshot } from '@/features/admin/seo-reporting';
 import { runMockWatchlistScan, sendWatchlistDigestBatch } from '@/features/intelligence/watchlist/service';
 import { getSession } from '@/lib/session';
 
@@ -36,19 +37,7 @@ export async function runSeoAutomationAction() {
       buildReleaseAutomationManifest(),
     ]);
 
-    const routeManifest = {
-      generatedAt: new Date().toISOString(),
-      total: routeEntries.length,
-      byFamily: routeEntries.reduce<Record<string, number>>((acc, entry) => {
-        acc[entry.family] = (acc[entry.family] ?? 0) + 1;
-        return acc;
-      }, {}),
-      byKind: routeEntries.reduce<Record<string, number>>((acc, entry) => {
-        acc[entry.kind] = (acc[entry.kind] ?? 0) + 1;
-        return acc;
-      }, {}),
-      entries: routeEntries,
-    };
+    const routeManifest = buildRouteManifestSnapshot(routeEntries);
 
     await Promise.all([
       saveJson(path.join(process.cwd(), 'public', 'seo', 'route-manifest.json'), routeManifest),

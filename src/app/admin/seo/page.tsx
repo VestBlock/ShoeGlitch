@@ -18,7 +18,7 @@ export default async function AdminSeoPage() {
   const summary = await buildAdminSeoSummary();
 
   return (
-    <DashboardShell currentPath="/admin/seo" pageTitle="SEO & automation">
+    <DashboardShell currentPath="/admin/seo" pageTitle="SEO health">
       <div className="flex flex-wrap items-center gap-3 mb-8">
         <Badge tone="glitch"><StatusDot tone={tone(summary.routeStatus.status)} /> {summary.routeManifest.total} route targets</Badge>
         <Badge tone="dark"><StatusDot tone={tone(summary.releaseStatus.status)} /> {summary.releaseManifest.counts.total} release targets</Badge>

@@ -59,8 +59,8 @@ Generated under the city routes for supported areas. Check `src/features/seo/rou
 - `/cleaner/*`
 - `/city-manager/*`
 - `/admin/*`
-- `/admin/seo` -> SEO and automation reporting
-- `/admin/automation` -> manual automation runs and recent run history
+- `/admin/seo` -> SEO health, manifest reporting, and content-engine inventory
+- `/admin/automation` -> manual automation run controls, readiness checks, and recent run history
 - `/admin/analytics` -> growth event and lead reporting
 - `/admin/social` -> social queue and Buffer publishing visibility
 - `/admin/operators` -> operator application review, kit payment status, and license document review

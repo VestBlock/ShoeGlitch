@@ -13,6 +13,8 @@ interface RouteManifestSnapshot {
   entries: SeoAutomationEntry[];
 }
 
+type RawRouteManifestSnapshot = RouteManifestSnapshot | SeoAutomationEntry[];
+
 export interface AdminManifestStatus {
   label: string;
   updatedAt: string;
@@ -61,29 +63,59 @@ function buildManifestStatus(label: string, updatedAt: string): AdminManifestSta
   };
 }
 
+export function buildRouteManifestSnapshot(
+  entries: SeoAutomationEntry[],
+  generatedAt = new Date().toISOString(),
+): RouteManifestSnapshot {
+  return {
+    generatedAt,
+    total: entries.length,
+    byFamily: entries.reduce<Record<string, number>>((acc, entry) => {
+      acc[entry.family] = (acc[entry.family] ?? 0) + 1;
+      return acc;
+    }, {}),
+    byKind: entries.reduce<Record<string, number>>((acc, entry) => {
+      acc[entry.kind] = (acc[entry.kind] ?? 0) + 1;
+      return acc;
+    }, {}),
+    entries,
+  };
+}
+
+function normalizeRouteManifest(
+  manifest: RawRouteManifestSnapshot | null,
+  updatedAt: string | null,
+): RouteManifestSnapshot | null {
+  if (!manifest) return null;
+  if (Array.isArray(manifest)) {
+    return buildRouteManifestSnapshot(manifest, updatedAt ?? new Date().toISOString());
+  }
+
+  const entries = Array.isArray(manifest.entries) ? manifest.entries : [];
+  return {
+    generatedAt: manifest.generatedAt ?? updatedAt ?? new Date().toISOString(),
+    total: typeof manifest.total === 'number' ? manifest.total : entries.length,
+    byFamily:
+      manifest.byFamily && Object.keys(manifest.byFamily).length > 0
+        ? manifest.byFamily
+        : buildRouteManifestSnapshot(entries).byFamily,
+    byKind:
+      manifest.byKind && Object.keys(manifest.byKind).length > 0
+        ? manifest.byKind
+        : buildRouteManifestSnapshot(entries).byKind,
+    entries,
+  };
+}
+
 export async function buildAdminSeoSummary(): Promise<AdminSeoSummary> {
   const [routeFile, releaseFile] = await Promise.all([
-    readJsonFile<RouteManifestSnapshot>(ROUTE_MANIFEST_PATH),
+    readJsonFile<RawRouteManifestSnapshot>(ROUTE_MANIFEST_PATH),
     readJsonFile<ReleaseAutomationManifest>(RELEASE_MANIFEST_PATH),
   ]);
 
   const routeManifest =
-    routeFile.data ??
-    (() => {
-      return buildSeoAutomationManifest().then((manifest) => ({
-        generatedAt: new Date().toISOString(),
-        total: manifest.length,
-        byFamily: manifest.reduce<Record<string, number>>((acc, entry) => {
-          acc[entry.family] = (acc[entry.family] ?? 0) + 1;
-          return acc;
-        }, {}),
-        byKind: manifest.reduce<Record<string, number>>((acc, entry) => {
-          acc[entry.kind] = (acc[entry.kind] ?? 0) + 1;
-          return acc;
-        }, {}),
-        entries: manifest,
-      }));
-    })();
+    normalizeRouteManifest(routeFile.data, routeFile.updatedAt) ??
+    (() => buildSeoAutomationManifest().then((manifest) => buildRouteManifestSnapshot(manifest)))();
 
   const resolvedRouteManifest = routeManifest instanceof Promise ? await routeManifest : routeManifest;
   const resolvedReleaseManifest = releaseFile.data ?? (await buildReleaseAutomationManifest());
