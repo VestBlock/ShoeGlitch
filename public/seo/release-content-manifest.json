@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-23T15:26:37.306Z",
+  "generatedAt": "2026-04-23T15:43:21.698Z",
   "budget": {
     "plan": "free",
     "monthlyRequests": 1000,
@@ -31,7 +31,7 @@
       "restoration": 64,
       "preservationValue": 58,
       "primaryCta": "Book cleaning",
-      "updatedAt": "2026-04-23T10:11:08Z"
+      "updatedAt": "2026-04-23T15:06:03Z"
     },
     {
       "family": "how-to-clean",
@@ -45,7 +45,7 @@
       "restoration": 54,
       "preservationValue": 54,
       "primaryCta": "Book cleaning",
-      "updatedAt": "2026-04-23T10:11:34Z"
+      "updatedAt": "2026-04-23T15:06:22Z"
     },
     {
       "family": "how-to-clean",
@@ -59,7 +59,7 @@
       "restoration": 54,
       "preservationValue": 54,
       "primaryCta": "Book cleaning",
-      "updatedAt": "2026-04-23T10:11:46Z"
+      "updatedAt": "2026-04-23T15:06:30Z"
     },
     {
       "family": "how-to-clean",
@@ -73,21 +73,7 @@
       "restoration": 52,
       "preservationValue": 50,
       "primaryCta": "Book cleaning",
-      "updatedAt": "2026-04-23T10:10:49Z"
-    },
-    {
-      "family": "release-alerts",
-      "path": "/release-alerts/air-jordan-1-high-method-of-make-hydrogen-blue-womens",
-      "slug": "air-jordan-1-high-method-of-make-hydrogen-blue-womens",
-      "title": "Jordan 1 High Method of Make Hydrogen Blue (Women's) release alerts",
-      "description": "Jordan 1 High Method of Make Hydrogen Blue (Women's) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
-      "brand": "Jordan",
-      "availability": "watch-worthy",
-      "marketStrength": 33,
-      "restoration": 44,
-      "preservationValue": 41,
-      "primaryCta": "Join release alerts",
-      "updatedAt": "2026-04-23T05:08:13Z"
+      "updatedAt": "2026-04-23T15:05:52Z"
     },
     {
       "family": "release-alerts",
@@ -105,17 +91,31 @@
     },
     {
       "family": "release-alerts",
-      "path": "/release-alerts/new-balance-1906r-silver-metallic-sea-salt",
-      "slug": "new-balance-1906r-silver-metallic-sea-salt",
-      "title": "New Balance 1906R Silver Metallic Sea Salt release alerts",
-      "description": "New Balance 1906R Silver Metallic Sea Salt is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
-      "brand": "New Balance",
+      "path": "/release-alerts/air-jordan-1-high-method-of-make-pink-oxford-womens",
+      "slug": "air-jordan-1-high-method-of-make-pink-oxford-womens",
+      "title": "Jordan 1 High Method Of Make Pink Oxford (Women's) release alerts",
+      "description": "Jordan 1 High Method Of Make Pink Oxford (Women's) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
+      "brand": "Jordan",
       "availability": "watch-worthy",
-      "marketStrength": 54,
-      "restoration": 62,
-      "preservationValue": 54,
+      "marketStrength": 34,
+      "restoration": 34,
+      "preservationValue": 37,
       "primaryCta": "Join release alerts",
-      "updatedAt": "2026-04-23T10:09:52Z"
+      "updatedAt": "2026-04-23T11:05:57Z"
+    },
+    {
+      "family": "release-alerts",
+      "path": "/release-alerts/air-jordan-1-high-mm-legend-medium-brown-womens",
+      "slug": "air-jordan-1-high-mm-legend-medium-brown-womens",
+      "title": "Jordan 1 High Method of Make Legend Medium Brown (Women's) release alerts",
+      "description": "Jordan 1 High Method of Make Legend Medium Brown (Women's) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
+      "brand": "Jordan",
+      "availability": "watch-worthy",
+      "marketStrength": 32,
+      "restoration": 52,
+      "preservationValue": 41,
+      "primaryCta": "Join release alerts",
+      "updatedAt": "2026-04-23T13:06:18Z"
     },
     {
       "family": "release-alerts",
@@ -147,31 +147,31 @@
     },
     {
       "family": "release-alerts",
-      "path": "/release-alerts/nike-vomero-5-pearl-pink-bleached-lilac-summit-white-vast-grey-gs",
-      "slug": "nike-vomero-5-pearl-pink-bleached-lilac-summit-white-vast-grey-gs",
-      "title": "Nike Vomero 5 Pearl Pink Bleached Lilac Summit White Vast Grey (GS) release alerts",
-      "description": "Nike Vomero 5 Pearl Pink Bleached Lilac Summit White Vast Grey (GS) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
-      "brand": "Nike",
-      "availability": "watch-worthy",
-      "marketStrength": 33,
-      "restoration": 44,
-      "preservationValue": 43,
-      "primaryCta": "Join release alerts",
-      "updatedAt": "2026-04-23T05:09:42Z"
-    },
-    {
-      "family": "release-alerts",
-      "path": "/release-alerts/nike-vomero-5-university-blue-stadium-green-summit-white-magic-ember-gs",
-      "slug": "nike-vomero-5-university-blue-stadium-green-summit-white-magic-ember-gs",
-      "title": "Nike Vomero 5 University Blue Stadium Green Summit White Magic Ember (GS) release alerts",
-      "description": "Nike Vomero 5 University Blue Stadium Green Summit White Magic Ember (GS) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if the service angle remains secondary.",
+      "path": "/release-alerts/nike-vomero-5-photon-dust-gridiron-sail-chrome-td",
+      "slug": "nike-vomero-5-photon-dust-gridiron-sail-chrome-td",
+      "title": "Nike Vomero 5 Photon Dust Gridiron Sail Chrome (TD) release alerts",
+      "description": "Nike Vomero 5 Photon Dust Gridiron Sail Chrome (TD) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if the service angle remains secondary.",
       "brand": "Nike",
       "availability": "watch-worthy",
       "marketStrength": 33,
       "restoration": 16,
       "preservationValue": 33,
       "primaryCta": "Join release alerts",
-      "updatedAt": "2026-04-23T05:05:00Z"
+      "updatedAt": "2026-04-23T13:07:20Z"
+    },
+    {
+      "family": "release-alerts",
+      "path": "/release-alerts/nike-vomero-5-taupe-haze-silt-red-tattoo-gs",
+      "slug": "nike-vomero-5-taupe-haze-silt-red-tattoo-gs",
+      "title": "Nike Vomero 5 Taupe Haze Silt Red Tattoo (GS) release alerts",
+      "description": "Nike Vomero 5 Taupe Haze Silt Red Tattoo (GS) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
+      "brand": "Nike",
+      "availability": "watch-worthy",
+      "marketStrength": 58,
+      "restoration": 26,
+      "preservationValue": 40,
+      "primaryCta": "Join release alerts",
+      "updatedAt": "2026-04-23T11:05:03Z"
     },
     {
       "family": "release",
@@ -185,7 +185,7 @@
       "restoration": 44,
       "preservationValue": 41,
       "primaryCta": "Watch this release",
-      "updatedAt": "2026-04-23T05:08:13Z"
+      "updatedAt": "2026-04-23T14:07:26Z"
     },
     {
       "family": "release",
@@ -203,17 +203,31 @@
     },
     {
       "family": "release",
-      "path": "/releases/air-jordan-4-retro-rare-air-gs",
-      "slug": "air-jordan-4-retro-rare-air-gs",
-      "title": "Jordan 4 Retro Rare Air (GS)",
-      "description": "Jordan 4 Retro Rare Air (GS) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
+      "path": "/releases/air-jordan-1-high-method-of-make-pink-oxford-womens",
+      "slug": "air-jordan-1-high-method-of-make-pink-oxford-womens",
+      "title": "Jordan 1 High Method Of Make Pink Oxford (Women's)",
+      "description": "Jordan 1 High Method Of Make Pink Oxford (Women's) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
       "brand": "Jordan",
       "availability": "watch-worthy",
-      "marketStrength": 58,
-      "restoration": 64,
-      "preservationValue": 58,
+      "marketStrength": 34,
+      "restoration": 34,
+      "preservationValue": 37,
       "primaryCta": "Watch this release",
-      "updatedAt": "2026-04-23T10:11:08Z"
+      "updatedAt": "2026-04-23T11:05:57Z"
+    },
+    {
+      "family": "release",
+      "path": "/releases/air-jordan-1-high-mm-legend-medium-brown-womens",
+      "slug": "air-jordan-1-high-mm-legend-medium-brown-womens",
+      "title": "Jordan 1 High Method of Make Legend Medium Brown (Women's)",
+      "description": "Jordan 1 High Method of Make Legend Medium Brown (Women's) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
+      "brand": "Jordan",
+      "availability": "watch-worthy",
+      "marketStrength": 32,
+      "restoration": 52,
+      "preservationValue": 41,
+      "primaryCta": "Watch this release",
+      "updatedAt": "2026-04-23T13:06:18Z"
     },
     {
       "family": "release",
@@ -227,35 +241,7 @@
       "restoration": 62,
       "preservationValue": 54,
       "primaryCta": "Watch this release",
-      "updatedAt": "2026-04-23T10:10:48Z"
-    },
-    {
-      "family": "release",
-      "path": "/releases/asics-gel-kayano-14-white-pure-silver-slate-grey",
-      "slug": "asics-gel-kayano-14-white-pure-silver-slate-grey",
-      "title": "ASICS Gel-Kayano 14 White Pure Silver Slate Grey Sage",
-      "description": "ASICS Gel-Kayano 14 White Pure Silver Slate Grey Sage is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
-      "brand": "ASICS",
-      "availability": "watch-worthy",
-      "marketStrength": 58,
-      "restoration": 54,
-      "preservationValue": 54,
-      "primaryCta": "Watch this release",
-      "updatedAt": "2026-04-23T10:11:34Z"
-    },
-    {
-      "family": "release",
-      "path": "/releases/new-balance-1906r-silver-black",
-      "slug": "new-balance-1906r-silver-black",
-      "title": "New Balance 1906R Silver Black",
-      "description": "New Balance 1906R Silver Black is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
-      "brand": "New Balance",
-      "availability": "watch-worthy",
-      "marketStrength": 58,
-      "restoration": 54,
-      "preservationValue": 54,
-      "primaryCta": "Watch this release",
-      "updatedAt": "2026-04-23T10:11:46Z"
+      "updatedAt": "2026-04-23T15:05:52Z"
     },
     {
       "family": "release",
@@ -269,7 +255,7 @@
       "restoration": 62,
       "preservationValue": 54,
       "primaryCta": "Watch this release",
-      "updatedAt": "2026-04-23T10:09:52Z"
+      "updatedAt": "2026-04-23T15:05:17Z"
     },
     {
       "family": "release",
@@ -284,20 +270,6 @@
       "preservationValue": 41,
       "primaryCta": "Watch this release",
       "updatedAt": "2026-04-23T07:08:41Z"
-    },
-    {
-      "family": "release",
-      "path": "/releases/new-balance-1906r-white-gold",
-      "slug": "new-balance-1906r-white-gold",
-      "title": "New Balance 1906R White Metallic Gold",
-      "description": "New Balance 1906R White Metallic Gold is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
-      "brand": "New Balance",
-      "availability": "watch-worthy",
-      "marketStrength": 51,
-      "restoration": 52,
-      "preservationValue": 50,
-      "primaryCta": "Watch this release",
-      "updatedAt": "2026-04-23T10:10:49Z"
     },
     {
       "family": "release",
@@ -325,7 +297,35 @@
       "restoration": 44,
       "preservationValue": 43,
       "primaryCta": "Watch this release",
-      "updatedAt": "2026-04-23T05:09:42Z"
+      "updatedAt": "2026-04-23T14:08:40Z"
+    },
+    {
+      "family": "release",
+      "path": "/releases/nike-vomero-5-photon-dust-gridiron-sail-chrome-td",
+      "slug": "nike-vomero-5-photon-dust-gridiron-sail-chrome-td",
+      "title": "Nike Vomero 5 Photon Dust Gridiron Sail Chrome (TD)",
+      "description": "Nike Vomero 5 Photon Dust Gridiron Sail Chrome (TD) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if the service angle remains secondary.",
+      "brand": "Nike",
+      "availability": "watch-worthy",
+      "marketStrength": 33,
+      "restoration": 16,
+      "preservationValue": 33,
+      "primaryCta": "Watch this release",
+      "updatedAt": "2026-04-23T13:07:20Z"
+    },
+    {
+      "family": "release",
+      "path": "/releases/nike-vomero-5-taupe-haze-silt-red-tattoo-gs",
+      "slug": "nike-vomero-5-taupe-haze-silt-red-tattoo-gs",
+      "title": "Nike Vomero 5 Taupe Haze Silt Red Tattoo (GS)",
+      "description": "Nike Vomero 5 Taupe Haze Silt Red Tattoo (GS) is more watchlist-driven right now because the market strength, liquidity, and release pressure are doing more work than the service profile, even if rarity still helps the story.",
+      "brand": "Nike",
+      "availability": "watch-worthy",
+      "marketStrength": 58,
+      "restoration": 26,
+      "preservationValue": 40,
+      "primaryCta": "Watch this release",
+      "updatedAt": "2026-04-23T11:05:03Z"
     },
     {
       "family": "release",
@@ -339,7 +339,7 @@
       "restoration": 16,
       "preservationValue": 33,
       "primaryCta": "Watch this release",
-      "updatedAt": "2026-04-23T05:05:00Z"
+      "updatedAt": "2026-04-23T14:05:01Z"
     },
     {
       "family": "worth-restoring",
@@ -353,7 +353,7 @@
       "restoration": 80,
       "preservationValue": 71,
       "primaryCta": "Book restoration",
-      "updatedAt": "2026-04-23T10:13:22Z"
+      "updatedAt": "2026-04-23T15:07:48Z"
     }
   ]
 }

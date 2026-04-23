@@ -38,6 +38,7 @@ function extractFromReleaseModel(pageType: SocialPageType, model: ReleasePageMod
     publishDate: model.item.release.date ?? null,
     sourceUpdatedAt: isoOrNow(model.item.lastUpdatedAt),
     metadata: {
+      shoeName: model.item.name,
       brand: model.item.brand,
       model: model.item.silhouette,
       colorway: model.item.colorway,

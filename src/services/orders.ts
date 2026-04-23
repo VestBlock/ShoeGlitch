@@ -188,17 +188,11 @@ export async function addAfterImage(
   return updated;
 }
 
-// --- integration stubs ---
-export async function chargeOrder(_orderId: string): Promise<{ success: true }> {
-  // TODO: PayPal capture
-  return { success: true };
+// --- legacy integration guards ---
+export async function chargeOrder(_orderId: string): Promise<never> {
+  throw new Error('Legacy chargeOrder is disabled. Use the Stripe checkout and webhook flow.');
 }
 
-export async function createReturnLabel(
-  _orderId: string,
-): Promise<{ labelUrl: string; trackingNumber: string }> {
-  return {
-    labelUrl: 'https://example.com/label.pdf',
-    trackingNumber: 'SG' + Date.now(),
-  };
+export async function createReturnLabel(_orderId: string): Promise<never> {
+  throw new Error('Return label generation is not connected yet. Use manual fulfillment until a shipping provider is wired.');
 }

@@ -49,6 +49,34 @@ export default async function HomePage() {
           <TrustProofStrip items={trustItems} />
         </div>
 
+        <div className="container-x relative pb-14 md:pb-20">
+          <div className="relative overflow-hidden rounded-[2rem] border border-glitch/20 bg-white/78 p-6 shadow-[0_26px_80px_rgba(10,15,31,0.10)] backdrop-blur-xl md:p-8">
+            <div className="absolute -right-16 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-cyan/20 blur-3xl" />
+            <div className="absolute -left-20 bottom-0 h-36 w-36 rounded-full bg-glitch/15 blur-3xl" />
+            <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+              <div className="max-w-2xl">
+                <div className="font-mono text-[11px] uppercase tracking-[0.34em] text-glitch/80">
+                  Sneaker intelligence
+                </div>
+                <h2 className="h-display mt-3 text-3xl leading-[0.95] text-ink md:text-5xl">
+                  See what is worth cleaning, restoring, or watching next.
+                </h2>
+                <p className="mt-4 text-sm leading-6 text-ink/65 md:text-base">
+                  Open the live feed for release signals, care scores, restoration upside, market-watch reads, and watchlist actions powered by ShoeGlitch sneaker data.
+                </p>
+              </div>
+              <Link
+                href="/intelligence"
+                className="btn-intelligence group shrink-0"
+                data-growth-cta="Open intelligence feed"
+              >
+                <span className="relative z-10">Open intelligence feed</span>
+                <span className="relative z-10 transition-transform group-hover:translate-x-1">→</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
         <div className="border-y border-glitch/20 bg-ink text-bone overflow-hidden relative">
           <div className="absolute inset-0 matrix-strip opacity-40" />
           <div className="track py-5 relative">

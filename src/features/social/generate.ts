@@ -19,7 +19,20 @@ function compactHashtag(value: string) {
   return tag.length >= 2 && tag.length <= 80 ? `#${tag}` : null;
 }
 
+function skuHashtag(value: string | null) {
+  if (!value) return null;
+  const tag = value.replace(/[^a-zA-Z0-9]+/g, '').toUpperCase();
+  return tag.length >= 2 && tag.length <= 80 ? `#${tag}` : null;
+}
+
+function brandModelLabel(brand: string | null, model: string | null) {
+  if (!model) return null;
+  if (!brand) return model;
+  return model.toLowerCase().startsWith(brand.toLowerCase()) ? model : `${brand} ${model}`;
+}
+
 function sneakerHashtagCandidates(source: SocialSourceExtract) {
+  const shoeName = typeof source.metadata.shoeName === 'string' ? source.metadata.shoeName : null;
   const title = source.title
     .replace(/^how to clean\s+/i, '')
     .replace(/^release alerts? for\s+/i, '')
@@ -29,18 +42,13 @@ function sneakerHashtagCandidates(source: SocialSourceExtract) {
     .trim();
   const brand = typeof source.metadata.brand === 'string' ? source.metadata.brand : null;
   const model = typeof source.metadata.model === 'string' ? source.metadata.model : null;
-  const colorway = typeof source.metadata.colorway === 'string' ? source.metadata.colorway : null;
   const sku = typeof source.metadata.sku === 'string' ? source.metadata.sku : null;
-  const normalizedTitle =
-    brand && model
-      ? [brand, model, colorway].filter(Boolean).join(' ')
-      : title;
 
   return [
-    normalizedTitle,
-    brand && model ? `${brand} ${model}` : null,
+    shoeName,
+    title,
+    brandModelLabel(brand, model),
     model,
-    sku,
   ].filter((value): value is string => Boolean(value));
 }
 
@@ -83,6 +91,9 @@ function buildHashtags(source: SocialSourceExtract) {
     const tag = compactHashtag(candidate);
     if (tag) tags.add(tag);
   }
+  const sku = typeof source.metadata.sku === 'string' ? source.metadata.sku : null;
+  const skuTag = skuHashtag(sku);
+  if (skuTag) tags.add(skuTag);
   if (brand) {
     const tag = compactHashtag(brand);
     if (tag) tags.add(tag);
