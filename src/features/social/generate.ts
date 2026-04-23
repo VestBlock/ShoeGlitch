@@ -126,6 +126,7 @@ function buildCaption(source: SocialSourceExtract, hashtags: string[]) {
         : source.pageType === 'worth-restoring'
           ? 'Read the restoration case, then decide if the pair deserves deeper work.'
           : 'Open the full page and take the next ShoeGlitch action from there.';
+  const intelligenceLine = 'See more on ShoeGlitch Intelligence.';
 
   return [
     buildHook(source),
@@ -133,7 +134,7 @@ function buildCaption(source: SocialSourceExtract, hashtags: string[]) {
     source.shortSummary,
     '',
     actionLine,
-    `Read more: ${source.canonicalUrl}`,
+    intelligenceLine,
     '',
     hashtags.join(' '),
   ].join('\n');
