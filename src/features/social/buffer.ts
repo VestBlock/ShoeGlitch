@@ -19,10 +19,19 @@ export interface BufferOrganizationSummary {
   name: string;
 }
 
+function cleanEnvValue(value?: string | null) {
+  const normalized = value?.trim();
+  return normalized ? normalized : undefined;
+}
+
+function isBufferObjectId(value?: string | null) {
+  return Boolean(value && /^[a-f0-9]{24}$/i.test(value));
+}
+
 function getConfig() {
-  const accessToken = process.env.BUFFER_ACCESS_TOKEN ?? process.env.BUFFER_API_TOKEN;
-  const organizationId = process.env.BUFFER_ORGANIZATION_ID;
-  const instagramChannelId = process.env.BUFFER_INSTAGRAM_CHANNEL_ID;
+  const accessToken = cleanEnvValue(process.env.BUFFER_ACCESS_TOKEN ?? process.env.BUFFER_API_TOKEN);
+  const organizationId = cleanEnvValue(process.env.BUFFER_ORGANIZATION_ID);
+  const instagramChannelId = cleanEnvValue(process.env.BUFFER_INSTAGRAM_CHANNEL_ID);
 
   if (!accessToken) {
     return null;
@@ -98,7 +107,7 @@ export async function getBufferOrganizations(): Promise<BufferOrganizationSummar
 async function resolveOrganizationId() {
   const config = getConfig();
   if (!config) return null;
-  if (config.organizationId) return config.organizationId;
+  if (isBufferObjectId(config.organizationId)) return config.organizationId;
 
   const organizations = await getBufferOrganizations();
   return organizations[0]?.id ?? null;
@@ -130,7 +139,7 @@ export async function getBufferInstagramChannels(): Promise<BufferChannelSummary
 async function resolveInstagramChannelId() {
   const config = getConfig();
   if (!config) return null;
-  if (config.instagramChannelId) return config.instagramChannelId;
+  if (isBufferObjectId(config.instagramChannelId)) return config.instagramChannelId;
 
   const channels = await getBufferInstagramChannels();
   return channels[0]?.id ?? null;
