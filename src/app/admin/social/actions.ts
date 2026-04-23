@@ -23,6 +23,11 @@ function finishError(message: string): never {
   redirect(`/admin/social?notice=${encodeURIComponent(message)}`);
 }
 
+function isBufferRateLimitError(message: string) {
+  const normalized = message.toLowerCase();
+  return normalized.includes('too many requests') || normalized.includes('rate limit');
+}
+
 function normalizeScheduleInput(value: FormDataEntryValue | null) {
   if (typeof value !== 'string' || !value.trim()) return undefined;
   const parsed = new Date(value);
@@ -118,9 +123,20 @@ export async function scheduleSocialDraftNowAction(formData: FormData) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Buffer scheduling failed.';
-    await socialStore.markFailed(staged.id, message);
+    if (isBufferRateLimitError(message)) {
+      await socialStore.updateForReview(staged.id, {
+        status: 'approved',
+        approvalNotes: String(formData.get('approvalNotes') ?? '').trim() || staged.approvalNotes,
+      });
+    } else {
+      await socialStore.markFailed(staged.id, message);
+    }
     revalidatePath('/admin/social');
-    finishError(`Buffer rejected that post: ${message}`);
+    finishError(
+      isBufferRateLimitError(message)
+        ? `Buffer rate-limited the request. The post stayed approved so you can retry later without rebuilding it.`
+        : `Buffer rejected that post: ${message}`,
+    );
   }
 
   revalidatePath('/admin/social');

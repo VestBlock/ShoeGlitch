@@ -32,6 +32,9 @@ export interface AdminSocialSummary {
 
 export async function buildAdminSocialSummary(): Promise<AdminSocialSummary> {
   const availability = getBufferAvailability();
+  const configuredOrganizationId = process.env.BUFFER_ORGANIZATION_ID?.trim();
+  const configuredInstagramChannelId = process.env.BUFFER_INSTAGRAM_CHANNEL_ID?.trim();
+  const configuredTikTokChannelId = process.env.BUFFER_TIKTOK_CHANNEL_ID?.trim();
 
   let organizations: Array<{ id: string; name: string }> = [];
   let instagramChannels: Array<{ id: string; name: string; displayName?: string | null; paused?: boolean | null }> = [];
@@ -39,27 +42,39 @@ export async function buildAdminSocialSummary(): Promise<AdminSocialSummary> {
   let bufferError: string | undefined;
 
   if (availability.configured) {
-    try {
-      const [orgs, rawInstagramChannels, rawTikTokChannels] = await Promise.all([
-        getBufferOrganizations(),
-        getBufferInstagramChannels(),
-        getBufferTikTokChannels(),
-      ]);
-      organizations = orgs;
-      instagramChannels = rawInstagramChannels.map((channel) => ({
-        id: channel.id,
-        name: channel.name,
-        displayName: channel.displayName,
-        paused: channel.isQueuePaused,
-      }));
-      tiktokChannels = rawTikTokChannels.map((channel) => ({
-        id: channel.id,
-        name: channel.name,
-        displayName: channel.displayName,
-        paused: channel.isQueuePaused,
-      }));
-    } catch (error) {
-      bufferError = error instanceof Error ? error.message : 'Unable to query Buffer.';
+    if (configuredOrganizationId || configuredInstagramChannelId || configuredTikTokChannelId) {
+      organizations = configuredOrganizationId
+        ? [{ id: configuredOrganizationId, name: 'Configured Buffer organization' }]
+        : [];
+      instagramChannels = configuredInstagramChannelId
+        ? [{ id: configuredInstagramChannelId, name: 'Configured Instagram channel', displayName: 'Instagram', paused: null }]
+        : [];
+      tiktokChannels = configuredTikTokChannelId
+        ? [{ id: configuredTikTokChannelId, name: 'Configured TikTok channel', displayName: 'TikTok', paused: null }]
+        : [];
+    } else {
+      try {
+        const [orgs, rawInstagramChannels, rawTikTokChannels] = await Promise.all([
+          getBufferOrganizations(),
+          getBufferInstagramChannels(),
+          getBufferTikTokChannels(),
+        ]);
+        organizations = orgs;
+        instagramChannels = rawInstagramChannels.map((channel) => ({
+          id: channel.id,
+          name: channel.name,
+          displayName: channel.displayName,
+          paused: channel.isQueuePaused,
+        }));
+        tiktokChannels = rawTikTokChannels.map((channel) => ({
+          id: channel.id,
+          name: channel.name,
+          displayName: channel.displayName,
+          paused: channel.isQueuePaused,
+        }));
+      } catch (error) {
+        bufferError = error instanceof Error ? error.message : 'Unable to query Buffer.';
+      }
     }
   }
 
