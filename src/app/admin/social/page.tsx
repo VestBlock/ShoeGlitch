@@ -85,22 +85,19 @@ export default async function AdminSocialPage({
             <form action={scanSocialDraftsAction}>
               <button className="btn-glitch-ghost">Scan for drafts</button>
             </form>
-            <form action={createMoreSocialDraftsAction} className="flex items-center gap-2">
-              <input type="hidden" name="limit" value="8" />
-              <button className="btn-glitch-ghost">Create 8 more</button>
-            </form>
-            <form action={createMoreSocialDraftsAction} className="flex items-center gap-2">
-              <input type="hidden" name="limit" value="16" />
-              <button className="btn-glitch-ghost">Create 16 more</button>
-            </form>
-            <form action={createMoreSocialDraftsAction} className="flex items-center gap-2">
-              <input type="hidden" name="limit" value="24" />
-              <button className="btn-glitch-ghost">Create 24 more</button>
-            </form>
             <form action={publishApprovedSocialAction}>
               <button className="btn-glitch">Schedule approved</button>
             </form>
           </div>
+        </div>
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-ink/45">Create more drafts</span>
+          {[8, 16, 24, 50].map((limit) => (
+            <form key={limit} action={createMoreSocialDraftsAction}>
+              <input type="hidden" name="limit" value={String(limit)} />
+              <button className="btn-glitch-ghost" type="submit">{limit} more</button>
+            </form>
+          ))}
         </div>
       </Card>
 
@@ -171,7 +168,7 @@ export default async function AdminSocialPage({
       </div>
 
       <Card>
-        <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Recent queue items</div>
+        <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Active queue items</div>
         <div className="mt-5 space-y-3">
           {summary.recentQueue.length > 0 ? summary.recentQueue.map((item) => (
             <div key={item.id} className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">

@@ -51,7 +51,7 @@ export async function buildAdminSocialSummary(): Promise<AdminSocialSummary> {
 
   try {
     const [items, statusCounts] = await Promise.all([
-      socialStore.listQueue({ limit: 50 }),
+      socialStore.listQueue({ limit: 50, excludeStatuses: ['published'] }),
       socialStore.countByStatus(),
     ]);
     const totals = {
@@ -78,7 +78,7 @@ export async function buildAdminSocialSummary(): Promise<AdminSocialSummary> {
         error: bufferError,
       },
       totals,
-      recentQueue: items.slice(0, 12),
+      recentQueue: items.slice(0, 20),
     };
   } catch (error) {
     return {

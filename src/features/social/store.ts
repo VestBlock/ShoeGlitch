@@ -67,12 +67,13 @@ export const socialStore = {
     return mapQueueRow(data);
   },
 
-  async listQueue(input?: { status?: SocialPostStatus; limit?: number }) {
+  async listQueue(input?: { status?: SocialPostStatus; limit?: number; excludeStatuses?: SocialPostStatus[] }) {
     const client = adminSafe();
     if (!client) return [];
 
-    let query = client.from('social_post_queue').select('*').order('created_at', { ascending: false });
+    let query = client.from('social_post_queue').select('*').order('updated_at', { ascending: false });
     if (input?.status) query = query.eq('status', input.status);
+    if (input?.excludeStatuses?.length) query = query.not('status', 'in', `(${input.excludeStatuses.join(',')})`);
     if (input?.limit) query = query.limit(input.limit);
 
     const { data, error } = await query;
