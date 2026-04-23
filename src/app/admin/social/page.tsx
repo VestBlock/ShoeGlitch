@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
@@ -27,6 +28,30 @@ function toLocalDateTimeInput(iso: string) {
   if (Number.isNaN(date.getTime())) return '';
   const offsetMs = date.getTimezoneOffset() * 60 * 1000;
   return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
+}
+
+function PlatformTab({
+  label,
+  href,
+  active,
+  count,
+}: {
+  label: string;
+  href: string;
+  active: boolean;
+  count: number;
+}) {
+  return (
+    <Link
+      href={href}
+      className={active
+        ? 'inline-flex items-center gap-2 rounded-full bg-glitch px-4 py-2 text-sm font-semibold text-white'
+        : 'inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-sm font-semibold text-ink transition hover:border-glitch/30 hover:text-glitch'}
+    >
+      <span>{label}</span>
+      <span className={active ? 'text-white/80' : 'text-ink/45'}>{count}</span>
+    </Link>
+  );
 }
 
 function QueueSection({
@@ -171,6 +196,10 @@ export default async function AdminSocialPage({
   const summary = await buildAdminSocialSummary();
   const params = (await searchParams) ?? {};
   const notice = typeof params.notice === 'string' ? params.notice : null;
+  const selectedPlatform =
+    typeof params.platform === 'string' && (params.platform === 'instagram' || params.platform === 'tiktok')
+      ? params.platform
+      : 'all';
   const instagramQueue = summary.recentQueue.filter((item) => item.targetPlatform === 'instagram');
   const tiktokQueue = summary.recentQueue.filter((item) => item.targetPlatform === 'tiktok');
 
@@ -233,6 +262,26 @@ export default async function AdminSocialPage({
               <button className="btn-glitch-ghost" type="submit">{limit} more</button>
             </form>
           ))}
+        </div>
+        <div className="mt-5 flex flex-wrap gap-2">
+          <PlatformTab
+            label="All"
+            href="/admin/social"
+            active={selectedPlatform === 'all'}
+            count={summary.recentQueue.length}
+          />
+          <PlatformTab
+            label="Instagram"
+            href="/admin/social?platform=instagram"
+            active={selectedPlatform === 'instagram'}
+            count={instagramQueue.length}
+          />
+          <PlatformTab
+            label="TikTok"
+            href="/admin/social?platform=tiktok"
+            active={selectedPlatform === 'tiktok'}
+            count={tiktokQueue.length}
+          />
         </div>
       </Card>
 
@@ -325,10 +374,16 @@ export default async function AdminSocialPage({
         </div>
       </Card>
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      {selectedPlatform === 'instagram' ? (
         <QueueSection title="Instagram queue" items={instagramQueue} />
+      ) : selectedPlatform === 'tiktok' ? (
         <QueueSection title="TikTok queue" items={tiktokQueue} />
-      </div>
+      ) : (
+        <div className="grid gap-6 xl:grid-cols-2">
+          <QueueSection title="Instagram queue" items={instagramQueue} />
+          <QueueSection title="TikTok queue" items={tiktokQueue} />
+        </div>
+      )}
     </DashboardShell>
   );
 }
