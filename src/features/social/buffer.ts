@@ -79,6 +79,16 @@ function buildAssetsBlock(imageUrl?: string | null) {
       }`;
 }
 
+function buildInstagramMetadataBlock() {
+  return `
+      metadata: {
+        instagram: {
+          type: post
+          shouldShareToFeed: true
+        }
+      }`;
+}
+
 export function getBufferAvailability(): BufferAvailability {
   return getConfig()
     ? { configured: true }
@@ -150,6 +160,10 @@ export async function scheduleBufferInstagramPost(record: SocialQueueRecord): Pr
   scheduledAt: string;
   metadata: Record<string, unknown>;
 }> {
+  if (!record.imageUrl) {
+    throw new Error('Instagram posts require at least one image.');
+  }
+
   const channelId = await resolveInstagramChannelId();
   if (!channelId) {
     throw new Error('No Instagram channel is available in Buffer. Add BUFFER_INSTAGRAM_CHANNEL_ID or connect an Instagram channel.');
@@ -162,7 +176,7 @@ export async function scheduleBufferInstagramPost(record: SocialQueueRecord): Pr
         channelId: ${gqlString(channelId)}
         schedulingType: automatic
         mode: customScheduled
-        dueAt: ${gqlString(record.recommendedScheduleAt)}${buildAssetsBlock(record.imageUrl)}
+        dueAt: ${gqlString(record.recommendedScheduleAt)}${buildAssetsBlock(record.imageUrl)}${buildInstagramMetadataBlock()}
       }) {
         ... on PostActionSuccess {
           post {
