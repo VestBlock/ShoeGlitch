@@ -1,8 +1,15 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { Badge, Card } from '@/components/ui';
 import HomeHeroMotion from '@/components/HomeHeroMotion';
 import TrustProofStrip from '@/components/TrustProofStrip';
+
+export const metadata: Metadata = {
+  title: 'ShoeGlitch | Sneaker cleaning, restoration, pickup, and mail-in care',
+  description:
+    'Book sneaker cleaning, restoration, steam-assisted deep care, pickup, drop-off, and mail-in service with ShoeGlitch.',
+};
 
 export default async function HomePage() {
   const [cities, allServices] = await Promise.all([

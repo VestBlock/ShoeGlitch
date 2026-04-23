@@ -32,6 +32,7 @@ async function main() {
   run('Export SEO route manifest', 'scripts/seo/export-route-manifest.ts', ['public/seo/route-manifest.json']);
   run('Export release content manifest', 'scripts/releases/export-content-manifest.ts', ['public/seo/release-content-manifest.json']);
   run('Verify public and SEO routes', 'scripts/seo/verify-site-routes.ts', [baseUrl]);
+  run('Check SEO content quality', 'scripts/seo/check-content-quality.ts', [baseUrl]);
 }
 
 main().catch((error) => {

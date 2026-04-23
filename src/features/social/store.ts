@@ -80,6 +80,24 @@ export const socialStore = {
     return data.map(mapQueueRow);
   },
 
+  async countByStatus() {
+    const client = adminSafe();
+    if (!client) return null;
+
+    const statuses: SocialPostStatus[] = ['draft', 'approved', 'scheduled', 'published', 'failed'];
+    const counts = await Promise.all(
+      statuses.map(async (status) => {
+        const { count, error } = await client
+          .from('social_post_queue')
+          .select('id', { count: 'exact', head: true })
+          .eq('status', status);
+        return [status, error ? 0 : count ?? 0] as const;
+      }),
+    );
+
+    return Object.fromEntries(counts) as Record<SocialPostStatus, number>;
+  },
+
   async getById(id: string) {
     const client = adminSafe();
     if (!client) return null;
@@ -151,6 +169,39 @@ export const socialStore = {
     };
     if (patch.status) payload.status = patch.status;
     if (patch.recommendedScheduleAt) payload.recommended_schedule_at = patch.recommendedScheduleAt;
+    if (patch.approvalNotes !== undefined) payload.approval_notes = patch.approvalNotes;
+
+    const { data, error } = await client
+      .from('social_post_queue')
+      .update(payload)
+      .eq('id', id)
+      .select('*')
+      .single();
+
+    if (error || !data) return null;
+    return mapQueueRow(data);
+  },
+
+  async updateContent(
+    id: string,
+    patch: {
+      hook?: string;
+      caption?: string;
+      hashtags?: string[];
+      recommendedScheduleAt?: string;
+      approvalNotes?: string | null;
+    },
+  ) {
+    const client = adminSafe();
+    if (!client) return null;
+
+    const payload: Record<string, unknown> = {
+      updated_at: new Date().toISOString(),
+    };
+    if (patch.hook !== undefined) payload.hook = patch.hook;
+    if (patch.caption !== undefined) payload.caption = patch.caption;
+    if (patch.hashtags !== undefined) payload.hashtags = patch.hashtags;
+    if (patch.recommendedScheduleAt !== undefined) payload.recommended_schedule_at = patch.recommendedScheduleAt;
     if (patch.approvalNotes !== undefined) payload.approval_notes = patch.approvalNotes;
 
     const { data, error } = await client

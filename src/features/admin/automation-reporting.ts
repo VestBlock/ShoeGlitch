@@ -3,6 +3,7 @@ import path from 'path';
 import { buildAdminSeoSummary } from '@/features/admin/seo-reporting';
 import { buildAdminSocialSummary } from '@/features/admin/social-reporting';
 import { checkRequiredOperationalTables } from '@/features/admin/db-health';
+import { buildAdminSourceHealthSummary } from '@/features/admin/source-health';
 import { createAdminSupabaseClient } from '@/lib/supabase/admin';
 import { recordGrowthEvent } from '@/lib/growth/persistence';
 
@@ -49,10 +50,11 @@ export async function recordAutomationRun(params: {
 }
 
 export async function buildAdminAutomationSummary() {
-  const [seo, social, dbHealth, routeManifestUpdatedAt, releaseManifestUpdatedAt] = await Promise.all([
+  const [seo, social, dbHealth, sourceHealth, routeManifestUpdatedAt, releaseManifestUpdatedAt] = await Promise.all([
     buildAdminSeoSummary(),
     buildAdminSocialSummary(),
     checkRequiredOperationalTables(),
+    buildAdminSourceHealthSummary(),
     getManifestTimestamp(path.join(process.cwd(), 'public', 'seo', 'route-manifest.json')),
     getManifestTimestamp(path.join(process.cwd(), 'public', 'seo', 'release-content-manifest.json')),
   ]);
@@ -85,6 +87,7 @@ export async function buildAdminAutomationSummary() {
     seo,
     social,
     dbHealth,
+    sourceHealth,
     routeManifestUpdatedAt,
     releaseManifestUpdatedAt,
     recentRuns,

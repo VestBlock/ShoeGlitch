@@ -28,6 +28,13 @@ export interface AdminAnalyticsSummary {
     watchlistSaves: number;
     operatorInterests: number;
   };
+  funnels: {
+    ctaRate: number;
+    leadRate: number;
+    bookingCompletionRate: number;
+    operatorLeadRate: number;
+    watchlistSaveRate: number;
+  };
   byFamily: Array<{
     family: string;
     pageViews: number;
@@ -84,6 +91,7 @@ export async function buildAdminAnalyticsSummary(): Promise<AdminAnalyticsSummar
       status: 'unavailable',
       message: 'Supabase admin credentials are not configured for analytics reporting.',
       totals: { pageViews: 0, ctaClicks: 0, leads: 0, trackedRoutes: 0, bookingStarts: 0, bookingCompletes: 0, watchlistSaves: 0, operatorInterests: 0 },
+      funnels: { ctaRate: 0, leadRate: 0, bookingCompletionRate: 0, operatorLeadRate: 0, watchlistSaveRate: 0 },
       byFamily: [],
       topRoutes: [],
       recentEvents: [],
@@ -110,6 +118,7 @@ export async function buildAdminAnalyticsSummary(): Promise<AdminAnalyticsSummar
         status: 'unavailable',
         message: eventsError?.message ?? leadsError?.message ?? 'Unable to load analytics data.',
         totals: { pageViews: 0, ctaClicks: 0, leads: 0, trackedRoutes: 0, bookingStarts: 0, bookingCompletes: 0, watchlistSaves: 0, operatorInterests: 0 },
+        funnels: { ctaRate: 0, leadRate: 0, bookingCompletionRate: 0, operatorLeadRate: 0, watchlistSaveRate: 0 },
         byFamily: [],
         topRoutes: [],
         recentEvents: [],
@@ -125,6 +134,7 @@ export async function buildAdminAnalyticsSummary(): Promise<AdminAnalyticsSummar
         status: 'empty',
         message: 'Tracking is wired, but no growth events or leads have been recorded yet.',
         totals: { pageViews: 0, ctaClicks: 0, leads: 0, trackedRoutes: 0, bookingStarts: 0, bookingCompletes: 0, watchlistSaves: 0, operatorInterests: 0 },
+        funnels: { ctaRate: 0, leadRate: 0, bookingCompletionRate: 0, operatorLeadRate: 0, watchlistSaveRate: 0 },
         byFamily: [],
         topRoutes: [],
         recentEvents: [],
@@ -198,17 +208,32 @@ export async function buildAdminAnalyticsSummary(): Promise<AdminAnalyticsSummar
       familyMap.set(family, current);
     }
 
+    const pageViews = events.filter((event) => event.event_name === 'page_view').length;
+    const ctaClicks = events.filter((event) => event.event_name === 'cta_click').length;
+    const bookingStarts = events.filter((event) => event.event_name === 'booking_start').length;
+    const bookingCompletes = events.filter((event) => event.event_name === 'booking_complete').length;
+    const watchlistSaves = events.filter((event) => event.event_name === 'watchlist_save').length;
+    const operatorInterests = events.filter((event) => event.event_name === 'operator_interest').length;
+    const safeRate = (top: number, bottom: number) => (bottom > 0 ? Math.round((top / bottom) * 1000) / 10 : 0);
+
     return {
       status: 'live',
       totals: {
-        pageViews: events.filter((event) => event.event_name === 'page_view').length,
-        ctaClicks: events.filter((event) => event.event_name === 'cta_click').length,
+        pageViews,
+        ctaClicks,
         leads: leads.length,
         trackedRoutes: routeMap.size,
-        bookingStarts: events.filter((event) => event.event_name === 'booking_start').length,
-        bookingCompletes: events.filter((event) => event.event_name === 'booking_complete').length,
-        watchlistSaves: events.filter((event) => event.event_name === 'watchlist_save').length,
-        operatorInterests: events.filter((event) => event.event_name === 'operator_interest').length,
+        bookingStarts,
+        bookingCompletes,
+        watchlistSaves,
+        operatorInterests,
+      },
+      funnels: {
+        ctaRate: safeRate(ctaClicks, pageViews),
+        leadRate: safeRate(leads.length, pageViews),
+        bookingCompletionRate: safeRate(bookingCompletes, bookingStarts),
+        operatorLeadRate: safeRate(operatorInterests, pageViews),
+        watchlistSaveRate: safeRate(watchlistSaves, pageViews),
       },
       byFamily: Array.from(familyMap.entries())
         .map(([family, metrics]) => ({ family, ...metrics }))
@@ -222,6 +247,7 @@ export async function buildAdminAnalyticsSummary(): Promise<AdminAnalyticsSummar
       status: 'unavailable',
       message: error instanceof Error ? error.message : 'Unable to load analytics summary.',
       totals: { pageViews: 0, ctaClicks: 0, leads: 0, trackedRoutes: 0, bookingStarts: 0, bookingCompletes: 0, watchlistSaves: 0, operatorInterests: 0 },
+      funnels: { ctaRate: 0, leadRate: 0, bookingCompletionRate: 0, operatorLeadRate: 0, watchlistSaveRate: 0 },
       byFamily: [],
       topRoutes: [],
       recentEvents: [],

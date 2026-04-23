@@ -1,8 +1,15 @@
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { resolveCatalogForCity } from '@/services/catalog';
 import { BookingFlow } from './BookingFlow';
 import { Badge } from '@/components/ui';
+
+export const metadata: Metadata = {
+  title: 'Book sneaker cleaning or restoration | ShoeGlitch',
+  description:
+    'Start a ShoeGlitch order for sneaker cleaning, steam-assisted care, restoration, pickup, drop-off, or mail-in service.',
+};
 
 export default async function BookPage() {
   const cities = await db.cities.all();

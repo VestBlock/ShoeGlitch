@@ -39,9 +39,10 @@ ShoeGlitch now treats existing SEO and release content as the source of truth fo
 
 ## Review-first workflow
 1. The scan job inspects existing content engines and creates queue drafts.
-2. A reviewer promotes good drafts to `approved`.
-3. The publish job schedules only approved drafts to Buffer.
-4. A sync step updates scheduled posts to `published` or `failed`.
+2. A reviewer uses `/admin/social` to edit hooks, captions, hashtags, notes, and schedule timing.
+3. A reviewer promotes good drafts to `approved`.
+4. The publish job schedules only approved drafts to Buffer.
+5. A sync step updates scheduled posts to `published` or `failed`.
 
 This keeps content generation separate from publishing and prevents blind auto-posting.
 
@@ -80,25 +81,17 @@ These routes require:
 - `npm run social:automation`
 
 ## What is live vs scaffolded
-The code path is live, but queue persistence requires the Supabase migration:
-
-```text
-supabase/migrations/20260422_social_automation.sql
-```
-
-Run `npm run db:check` to confirm whether the queue table and other operational tables exist in the connected Supabase project.
 - live:
   - page extraction
   - social payload generation
   - queue persistence
   - duplicate prevention
-  - review/status workflow
+  - admin review, edit, approve, reject, scan, and publish controls at `/admin/social`
+  - review/status workflow backed by `social_post_queue`
   - Buffer publishing adapter
-- requires env + migration to fully activate:
+- requires env to fully activate:
   - real Buffer scheduling
-  - queue persistence in Supabase
+  - Buffer organization/channel discovery
 
 ## Best next improvement
-- add a protected admin review surface for social drafts, approvals, and publish logs so queue review does not require API calls alone
-
-That review surface now lives at `/admin/social`.
+- add Buffer credentials that pass Buffer API authentication so approved posts can move from queue review into scheduled Instagram posts.

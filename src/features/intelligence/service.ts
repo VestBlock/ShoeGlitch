@@ -257,11 +257,14 @@ export async function getSneakerFeed(): Promise<SneakerFeedResult> {
 }
 
 export async function getSneakerBySlug(slug: string) {
+  const feed = await getSneakerFeed();
+  const feedItem = feed.items.find((item) => item.slug === slug || item.externalId === slug);
+  if (feedItem) return feedItem;
+
   const product = await getSneakerProduct(slug);
   if (product.item) return mapNormalizedToFeedItem(product.item);
 
-  const feed = await getSneakerFeed();
-  return feed.items.find((item) => item.slug === slug || item.externalId === slug);
+  return undefined;
 }
 
 export async function getIntelligenceRouteIndex() {

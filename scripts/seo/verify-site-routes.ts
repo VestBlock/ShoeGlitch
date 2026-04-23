@@ -1,5 +1,7 @@
 #!/usr/bin/env tsx
 
+export {};
+
 type RouteExpectation = {
   path: string;
   expect: 'ok' | 'redirect';

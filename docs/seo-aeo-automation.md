@@ -78,6 +78,7 @@ This repo now includes a reusable automation layer for ShoeGlitch city and servi
 - `npx tsx scripts/releases/export-content-manifest.ts`
 - `curl http://localhost:3000/api/seo/release-manifest`
 - `npx tsx scripts/seo/verify-site-routes.ts`
+- `npx tsx scripts/seo/check-content-quality.ts`
 - `npx tsx scripts/seo/run-automation.ts`
 - `npm run seo:automation`
 
@@ -131,7 +132,12 @@ That keeps the content engine active without turning the site into a thin page f
   - export `public/seo/route-manifest.json`
   - export `public/seo/release-content-manifest.json`
   - verify representative public, SEO, operator, intelligence, and API routes
-  - confirm metadata, schema, and CTA surfaces still render after automation updates
+  - confirm metadata, schema, CTA surfaces, duplicate titles/descriptions, and public-copy quality still pass after automation updates
+
+## Quality gates
+- `scripts/seo/verify-site-routes.ts` checks representative routes, protected redirects, metadata, and H1 presence.
+- `scripts/seo/check-content-quality.ts` checks a broader manifest-backed page set for duplicate metadata, missing conversion links, missing JSON-LD on structured routes, and accidental internal/mock copy.
+- `npm run seo:automation` runs both checks after manifest export.
 
 ## Steam-cleaning messaging rule
 - Steam-assisted cleaning is part of every service package above Fresh Start.

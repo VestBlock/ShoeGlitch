@@ -50,18 +50,17 @@ export async function buildAdminSocialSummary(): Promise<AdminSocialSummary> {
   }
 
   try {
-    const items = await socialStore.listQueue({ limit: 50 });
-    const totals = items.reduce(
-      (acc, item) => {
-        if (item.status === 'draft') acc.drafts += 1;
-        if (item.status === 'approved') acc.approved += 1;
-        if (item.status === 'scheduled') acc.scheduled += 1;
-        if (item.status === 'published') acc.published += 1;
-        if (item.status === 'failed') acc.failed += 1;
-        return acc;
-      },
-      { drafts: 0, approved: 0, scheduled: 0, published: 0, failed: 0 },
-    );
+    const [items, statusCounts] = await Promise.all([
+      socialStore.listQueue({ limit: 50 }),
+      socialStore.countByStatus(),
+    ]);
+    const totals = {
+      drafts: statusCounts?.draft ?? 0,
+      approved: statusCounts?.approved ?? 0,
+      scheduled: statusCounts?.scheduled ?? 0,
+      published: statusCounts?.published ?? 0,
+      failed: statusCounts?.failed ?? 0,
+    };
 
     return {
       queueStatus: items.length > 0 ? 'live' : 'empty',

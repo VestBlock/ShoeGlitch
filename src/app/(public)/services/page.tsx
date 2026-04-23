@@ -1,7 +1,14 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { Badge, Card } from '@/components/ui';
 import TrustProofStrip from '@/components/TrustProofStrip';
+
+export const metadata: Metadata = {
+  title: 'Sneaker cleaning and restoration services | ShoeGlitch',
+  description:
+    'Compare ShoeGlitch sneaker cleaning, steam-assisted deep cleaning, restoration, sole care, pickup, drop-off, and mail-in services.',
+};
 
 const SERVICE_GUIDE = [
   {

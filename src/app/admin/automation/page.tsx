@@ -17,6 +17,12 @@ function runTone(status: string) {
   return 'warn' as const;
 }
 
+function sourceTone(status: string) {
+  if (status === 'healthy' || status === 'ready') return 'ok' as const;
+  if (status === 'degraded' || status === 'empty') return 'warn' as const;
+  return 'error' as const;
+}
+
 export default async function AdminAutomationPage({
   searchParams,
 }: {
@@ -41,6 +47,9 @@ export default async function AdminAutomationPage({
         <Badge>{summary.seo.releaseManifest.counts.total} release routes</Badge>
         <Badge tone={summary.dbHealth.status === 'ready' ? 'acid' : 'glitch'}>
           <StatusDot tone={summary.dbHealth.status === 'ready' ? 'ok' : 'error'} /> DB {summary.dbHealth.status}
+        </Badge>
+        <Badge tone={summary.sourceHealth.kicksdb.status === 'healthy' ? 'acid' : 'glitch'}>
+          <StatusDot tone={sourceTone(summary.sourceHealth.kicksdb.status)} /> KicksDB {summary.sourceHealth.kicksdb.status}
         </Badge>
       </div>
 
@@ -115,6 +124,50 @@ export default async function AdminAutomationPage({
               ) : null}
             </div>
           ))}
+        </div>
+      </Card>
+
+      <Card className="mb-10">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Sneaker source health</div>
+            <div className="mt-2 text-sm leading-6 text-ink/66">
+              This checks the KicksDB provider path and the normalized provider cache that powers releases, alerts, and intelligence pages.
+            </div>
+          </div>
+          <Badge tone={summary.sourceHealth.kicksdb.status === 'healthy' ? 'acid' : 'glitch'}>
+            <StatusDot tone={sourceTone(summary.sourceHealth.kicksdb.status)} /> {summary.sourceHealth.kicksdb.status}
+          </Badge>
+        </div>
+        <div className="mt-5 grid gap-3 md:grid-cols-2">
+          <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
+            <div className="font-semibold text-ink">KicksDB probe</div>
+            <div className="mt-1 text-sm text-ink/62">{summary.sourceHealth.kicksdb.message}</div>
+            <div className="mt-2 grid gap-1 text-xs text-ink/48">
+              <span>Sample products: {summary.sourceHealth.kicksdb.sampleCount}</span>
+              <span>Served from cache: {summary.sourceHealth.kicksdb.cached ? 'yes' : 'no'}</span>
+              <span>Direct key configured: {summary.sourceHealth.kicksdb.liveKeyConfigured ? 'yes' : 'no'}</span>
+              <span>Live proxy fallback available: {summary.sourceHealth.kicksdb.proxyModeAvailable ? 'yes' : 'no'}</span>
+              <span>Last attempt: {new Date(summary.sourceHealth.kicksdb.lastAttemptAt).toLocaleString()}</span>
+            </div>
+          </div>
+          <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="font-semibold text-ink">Provider cache</div>
+              <StatusDot tone={sourceTone(summary.sourceHealth.cache.status)} />
+            </div>
+            <div className="mt-1 text-sm text-ink/62">
+              {summary.sourceHealth.cache.message ?? `${summary.sourceHealth.cache.totalRows} cached records, ${summary.sourceHealth.cache.expiredRows} expired.`}
+            </div>
+            <div className="mt-2 grid gap-1 text-xs text-ink/48">
+              <span>Latest fetch: {summary.sourceHealth.cache.latestFetchAt ? new Date(summary.sourceHealth.cache.latestFetchAt).toLocaleString() : 'none yet'}</span>
+              <span>
+                Providers: {summary.sourceHealth.cache.byProvider.length > 0
+                  ? summary.sourceHealth.cache.byProvider.map((item) => `${item.provider} (${item.total})`).join(', ')
+                  : 'none yet'}
+              </span>
+            </div>
+          </div>
         </div>
       </Card>
 

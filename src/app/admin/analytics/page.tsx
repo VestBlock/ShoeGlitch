@@ -62,6 +62,32 @@ export default async function AdminAnalyticsPage() {
 
       <div className="grid gap-6 lg:grid-cols-2 mb-10">
         <Card>
+          <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Funnel rates</div>
+          <div className="mt-5 grid gap-3 md:grid-cols-2">
+            <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
+              <div className="font-semibold text-ink">CTA rate</div>
+              <div className="mt-1 text-3xl h-display">{summary.funnels.ctaRate}%</div>
+              <div className="mt-1 text-xs text-ink/48">CTA clicks divided by page views.</div>
+            </div>
+            <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
+              <div className="font-semibold text-ink">Lead rate</div>
+              <div className="mt-1 text-3xl h-display">{summary.funnels.leadRate}%</div>
+              <div className="mt-1 text-xs text-ink/48">Lead captures divided by page views.</div>
+            </div>
+            <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
+              <div className="font-semibold text-ink">Booking completion</div>
+              <div className="mt-1 text-3xl h-display">{summary.funnels.bookingCompletionRate}%</div>
+              <div className="mt-1 text-xs text-ink/48">Completed checkouts divided by booking starts.</div>
+            </div>
+            <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
+              <div className="font-semibold text-ink">Watchlist save rate</div>
+              <div className="mt-1 text-3xl h-display">{summary.funnels.watchlistSaveRate}%</div>
+              <div className="mt-1 text-xs text-ink/48">Watchlist saves divided by page views.</div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
           <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Coverage by family</div>
           <div className="mt-5 space-y-3">
             {summary.byFamily.length > 0 ? summary.byFamily.map((family) => (

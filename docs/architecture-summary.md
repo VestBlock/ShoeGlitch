@@ -80,6 +80,7 @@ The admin reporting layer lives in `src/features/admin` and powers:
 - funnel activity summaries from growth events and leads
 - manual automation runs and recent run history
 - database readiness checks for required automation tables
+- KicksDB/source-health and provider-cache status for sneaker intelligence inputs
 
 Key rule: dashboards should read from safe summaries and normalized reporting inputs, not raw operational payloads.
 
