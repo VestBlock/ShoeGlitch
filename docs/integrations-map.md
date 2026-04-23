@@ -8,6 +8,7 @@ Purpose:
 - role lookup
 - operational data
 - watchlist/alert persistence
+- operator driver license document metadata and private storage
 - optional caching and provider snapshots
 
 Main files:
@@ -22,10 +23,12 @@ Watch for:
 - server/client boundary mistakes
 - auth cookie handling
 - changing data assumptions without a migration
+- keeping driver license files server-side/private and using short signed URLs for admin review
 
 ## Stripe
 Purpose:
 - checkout and booking payment handling
+- operator kit payment handling
 
 Main files:
 - `src/lib/stripe.ts`
@@ -36,6 +39,7 @@ Watch for:
 - webhook/data consistency
 - order creation side effects
 - accidental breakage of confirmation/success routes
+- missing `payment_intent_data.metadata`, which weakens failed-payment alerts
 
 ## Email / Resend
 Purpose:
@@ -45,6 +49,7 @@ Purpose:
 - customer welcome and abandoned booking recovery
 - watchlist digest emails
 - admin application alerts
+- admin payment/webhook alerts
 
 Main files:
 - `src/lib/email.ts`

@@ -13,6 +13,7 @@ import { getStripe } from '@/lib/stripe';
 import { db } from '@/lib/db';
 import {
   sendAbandonedBookingFollowUp,
+  sendAdminSystemAlert,
   sendOperatorBookingAlert,
   sendOperatorKitPaymentConfirmation,
   sendOrderConfirmation,
@@ -162,6 +163,22 @@ export async function POST(req: Request) {
       case 'checkout.session.expired': {
         const session = event.data.object as Stripe.Checkout.Session;
         const orderId = session.metadata?.orderId;
+        const applicationId = session.metadata?.applicationId;
+        if (!orderId && applicationId) {
+          const admin = createAdminSupabaseClient();
+          await admin
+            .from('operator_applications')
+            .update({ kitPaymentStatus: 'expired' })
+            .eq('id', applicationId);
+          await sendAdminSystemAlert({
+            subject: 'Operator kit checkout expired',
+            badge: 'Stripe notice',
+            heading: 'An operator kit checkout expired.',
+            body: `<p style="font-size:15px;color:#4B5563;margin:0;">Application <strong>${applicationId}</strong> started kit checkout but did not complete payment.</p>`,
+            cta: { href: 'https://shoeglitch.com/admin/operators', label: 'Review application →' },
+          });
+          break;
+        }
         if (!orderId) break;
         const order = await db.orders.byId(orderId);
         if (!order || order.paymentStatus === 'paid') break;
@@ -188,6 +205,26 @@ export async function POST(req: Request) {
         } catch (emailErr: any) {
           console.error('[email] abandoned booking follow-up failed:', emailErr?.message ?? emailErr);
         }
+        break;
+      }
+
+      case 'payment_intent.payment_failed': {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        const orderId = paymentIntent.metadata?.orderId;
+        const applicationId = paymentIntent.metadata?.applicationId;
+        await sendAdminSystemAlert({
+          subject: 'Stripe payment failed',
+          badge: 'Stripe alert',
+          heading: 'A Stripe payment failed.',
+          body: `
+            <table style="width:100%;border-collapse:collapse;">
+              <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Payment intent</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${paymentIntent.id}</td></tr>
+              ${orderId ? `<tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Order</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${orderId}</td></tr>` : ''}
+              ${applicationId ? `<tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${applicationId}</td></tr>` : ''}
+            </table>
+          `,
+          cta: { href: 'https://dashboard.stripe.com/payments', label: 'Open Stripe →' },
+        });
         break;
       }
 
@@ -231,6 +268,13 @@ export async function POST(req: Request) {
     }
   } catch (err: any) {
     console.error('Webhook processing error:', err);
+    await sendAdminSystemAlert({
+      subject: 'Stripe webhook processing failed',
+      badge: 'Webhook error',
+      heading: 'A Stripe webhook failed inside Shoe Glitch.',
+      body: `<p style="font-size:15px;color:#4B5563;margin:0;">${err?.message ?? 'Unknown webhook handler error'}</p>`,
+      cta: { href: 'https://dashboard.stripe.com/webhooks', label: 'Open Stripe webhooks →' },
+    });
     return NextResponse.json({ error: `Handler error: ${err.message}` }, { status: 500 });
   }
 

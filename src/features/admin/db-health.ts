@@ -54,6 +54,11 @@ export const REQUIRED_OPERATIONAL_TABLES: Array<Omit<RequiredTableStatus, 'ok' |
     purpose: 'review-first social post queue',
     migration: 'supabase/migrations/20260422_social_automation.sql',
   },
+  {
+    table: 'operator_application_documents',
+    purpose: 'operator driver license upload metadata',
+    migration: 'supabase/migrations/20260423_operator_license_documents.sql',
+  },
 ];
 
 export async function checkRequiredOperationalTables(): Promise<{

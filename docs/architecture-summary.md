@@ -105,14 +105,22 @@ Email delivery is centralized in `src/lib/email.ts`.
 Current live families:
 - customer transactional email and first-login welcome
 - operator booking alerts
-- operator application admin + applicant email
+- operator application admin + applicant email, including license upload status
+- operator payment/webhook admin alerts
 - sneaker watchlist alerts and digest batching
 
 Any new email work should extend the shared delivery layer and keep trigger logic at durable server-side event boundaries.
+
+## Operator onboarding documents
+Operator applications require a driver license upload before kit checkout and admin approval.
+Document uploads are handled server-side in `src/lib/operator-documents.ts`, stored in a private Supabase Storage bucket, and surfaced to admins with short-lived signed URLs.
+
+Key rule: license files are operational review documents. Do not expose them in public routes or client-side storage writes.
 
 ## Change-routing guidance
 - Booking or checkout changes: start in `src/app/(public)/book` and related `src/lib/*`.
 - Sneaker feed changes: start in `src/features/intelligence`.
 - SEO route/system changes: start in `src/features/seo`.
 - Operator recruitment SEO changes: start in `src/features/operator-seo` and the existing `/operator/apply` flow.
+- Operator application or onboarding changes: inspect `src/app/(public)/operator/apply`, `src/app/admin/operators`, and `src/lib/operator-documents.ts`.
 - Role/dashboard changes: start in `src/middleware.ts` and the relevant protected app subtree.

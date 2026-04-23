@@ -106,6 +106,7 @@ Generic growth/programmatic route family. Only touch this when working on the gr
 - `src/lib/supabase/*`: auth/data boundary.
 - `src/lib/stripe.ts` and `src/app/api/stripe/webhook/route.ts`: payments.
 - `src/lib/email.ts`: notification delivery.
+- `src/lib/operator-documents.ts`: private operator license upload and review document handling.
 - `src/app/(public)/book/*`: booking and conversion flow.
 
 ## Orientation rules

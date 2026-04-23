@@ -8,6 +8,10 @@ import { getStripe } from '@/lib/stripe';
 import { sendOperatorApplicationAdminAlert, sendOperatorApplicationConfirmation } from '@/lib/email';
 import { db } from '@/lib/db';
 import { recordGrowthEvent } from '@/lib/growth/persistence';
+import {
+  uploadOperatorLicenseDocument,
+  validateOperatorLicenseFile,
+} from '@/lib/operator-documents';
 
 const ApplicationSchema = z.object({
   name: z.string().min(2),
@@ -26,6 +30,13 @@ const TIER_PRICES = {
 } as const;
 
 export async function submitApplicationAction(formData: FormData) {
+  const licenseFile = formData.get('licenseFile');
+  const parsedLicenseFile = licenseFile instanceof File ? licenseFile : null;
+  validateOperatorLicenseFile(parsedLicenseFile);
+  if (!parsedLicenseFile) {
+    throw new Error('A driver license upload is required for operator review.');
+  }
+
   const parsed = ApplicationSchema.parse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -57,6 +68,19 @@ export async function submitApplicationAction(formData: FormData) {
 
   if (error) throw error;
 
+  try {
+    await uploadOperatorLicenseDocument({
+      applicationId: app.id,
+      file: parsedLicenseFile,
+    });
+  } catch (documentError) {
+    await supabase
+      .from('operator_applications')
+      .delete()
+      .eq('id', app.id);
+    throw documentError;
+  }
+
   await recordGrowthEvent({
     routePath: '/become-an-operator',
     eventName: 'operator_interest',
@@ -82,6 +106,7 @@ export async function submitApplicationAction(formData: FormData) {
         tier: parsed.tier,
         experience: parsed.experience ?? null,
         whyJoin: parsed.whyJoin ?? null,
+        licenseUploaded: true,
       }),
       sendOperatorApplicationConfirmation({
         applicationId: app.id,
@@ -89,6 +114,7 @@ export async function submitApplicationAction(formData: FormData) {
         name: parsed.name,
         cityName,
         tier: parsed.tier,
+        licenseUploaded: true,
       }),
     ]);
   } catch (emailError) {
@@ -123,6 +149,12 @@ export async function submitApplicationAction(formData: FormData) {
     metadata: {
       applicationId: app.id,
       tier: parsed.tier,
+    },
+    payment_intent_data: {
+      metadata: {
+        applicationId: app.id,
+        tier: parsed.tier,
+      },
     },
   });
 

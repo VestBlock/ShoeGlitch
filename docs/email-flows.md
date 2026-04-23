@@ -20,11 +20,14 @@ This file is the source of truth for what ShoeGlitch emails are actually live, w
 
 ### Operator / cleaner
 - new order booking alert to cleaners/operators
-- operator application admin alert
-- operator application confirmation to applicant
+- operator application admin alert, including driver license upload status
+- operator application confirmation to applicant, including application packet status
 - operator kit payment confirmation
 - operator approval email
 - operator rejection / application update email
+- admin alert when an operator kit checkout expires
+- admin alert when Stripe reports a payment failure
+- admin alert when Stripe webhook processing fails
 
 ### Intelligence members
 - sneaker watchlist alert email
@@ -33,7 +36,7 @@ This file is the source of truth for what ShoeGlitch emails are actually live, w
 ## Incomplete / not yet live
 - intelligence digest / recap automation beyond watchlist digest batching
 - broader restock and price-drop member email quality still depends on live event-source coverage
-- admin alerts for automation failures
+- automation failure alerts beyond the admin automation dashboard
 
 ## Configuration
 - `RESEND_API_KEY`

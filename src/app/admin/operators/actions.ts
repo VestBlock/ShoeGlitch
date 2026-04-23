@@ -7,6 +7,7 @@ import {
   sendOperatorApplicationRejected,
 } from '@/lib/email';
 import { getSession } from '@/lib/session';
+import { hasOperatorLicenseDocument } from '@/lib/operator-documents';
 
 async function requireSuperAdmin() {
   const session = await getSession();
@@ -30,6 +31,9 @@ export async function approveOperatorAction(applicationId: string) {
   if (!app) throw new Error('Application not found');
   if (app.status !== 'pending') throw new Error('Already processed');
   if (app.kitPaymentStatus !== 'paid') throw new Error('Kit not paid');
+  if (!(await hasOperatorLicenseDocument(applicationId))) {
+    throw new Error('Driver license upload is required before approval');
+  }
 
   let userId = null;
   const { data: existingUser } = await admin

@@ -51,7 +51,7 @@ export default async function OperatorApplyPage({
       ) : null}
 
       <Card className="p-8">
-        <form action={submitApplicationAction} className="space-y-5">
+        <form action={submitApplicationAction} encType="multipart/form-data" className="space-y-5">
           <input type="hidden" name="tier" value={tier} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
@@ -87,6 +87,20 @@ export default async function OperatorApplyPage({
           <div>
             <label className="label">Why Shoe Glitch?</label>
             <textarea name="whyJoin" className="input min-h-[80px]" />
+          </div>
+          <div>
+            <label className="label">Driver license upload</label>
+            <input
+              name="licenseFile"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,application/pdf"
+              className="input file:mr-4 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+              required
+            />
+            <p className="mt-2 text-xs leading-relaxed text-ink/55">
+              Required for operator review because pickup and drop-off work involves customer property and local routes.
+              JPG, PNG, WebP, or PDF accepted. Max 10MB.
+            </p>
           </div>
           <div className="pt-4 border-t border-ink/10 flex items-center justify-between">
             <div className="text-sm text-ink/60">Your application is submitted first, then you continue to the one-time kit payment so the review can move forward.</div>

@@ -40,6 +40,50 @@ function getResend(): Resend | null {
   return _resend;
 }
 
+export async function sendAdminSystemAlert(params: {
+  subject: string;
+  badge?: string;
+  heading: string;
+  body: string;
+  cta?: { href: string; label: string };
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  const recipients = getAdminAlertRecipients();
+  if (recipients.length === 0) return;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: recipients,
+      replyTo: REPLY_TO,
+      subject: params.subject,
+      html: simpleShell({
+        badge: params.badge ?? 'Admin alert',
+        heading: params.heading,
+        body: params.body,
+        cta: params.cta,
+      }),
+      text: [
+        params.heading,
+        '',
+        params.body.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(),
+        params.cta ? `\n${params.cta.label}: ${params.cta.href}` : null,
+        '',
+        '— Shoe Glitch',
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    });
+    if (error) {
+      console.error('[email] resend error on sendAdminSystemAlert:', error);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendAdminSystemAlert:', err?.message ?? err);
+  }
+}
+
 /**
  * Send order confirmation email after successful payment.
  * Safe to call from webhook handlers — never throws.
@@ -718,6 +762,7 @@ export async function sendOperatorApplicationAdminAlert(params: {
   tier: 'starter' | 'pro' | 'luxury';
   experience?: string | null;
   whyJoin?: string | null;
+  licenseUploaded?: boolean;
 }): Promise<void> {
   const resend = getResend();
   if (!resend) return;
@@ -725,7 +770,7 @@ export async function sendOperatorApplicationAdminAlert(params: {
   const recipients = getAdminAlertRecipients();
   if (recipients.length === 0) return;
 
-  const { applicationId, name, email, phone, cityName, tier, experience, whyJoin } = params;
+  const { applicationId, name, email, phone, cityName, tier, experience, whyJoin, licenseUploaded } = params;
   const subject = `New operator application — ${name} · ${cityName}`;
 
   try {
@@ -744,6 +789,7 @@ export async function sendOperatorApplicationAdminAlert(params: {
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Phone</td><td style="padding:8px 0;text-align:right;">${escapeHtml(phone)}</td></tr>
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">City</td><td style="padding:8px 0;text-align:right;">${escapeHtml(cityName)}</td></tr>
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Driver license</td><td style="padding:8px 0;text-align:right;">${licenseUploaded ? 'Uploaded' : 'Missing'}</td></tr>
           </table>
           ${experience ? `<p style="font-size:14px;color:#4B5563;margin:20px 0 12px 0;"><strong>Experience</strong><br>${escapeHtml(experience)}</p>` : ''}
           ${whyJoin ? `<p style="font-size:14px;color:#4B5563;margin:12px 0 0 0;"><strong>Why Shoe Glitch</strong><br>${escapeHtml(whyJoin)}</p>` : ''}
@@ -758,6 +804,7 @@ export async function sendOperatorApplicationAdminAlert(params: {
         `Phone: ${phone}`,
         `City: ${cityName}`,
         `Kit tier: ${tier}`,
+        `Driver license: ${licenseUploaded ? 'Uploaded' : 'Missing'}`,
         experience ? `Experience: ${experience}` : null,
         whyJoin ? `Why Shoe Glitch: ${whyJoin}` : null,
         '',
@@ -782,11 +829,12 @@ export async function sendOperatorApplicationConfirmation(params: {
   name: string;
   cityName: string;
   tier: 'starter' | 'pro' | 'luxury';
+  licenseUploaded?: boolean;
 }): Promise<void> {
   const resend = getResend();
   if (!resend) return;
 
-  const { applicationId, toEmail, name, cityName, tier } = params;
+  const { applicationId, toEmail, name, cityName, tier, licenseUploaded } = params;
   const subject = `Application received — Shoe Glitch operator path`;
 
   try {
@@ -803,8 +851,9 @@ export async function sendOperatorApplicationConfirmation(params: {
           <table style="width:100%;border-collapse:collapse;">
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Application</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(applicationId)}</td></tr>
             <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Kit tier</td><td style="padding:8px 0;text-align:right;text-transform:capitalize;">${escapeHtml(tier)}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Driver license</td><td style="padding:8px 0;text-align:right;">${licenseUploaded ? 'Received' : 'Needed'}</td></tr>
           </table>
-          <p style="font-size:14px;color:#6B7280;margin:20px 0 0 0;">Our team will review your application and follow up with the next step. Keep an eye on your inbox for updates.</p>
+          <p style="font-size:14px;color:#6B7280;margin:20px 0 0 0;">Our team will review your application packet, kit payment, and license upload before sending the next step. Keep an eye on your inbox for updates.</p>
         `,
         cta: { href: `${SITE_URL}/operator/applied?ref=${encodeURIComponent(applicationId)}`, label: 'View application status →' },
       }),
@@ -814,6 +863,7 @@ export async function sendOperatorApplicationConfirmation(params: {
         `Application: ${applicationId}`,
         `City: ${cityName}`,
         `Kit tier: ${tier}`,
+        `Driver license: ${licenseUploaded ? 'Received' : 'Needed'}`,
         '',
         `Status page: ${SITE_URL}/operator/applied?ref=${encodeURIComponent(applicationId)}`,
         '',

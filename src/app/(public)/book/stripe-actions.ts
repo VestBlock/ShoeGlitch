@@ -191,6 +191,14 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
       couponCode: order.couponCode ?? '',
       discount: String(order.discount),
     },
+    payment_intent_data: {
+      metadata: {
+        orderId: order.id,
+        orderCode: order.code,
+        customerId: order.customerId,
+        cityId: order.cityId,
+      },
+    },
     success_url: `${origin}/book/success?order=${order.id}&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/book/cancelled?order=${order.id}`,
     customer_email: undefined, // let Stripe collect email on its page

@@ -4,7 +4,13 @@ import { useState, useMemo } from 'react';
 import { SearchBar } from '@/components/SearchBar';
 import { ApprovalActions } from './ApprovalActions';
 
-export function AdminOperatorsClient({ applications }: { applications: any[] }) {
+export function AdminOperatorsClient({
+  applications,
+  documentsSetupError,
+}: {
+  applications: any[];
+  documentsSetupError?: string | null;
+}) {
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(() => {
@@ -24,6 +30,13 @@ export function AdminOperatorsClient({ applications }: { applications: any[] }) 
       <div className="mb-6">
         <SearchBar placeholder="Search by name, email, phone, or city..." onSearch={setSearch} />
       </div>
+
+      {documentsSetupError ? (
+        <div className="mb-6 rounded-2xl border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-900">
+          License uploads need the operator document migration before admin review links can load.
+          <span className="block font-mono text-xs mt-2">{documentsSetupError}</span>
+        </div>
+      ) : null}
 
       <div className="space-y-4">
         {filtered.length === 0 && (
@@ -70,8 +83,51 @@ export function AdminOperatorsClient({ applications }: { applications: any[] }) 
               </div>
             )}
 
-            {app.status === 'pending' && app.kitPaymentStatus === 'paid' && (
+            <div className="mt-4 rounded-xl border border-ink/10 bg-bone-soft p-4">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-ink/40">License verification</div>
+                  <div className="mt-1 text-sm font-semibold">
+                    {app.licenseDocuments?.length ? 'Driver license uploaded' : 'No license uploaded'}
+                  </div>
+                  <p className="mt-1 text-xs text-ink/55">
+                    Required before approving pickup, drop-off, or cleaning operator access.
+                  </p>
+                </div>
+                {app.licenseDocuments?.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {app.licenseDocuments.map((document: any) => (
+                      document.signedUrl ? (
+                        <a
+                          key={document.id}
+                          href={document.signedUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="btn-outline text-sm"
+                        >
+                          View license
+                        </a>
+                      ) : (
+                        <span key={document.id} className="rounded-full bg-yellow-100 px-3 py-2 text-xs text-yellow-800">
+                          Link unavailable
+                        </span>
+                      )
+                    ))}
+                  </div>
+                ) : (
+                  <span className="rounded-full bg-red-100 px-3 py-2 text-xs font-semibold text-red-800">
+                    Missing
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {app.status === 'pending' && app.kitPaymentStatus === 'paid' && app.licenseDocuments?.length > 0 && (
               <ApprovalActions applicationId={app.id} />
+            )}
+
+            {app.status === 'pending' && app.kitPaymentStatus === 'paid' && !app.licenseDocuments?.length && (
+              <p className="text-xs text-red-700 mt-4">Approval is locked until a driver license is uploaded.</p>
             )}
 
             {app.status === 'pending' && app.kitPaymentStatus !== 'paid' && (
