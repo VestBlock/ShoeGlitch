@@ -59,12 +59,14 @@ export const socialStore = {
       .eq('route_path', routePath)
       .eq('content_angle', contentAngle)
       .eq('target_platform', platform)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .order('updated_at', { ascending: false })
+      .limit(10);
 
-    if (error || !data) return null;
-    return mapQueueRow(data);
+    if (error || !data?.length) return null;
+
+    const rows = data.map(mapQueueRow);
+    const nonPublished = rows.filter((row) => row.status !== 'published');
+    return nonPublished[0] ?? rows[0] ?? null;
   },
 
   async listQueue(input?: { status?: SocialPostStatus; limit?: number; excludeStatuses?: SocialPostStatus[] }) {
@@ -310,5 +312,18 @@ export const socialStore = {
 
     if (error || !data) return null;
     return mapQueueRow(data);
+  },
+
+  async deleteMany(ids: string[]) {
+    const client = adminSafe();
+    if (!client || ids.length === 0) return 0;
+
+    const { error, count } = await client
+      .from('social_post_queue')
+      .delete({ count: 'exact' })
+      .in('id', ids);
+
+    if (error) return 0;
+    return count ?? ids.length;
   },
 };

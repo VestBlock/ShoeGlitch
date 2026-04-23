@@ -33,6 +33,23 @@ function socialEligibleSeoEntry(path: string) {
   );
 }
 
+function activeStatusPriority(status: SocialQueueRecord['status']) {
+  switch (status) {
+    case 'scheduled':
+      return 4;
+    case 'approved':
+      return 3;
+    case 'draft':
+      return 2;
+    case 'failed':
+      return 1;
+    case 'published':
+      return 0;
+    default:
+      return 0;
+  }
+}
+
 function routePriority(pageType: SocialPageType) {
   switch (pageType) {
     case 'release':
@@ -66,8 +83,16 @@ export async function createSocialDraftForPath(path: string, force = false, sour
 
   if (!force && latest) {
     const sameOrNewer = compareIso(latest.sourceUpdatedAt, source.sourceUpdatedAt) >= 0;
-    if (sameOrNewer) {
-      if (latest.status === 'draft' || latest.status === 'failed') {
+    if (latest.status === 'scheduled' || latest.status === 'published') {
+      return {
+        status: 'duplicate' as const,
+        reason: `A ${latest.status} candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`,
+        draft: latest,
+      };
+    }
+
+    if (sameOrNewer || latest.status === 'draft' || latest.status === 'approved' || latest.status === 'failed') {
+      if (latest.status === 'draft' || latest.status === 'failed' || latest.status === 'approved') {
         const refreshed = await socialStore.updateContent(latest.id, {
           hook: payload.hook,
           caption: payload.caption,
@@ -76,9 +101,9 @@ export async function createSocialDraftForPath(path: string, force = false, sour
           approvalNotes: latest.approvalNotes ?? null,
         });
         const recycled =
-          latest.status === 'failed'
+          latest.status === 'failed' || latest.status === 'approved'
             ? await socialStore.updateForReview(latest.id, {
-                status: 'draft',
+                status: latest.status === 'approved' ? 'approved' : 'draft',
                 recommendedScheduleAt: payload.recommendedScheduleAt,
                 approvalNotes: latest.approvalNotes ?? null,
               })
@@ -87,7 +112,9 @@ export async function createSocialDraftForPath(path: string, force = false, sour
           status: 'duplicate' as const,
           reason: recycled
             ? latest.status === 'failed'
-              ? `Recycled failed social candidate for ${source.routePath} back into draft status.`
+              ? latest.status === 'failed'
+                ? `Recycled failed social candidate for ${source.routePath} back into draft status.`
+                : `Refreshed approved candidate for ${source.routePath} without creating a duplicate.`
               : `Refreshed draft candidate for ${source.routePath} and angle ${payload.contentAngle}.`
             : `A draft candidate already exists for ${source.routePath} and angle ${payload.contentAngle}.`,
           draft: recycled ?? refreshed ?? latest,
@@ -134,6 +161,46 @@ export async function createSocialDraftForPath(path: string, force = false, sour
       ? `Created draft for ${source.routePath}.`
       : `Failed to create social draft for ${source.routePath}. Confirm the social_post_queue table exists and Supabase admin access is configured.`,
     draft,
+  };
+}
+
+export async function cleanupSocialQueueDuplicates(limit = 250) {
+  const rows = await socialStore.listQueue({ limit });
+  const grouped = new Map<string, SocialQueueRecord[]>();
+
+  for (const row of rows) {
+    const key = `${row.routePath}|${row.contentAngle}|${row.targetPlatform}`;
+    const existing = grouped.get(key) ?? [];
+    existing.push(row);
+    grouped.set(key, existing);
+  }
+
+  const idsToDelete: string[] = [];
+  const messages: string[] = [];
+
+  for (const [key, entries] of grouped) {
+    if (entries.length <= 1) continue;
+
+    const sorted = [...entries].sort((left, right) => {
+      const priority = activeStatusPriority(right.status) - activeStatusPriority(left.status);
+      if (priority !== 0) return priority;
+      return new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime();
+    });
+
+    const keeper = sorted[0];
+    const removable = sorted.slice(1).filter((entry) => entry.status !== 'published');
+    if (removable.length === 0) continue;
+
+    idsToDelete.push(...removable.map((entry) => entry.id));
+    messages.push(`Kept ${keeper.routePath} (${keeper.status}) and removed ${removable.length} duplicate queue item(s).`);
+  }
+
+  const deleted = await socialStore.deleteMany(idsToDelete);
+
+  return {
+    scanned: rows.length,
+    deleted,
+    messages,
   };
 }
 

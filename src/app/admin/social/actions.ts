@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { publishApprovedSocialQueue, runDailySocialDraftScan } from '@/features/social/service';
+import { cleanupSocialQueueDuplicates, publishApprovedSocialQueue, runDailySocialDraftScan } from '@/features/social/service';
 import { getBufferAvailability, scheduleBufferInstagramPost } from '@/features/social/buffer';
 import { socialStore } from '@/features/social/store';
 import { recordAutomationRun } from '@/features/admin/automation-reporting';
@@ -159,15 +159,16 @@ export async function scanSocialDraftsAction() {
   await requireSuperAdmin();
 
   const summary = await runDailySocialDraftScan();
+  const cleanup = await cleanupSocialQueueDuplicates();
   await recordAutomationRun({
     task: 'social-scan',
     status: summary.failed > 0 ? 'failed' : 'success',
-    message: `Created ${summary.created} drafts, skipped ${summary.skippedDuplicates}, failed ${summary.failed}.`,
-    metadata: { ...summary },
+    message: `Created ${summary.created} drafts, skipped ${summary.skippedDuplicates}, failed ${summary.failed}, removed ${cleanup.deleted} duplicates.`,
+    metadata: { ...summary, cleanup },
   });
 
   revalidatePath('/admin/social');
-  finish(`Social scan created ${summary.created} drafts and skipped ${summary.skippedDuplicates} duplicates.`);
+  finish(`Social scan created ${summary.created} drafts, skipped ${summary.skippedDuplicates}, and removed ${cleanup.deleted} duplicate queue items.`);
 }
 
 export async function createMoreSocialDraftsAction(formData: FormData) {
@@ -177,15 +178,16 @@ export async function createMoreSocialDraftsAction(formData: FormData) {
   const limit = Number.isFinite(requested) ? Math.min(Math.max(requested, 4), 32) : 8;
 
   const summary = await runDailySocialDraftScan(limit);
+  const cleanup = await cleanupSocialQueueDuplicates();
   await recordAutomationRun({
     task: 'social-scan-more',
     status: summary.failed > 0 ? 'failed' : 'success',
-    message: `Created ${summary.created} drafts from a ${limit}-candidate scan, skipped ${summary.skippedDuplicates}, failed ${summary.failed}.`,
-    metadata: { limit, ...summary },
+    message: `Created ${summary.created} drafts from a ${limit}-candidate scan, skipped ${summary.skippedDuplicates}, failed ${summary.failed}, removed ${cleanup.deleted} duplicates.`,
+    metadata: { limit, ...summary, cleanup },
   });
 
   revalidatePath('/admin/social');
-  finish(`Create more drafts scanned ${limit} candidates, created ${summary.created}, and skipped ${summary.skippedDuplicates}.`);
+  finish(`Create more drafts scanned ${limit} candidates, created ${summary.created}, skipped ${summary.skippedDuplicates}, and removed ${cleanup.deleted} duplicates.`);
 }
 
 export async function publishApprovedSocialAction() {
