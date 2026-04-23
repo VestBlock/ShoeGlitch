@@ -94,7 +94,6 @@ function buildTikTokMetadataBlock(title: string) {
   return `
       metadata: {
         tiktok: {
-          type: post
           title: ${gqlString(title.slice(0, 140))}
         }
       }`;
