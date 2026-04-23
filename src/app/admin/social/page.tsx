@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { Badge, Card, StatusDot } from '@/components/ui';
 import { buildAdminSocialSummary } from '@/features/admin/social-reporting';
@@ -160,15 +161,37 @@ export default async function AdminSocialPage({
         <div className="mt-5 space-y-3">
           {summary.recentQueue.length > 0 ? summary.recentQueue.map((item) => (
             <div key={item.id} className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
-              <div className="flex items-center justify-between gap-4">
-                <div className="font-semibold text-ink">{item.routePath}</div>
-                <Badge tone={item.status === 'published' ? 'acid' : item.status === 'failed' ? 'glitch' : 'default'}>
-                  {item.status}
-                </Badge>
-              </div>
-              <div className="mt-2 text-sm text-ink/62">{item.hook}</div>
-              <div className="mt-1 text-xs text-ink/48">
-                {item.contentAngle} · {item.targetPlatform} · {new Date(item.updatedAt).toLocaleString()}
+              <div className="grid gap-4 md:grid-cols-[148px_minmax(0,1fr)]">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-[1rem] border border-ink/10 bg-white">
+                  {item.imageUrl ? (
+                    <Image
+                      src={item.imageUrl}
+                      alt={item.title}
+                      fill
+                      sizes="148px"
+                      className="object-contain p-2"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center px-4 text-center text-xs font-semibold uppercase tracking-widest text-ink/35">
+                      No image
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="truncate font-semibold text-ink">{item.title}</div>
+                      <div className="mt-1 truncate font-mono text-xs text-ink/45">{item.routePath}</div>
+                    </div>
+                    <Badge tone={item.status === 'published' ? 'acid' : item.status === 'failed' ? 'glitch' : 'default'}>
+                      {item.status}
+                    </Badge>
+                  </div>
+                  <div className="mt-2 text-sm text-ink/62">{item.hook}</div>
+                  <div className="mt-1 text-xs text-ink/48">
+                    {item.contentAngle} · {item.targetPlatform} · {new Date(item.updatedAt).toLocaleString()}
+                  </div>
+                </div>
               </div>
               <form action={saveSocialDraftAction} className="mt-4 grid gap-3">
                 <input type="hidden" name="id" value={item.id} />
