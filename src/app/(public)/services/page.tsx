@@ -37,6 +37,9 @@ export default async function ServicesPage() {
         <p className="text-ink/70 max-w-2xl text-lg">
           Pricing shown is the national default. Your city may have local pricing — you&rsquo;ll see the final number at checkout.
         </p>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/62">
+          Steam-assisted cleaning is included in every package above Fresh Start. The lowest tier stays lighter on purpose, while deeper packages move into steam, interior refresh, and stronger finish work.
+        </p>
         <TrustProofStrip
           className="mt-8"
           items={[
@@ -46,11 +49,15 @@ export default async function ServicesPage() {
             },
             {
               label: 'Built around the pair',
-              detail: 'Cleaning, restoration, sole work, and add-ons all stack into one tracked order.',
+              detail: 'Cleaning, restoration, steam-assisted deep care, sole work, and add-ons all stack into one tracked order.',
             },
             {
               label: 'Use the route that fits',
               detail: 'Pickup, drop-off, and mail-in stay in the same booking flow so the handoff stays clear.',
+            },
+            {
+              label: 'Steam where it belongs',
+              detail: 'Fresh Start stays entry-level. Every package above it moves into steam-assisted cleaning as part of the deeper process.',
             },
           ]}
         />
@@ -64,7 +71,7 @@ export default async function ServicesPage() {
               Start with the outcome, not the menu.
             </h2>
             <p className="mt-4 text-base leading-7 text-ink/68">
-              Most customers only need one question answered: does this pair need a quick clean, a deeper restoration, or the easiest route to hand it off?
+              Most customers only need one question answered: does this pair need a quick clean, a deeper steam-assisted service, or the easiest route to hand it off?
             </p>
           </Card>
 
@@ -105,10 +112,21 @@ export default async function ServicesPage() {
               <p className="text-sm text-ink/50 italic mb-4">{s.tagline}</p>
               <p className="text-ink/70 mb-6">{s.description}</p>
               <div className="mb-6 flex flex-wrap gap-2">
+                {s.slug !== 'fresh-start' && s.category !== 'luxury' && <Badge tone="acid">Steam-assisted</Badge>}
                 {s.category === 'clean' && <Badge tone="neon">Best for visible dirt</Badge>}
                 {s.category === 'restoration' && <Badge tone="acid">Best for deeper recovery</Badge>}
                 {s.category === 'specialty' && <Badge>Best for material-specific care</Badge>}
+                {s.slug === 'fresh-start' && <Badge>Entry tier</Badge>}
               </div>
+              {s.slug === 'fresh-start' ? (
+                <p className="mb-6 text-xs leading-6 text-ink/55">
+                  Fresh Start is the only package that skips steam so the entry tier stays lighter and faster.
+                </p>
+              ) : s.category !== 'luxury' ? (
+                <p className="mb-6 text-xs leading-6 text-ink/55">
+                  This package includes steam-assisted cleaning as part of the deeper process.
+                </p>
+              ) : null}
               <div className="flex items-center justify-between pt-4 border-t border-ink/10">
                 <div className="flex gap-2 flex-wrap">
                   <Badge>{s.category}</Badge>

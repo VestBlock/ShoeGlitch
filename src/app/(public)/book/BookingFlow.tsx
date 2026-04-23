@@ -446,7 +446,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
 
         {/* STEP 3 — Service */}
         {step === 3 && catalog && (
-          <Panel title="Pick your service." subtitle={`Pricing reflects ${currentCity?.name}.`}>
+          <Panel title="Pick your service." subtitle={`Pricing reflects ${currentCity?.name}. Steam-assisted cleaning is included in every package above Fresh Start.`}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {catalog.primary.map((s) => (
                 <button
@@ -460,6 +460,17 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
                   </div>
                   <p className="text-xs text-ink/50 italic mt-1">{s.tagline}</p>
                   <p className="text-xs text-ink/70 mt-2 line-clamp-2">{s.description}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {s.slug === 'fresh-start' ? (
+                      <span className="rounded-full border border-ink/10 bg-bone-soft px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/55">
+                        Entry tier · no steam
+                      </span>
+                    ) : (
+                      <span className="rounded-full border border-glitch/20 bg-glitch/8 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-glitch/85">
+                        Steam-assisted
+                      </span>
+                    )}
+                  </div>
                 </button>
               ))}
             </div>
@@ -474,6 +485,9 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
                   </button>
                 ))}
               </div>
+            </div>
+            <div className="mt-6 rounded-[1.35rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm leading-6 text-ink/62">
+              Fresh Start stays lighter for quick resets. Full Reset, Fabric Rescue, Revival, and deeper packages move into steam-assisted cleaning so the process can do more than surface-level work.
             </div>
           </Panel>
         )}

@@ -56,10 +56,10 @@ export default function TermsPage() {
 
         <h3>Current listed services include</h3>
         <ul>
-          <li>Fresh Start ($40) — basic exterior cleaning</li>
-          <li>Full Reset ($70) — deep clean plus deodorize</li>
-          <li>Fabric Rescue ($75) — specialty fabric treatment</li>
-          <li>Revival Package ($150) — full restoration</li>
+          <li>Fresh Start ($40) — basic exterior cleaning without steam treatment</li>
+          <li>Full Reset ($70) — steam-assisted deep clean plus deodorize</li>
+          <li>Fabric Rescue ($75) — specialty fabric treatment with material-safe steam-assisted cleaning where appropriate</li>
+          <li>Revival Package ($150) — full restoration with steam-assisted deep cleaning and reconditioning</li>
           <li>Ice Recovery ($50) — yellowing reversal on transparent or icy soles</li>
           <li>Sole Color services ($45–$110) — heel and sole repainting, including red-bottom touch-ups on Louboutin-style shoes</li>
           <li>Add-ons including Street Shield, Lace Lab, Fresh Core, and Detail Fix</li>

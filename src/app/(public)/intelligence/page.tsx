@@ -70,7 +70,7 @@ export default async function IntelligencePage() {
                   What comes next
                 </div>
                 <p className="mt-3 text-sm leading-6 text-ink/70">
-                  This MVP keeps market placeholders isolated so real API, scraper, and affiliate layers can plug in later without rewriting the UI.
+                  Live release data drives the feed now, and the market layer will keep getting sharper as deeper pricing coverage comes online.
                 </p>
               </div>
             </div>
@@ -105,7 +105,7 @@ export default async function IntelligencePage() {
               Frequently asked questions
             </div>
             <h2 className="h-display mt-4 text-[clamp(2rem,4vw,3.2rem)] leading-[0.95] text-ink">
-              Built for search, AI, and actual decisions.
+              Straight answers for real release decisions.
             </h2>
           </div>
 

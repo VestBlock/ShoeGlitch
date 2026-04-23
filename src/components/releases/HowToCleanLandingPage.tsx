@@ -37,7 +37,7 @@ export default function HowToCleanLandingPage({ model }: { model: ReleasePageMod
 
               <div className="mt-7 grid gap-4 md:grid-cols-[minmax(0,1.1fr)_300px]">
                 <div className="rounded-[1.5rem] border border-ink/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.95),rgba(239,255,247,0.84))] p-5">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">AI-readable cleaning read</div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Quick cleaning read</div>
                   <p className="mt-3 text-base leading-7 text-ink/72">{model.aiSummary}</p>
                 </div>
                 <div className="rounded-[1.5rem] border border-ink/10 bg-bone-soft p-5">
@@ -110,6 +110,9 @@ export default function HowToCleanLandingPage({ model }: { model: ReleasePageMod
                 <section>
                   <h2>Why this shoe needs a real cleaning plan</h2>
                   <p>{model.recommendation.body}</p>
+                  <p>
+                    On Shoe Glitch, the deeper cleaning routes move into steam-assisted treatment above the entry tier. That matters because many pairs need more than a surface reset once dirt settles into the upper, lining, or stitch lines.
+                  </p>
                   <ul>
                     {model.recommendation.bullets.map((bullet) => (
                       <li key={bullet}>{bullet}</li>

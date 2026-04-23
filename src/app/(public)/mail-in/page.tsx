@@ -16,6 +16,9 @@ export default async function MailInPage() {
         <p className="text-ink/70 max-w-2xl text-lg">
           If local pickup isn&rsquo;t live in your city yet, ship them in. We&rsquo;ll clean, restore, and ship them back.
         </p>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/60">
+          That includes the same deeper service process used in local markets, with steam-assisted cleaning built into every package above Fresh Start.
+        </p>
       </section>
 
       <section className="container-x pb-16">
@@ -23,7 +26,7 @@ export default async function MailInPage() {
           {[
             { n: '01', t: 'Book online', d: 'Pick a service, upload photos, pay.' },
             { n: '02', t: 'Pack carefully', d: 'Use the original box if you can.' },
-            { n: '03', t: 'Ship it in', d: "We'll email instructions with the hub address." },
+            { n: '03', t: 'Ship it in', d: "We'll email instructions with the hub address, then route it into the right clean or restoration process." },
             { n: '04', t: 'Track & receive', d: 'Live status from receipt through return shipping.' },
           ].map((s) => (
             <Card key={s.n} className="p-6">

@@ -63,8 +63,8 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
                 className="mt-8"
                 items={[
                   {
-                    label: 'Built to convert, not stall',
-                    detail: 'These pages route straight into booking, coverage, and the right service path instead of stopping at information.',
+                    label: 'Built for a real next step',
+                    detail: 'These pages route straight into booking, coverage, and the right service path instead of stopping at generic information.',
                   },
                   {
                     label: 'Grounded in real coverage',
@@ -73,8 +73,8 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
                       : 'Mail-in stays available while local coverage expands.',
                   },
                   {
-                    label: 'Readable by people and AI',
-                    detail: 'Direct answers, FAQs, and schema sit near the top so the page is useful before it gets long.',
+                    label: 'Clear answers up front',
+                    detail: 'Direct answers and FAQs sit near the top so the page is useful before it gets long.',
                   },
                 ]}
               />
@@ -172,7 +172,7 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
 
             <Card className="p-6">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                Conversion path
+                Best next step
               </div>
               <h2 className="h-display mt-4 text-[clamp(2rem,4vw,3rem)] leading-[0.95]">
                 {model.cta.headline}
@@ -198,7 +198,7 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
               Frequently asked questions
             </div>
             <h2 className="h-display mt-4 text-[clamp(2.1rem,4vw,3.2rem)] leading-[0.95] text-ink">
-              Straight answers for search and AI.
+              Straight answers before you book.
             </h2>
           </div>
           <div className="mt-8 grid gap-4 lg:grid-cols-2">

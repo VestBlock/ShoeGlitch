@@ -21,7 +21,7 @@ const TIERS = [
     id: 'pro',
     name: 'Pro',
     price: 599,
-    tagline: 'Most popular. Full clean + restoration.',
+    tagline: 'Most popular. Full clean, steam-assisted work, and restoration.',
     includes: [
       'Everything in Starter',
       'Steam brush + steamer',
@@ -41,6 +41,7 @@ const TIERS = [
     tagline: 'Sole color + premium work.',
     includes: [
       'Everything in Pro',
+      'Commercial steam cleaner brush system for premium/high-volume jobs',
       'Fine detail brush set (sizes 0-6)',
       'Louboutin-matched red lacquer + black/custom',
       'Sole prep solution + masking tape',
@@ -62,7 +63,7 @@ export default function OperatorPage() {
           <em className="h-italic text-glitch">We&rsquo;ll send the gear.</em>
         </h1>
         <p className="text-ink/70 max-w-2xl text-lg mb-10">
-          Join the Shoe Glitch network as a certified operator. Pick your tier, get a branded kit shipped to you, complete training, and start getting real jobs routed to you in your city.
+          Join the Shoe Glitch network as a certified operator. Pick your tier, get a branded kit shipped to you, complete training, and start getting real jobs routed to you in your city. Steam-assisted cleaning is part of the customer experience above the entry tier, and the highest operator package includes the commercial steam cleaner brush setup used on those deeper jobs.
         </p>
         <div className="flex flex-wrap gap-3 mb-12">
           <div className="px-4 py-2 bg-bone-soft rounded-full text-sm">🎯 Exclusive territory rights for 90 days</div>
@@ -139,9 +140,9 @@ export default function OperatorPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
             { t: 'Exclusive territory', d: '90 days of priority lead routing in your assigned service area, so you build a book of business without fighting for jobs.' },
-            { t: 'Real training', d: 'Video certification modules per service. Submit a test pair before luxury jobs route to you. Protects you, protects the brand.' },
+            { t: 'Real training', d: 'Video certification modules per service, including when to use steam-assisted cleaning versus a lighter exterior-only pass. Submit a test pair before luxury jobs route to you.' },
             { t: 'Consumables at cost+10%', d: 'Refill your oxidation solution, paints, and protectants through the operator portal at near-wholesale prices.' },
-            { t: 'Marketing support', d: 'Branded boxes, before/after photography standards, and social content templates. We handle customer acquisition.' },
+            { t: 'Marketing support', d: 'Branded boxes, before/after photography standards, and social content templates. We handle customer acquisition while your kit matches the services you are cleared to perform.' },
           ].map((f) => (
             <Card key={f.t} className="p-6">
               <h3 className="h-display text-2xl mb-2">{f.t}</h3>

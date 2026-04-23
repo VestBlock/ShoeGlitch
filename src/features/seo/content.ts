@@ -50,11 +50,11 @@ function buildServiceIntentCopy(serviceSlug: SeoServiceSlug) {
   if (serviceSlug === 'sneaker-cleaning') {
     return {
       promise:
-        'Sneaker cleaning intent is about getting from dirty pair to booked order fast, with enough detail that the customer knows pickup, drop-off, or mail-in is real.',
+        'Sneaker cleaning intent is about getting from dirty pair to booked order fast, with enough detail that the customer knows pickup, drop-off, or mail-in is real and that deeper packages move into steam-assisted cleaning.',
       faq:
-        'People searching for sneaker cleaning usually want a direct answer on service fit, coverage, and the fastest way to start the order.',
+        'People searching for sneaker cleaning usually want a direct answer on service fit, coverage, whether the process goes deeper than a wipe-down, and the fastest way to start the order.',
       expectation:
-        'The best sneaker-cleaning page explains what kind of pair fits the service, where Shoe Glitch is active, and which next action gets the pair into the workflow immediately.',
+        'The best sneaker-cleaning page explains what kind of pair fits the service, where Shoe Glitch is active, when steam-assisted cleaning is part of the process, and which next action gets the pair into the workflow immediately.',
       examples: [
         'white leather or mesh pairs that show dirt quickly',
         'daily-wear sneakers that need a deep clean instead of replacement',
@@ -66,11 +66,11 @@ function buildServiceIntentCopy(serviceSlug: SeoServiceSlug) {
   if (serviceSlug === 'shoe-restoration') {
     return {
       promise:
-        'Restoration intent is about deciding whether a pair is worth saving and what kind of work justifies the spend before booking.',
+        'Restoration intent is about deciding whether a pair is worth saving and what kind of steam-assisted cleaning, finish correction, and recovery work justifies the spend before booking.',
       faq:
         'Restoration searches come from people dealing with yellowing, sole issues, faded finish, or collector pairs that deserve more than a quick wipe-down.',
       expectation:
-        'A strong restoration page needs to help a visitor decide whether the pair is a cleaning-first job or a deeper repair and finish job, then guide them into the correct booking path.',
+        'A strong restoration page needs to help a visitor decide whether the pair is a cleaning-first job or a deeper repair and finish job, then guide them into the correct booking path with the right level of steam-assisted prep and recovery work.',
       examples: [
         'older collector pairs with visible sole or finish issues',
         'retro silhouettes where value and preservation matter',
@@ -122,6 +122,11 @@ export async function buildServiceCityPageModel(
     summaryBullets: [
       `${service.name} is available for customers in ${cityLabel}.`,
       `Current market coverage includes ${areaSummary}.`,
+      service.slug === 'sneaker-cleaning'
+        ? 'Every package above Fresh Start moves into steam-assisted cleaning as part of the deeper process.'
+        : service.slug === 'shoe-restoration'
+          ? 'Restoration routes pair deeper recovery work with steam-assisted cleaning before finish corrections.'
+          : 'Use the coverage flow first so the local route stays clear before booking.',
       `Shoe Glitch supports booking through pickup, drop-off, or mail-in depending on the job and market.`,
       `The fastest next step is to check coverage and start an order with intake details.`,
     ],
@@ -138,8 +143,8 @@ export async function buildServiceCityPageModel(
       {
         heading: `Coverage and service-area reality in ${city.name}`,
         paragraphs: [
-          `This page is built around real city data, not fake localization. For ${cityLabel}, the current active service-area pattern is ${areaSummary}. That lets the page target organic traffic without claiming more local coverage than the system actually supports.`,
-          `That matters for SEO and AEO because pages rank better when the local claim is real. It also matters for conversion because visitors can move into a ZIP check or booking flow with fewer surprises.`,
+          `This page is built around real city data, not inflated local claims. For ${cityLabel}, the current active service-area pattern is ${areaSummary}. That keeps the local guidance grounded in the coverage Shoe Glitch can actually support.`,
+          `That matters for SEO and AEO because pages rank better when the local claim is real. It also matters for conversion because visitors can move into a ZIP check or booking flow with fewer surprises. For cleaning and restoration routes, it also lets Shoe Glitch explain when steam-assisted care is part of the service instead of pretending every tier works the same way.`,
         ],
       },
       {
@@ -167,9 +172,9 @@ export async function buildServiceCityPageModel(
         answer: `The most useful starting point is the shoe type, condition notes, and clear intake photos. That gives the team enough context to point you toward cleaning, restoration, or the right fulfillment path without unnecessary back-and-forth.`,
       },
       {
-        question: `Why is this page useful for AI answers and search engines?`,
+        question: `Why is this page useful when I am comparing local options?`,
         shortAnswer: `Because it gives a direct answer, city context, FAQs, structured headings, and schema tied to a real booking path.`,
-        answer: `This page is easier for search engines and AI answer engines to understand because it combines direct answers, local context, visible FAQs, structured headings, and JSON-LD. It is not just content; it is a city-and-service landing page tied to a real next action.`,
+        answer: `This page gives a direct answer, shows the local context, includes clear FAQs, and points you toward the next useful step. Instead of vague local copy, it connects this city and service to real booking and coverage paths.`,
       },
     ],
     cta: {
@@ -219,6 +224,11 @@ export async function buildServiceAreaPageModel(
     summaryBullets: [
       `${area.name} is part of the live ${city.name} market coverage.`,
       area.zips.length > 0 ? `Common ZIPs tied to this service area include ${zipSummary}.` : `Use the coverage checker for ZIP-level confirmation in ${area.name}.`,
+      service.slug === 'sneaker-cleaning'
+        ? 'Every package above Fresh Start uses steam-assisted cleaning as part of the deeper service path.'
+        : service.slug === 'shoe-restoration'
+          ? 'Restoration routes layer steam-assisted prep into the work before finish corrections and recovery steps.'
+          : 'Use the coverage checker for the exact handoff path before booking.',
       `${service.name} can route into pickup, drop-off, or mail-in depending on the job and local coverage.`,
       `The safest next step is to confirm your ZIP, then start the order with intake details.`,
     ],
@@ -316,7 +326,7 @@ export async function buildCityHubPageModel(citySlug: string): Promise<SeoPageMo
         heading: `What makes the ${city.name} page useful`,
         paragraphs: [
           `A local page should do more than repeat the city name. For ${cityLabel}, the page has to connect actual coverage, the live booking flow, and the services people are most likely to search for: sneaker cleaning, restoration, and pickup or drop-off logistics.`,
-          `That combination makes the page useful for both SEO and AEO. Search engines can understand the local intent, and AI tools can extract a clear answer about what Shoe Glitch does in ${city.name} and where the visitor should go next.`,
+          `That combination makes the page useful for both SEO and AEO. Search engines can understand the local intent, and AI tools can extract a clear answer about what Shoe Glitch does in ${city.name} and where the visitor should go next. It also gives Shoe Glitch room to explain the real process, including steam-assisted cleaning on the deeper service tiers.`,
         ],
       },
       {
@@ -404,7 +414,7 @@ export async function buildLocationsIndexPageModel(): Promise<SeoLocationsIndexM
       {
         heading: 'Why this locations page exists',
         paragraphs: [
-          'A locations index gives Shoe Glitch a clean hub for local discovery. It helps search engines, AI answer tools, and human visitors understand where the service is active before they dive into a city-specific page.',
+          'A locations index gives Shoe Glitch a clean hub for local discovery. It helps people understand where the service is active before they dive into a city-specific page.',
           'This also reduces friction for customers who know the city but not yet the exact service they need. The locations page can route them into the right city hub, service hub, or booking path.',
         ],
       },
@@ -441,7 +451,7 @@ export async function buildLocationsIndexPageModel(): Promise<SeoLocationsIndexM
       {
         question: 'Why is a locations hub good for SEO and AEO?',
         shortAnswer: 'Because it gives search engines and AI tools a clean map of live markets, related services, and local booking routes.',
-        answer: 'A locations hub helps SEO and AEO by giving search engines and answer engines a clean map of live markets, related services, and local booking routes. It also creates a stronger internal linking system between city, service, and booking pages.',
+        answer: 'A locations hub gives visitors a clear map of live markets, related services, and local booking routes. It also makes it easier to move between city pages, service pages, and the booking flow without getting lost.',
       },
     ],
     cta: {
@@ -478,6 +488,11 @@ export async function buildServiceHubPageModel(
     summaryBullets: [
       `Shoe Glitch uses this hub to explain ${service.name.toLowerCase()} without hiding the booking path.`,
       `Supported city pages currently include ${cityList.slice(0, 3).join(', ')}${cityList.length > 3 ? `, and ${cityList.length - 3} more` : ''}.`,
+      service.slug === 'sneaker-cleaning'
+        ? 'Every package above Fresh Start moves into steam-assisted cleaning before the deeper finish work starts.'
+        : service.slug === 'shoe-restoration'
+          ? 'Restoration routes pair steam-assisted cleaning with finish correction and recovery work.'
+          : 'The route keeps coverage and booking logic clear before you move into the order.',
       `The page connects directly to booking, service comparison, and local market routes.`,
       `The goal is conversion-ready search traffic, not thin service copy.`,
     ],
@@ -486,15 +501,15 @@ export async function buildServiceHubPageModel(
         heading: `What ${service.name.toLowerCase()} means at Shoe Glitch`,
         paragraphs: [
           intent.faq,
-          `This hub page exists so visitors can understand what ${service.name.toLowerCase()} covers before choosing a city page, a coverage check, or the booking flow. That makes it useful both for Google and for AI answer engines that need a clean summary.`,
+          `This hub page exists so visitors can understand what ${service.name.toLowerCase()} covers before choosing a city page, a coverage check, or the booking flow. For cleaning and restoration, that also means explaining when steam-assisted cleaning is part of the process and when the lightest tier stays simpler by design.`,
         ],
         bullets: intent.examples,
       },
       {
-        heading: 'How this service turns organic traffic into bookings',
+        heading: 'How this service page helps you move forward',
         paragraphs: [
-          `The page is structured to answer the search query fast, then point people into the next useful action. That is why the primary conversion path stays above the fold and why related city links are visible instead of hidden in the footer.`,
-          `For Shoe Glitch, ranking is only useful if the page converts into a booked order, a coverage check, or a qualified lead. This hub is part of that system.`,
+          `The page is structured to answer the main question quickly, then point people into the next useful action. That is why the main booking or coverage step stays easy to find and why related city links are visible instead of buried in the footer.`,
+          `For Shoe Glitch, this page should make the next move obvious: book, check local coverage, or compare services before you commit.`,
         ],
       },
       {
@@ -516,9 +531,9 @@ export async function buildServiceHubPageModel(
         answer: `The active city pages listed here are the best starting point for ${service.name.toLowerCase()}. From there, visitors can move into city-specific landing pages and the live coverage flow instead of relying on generic national copy.`,
       },
       {
-        question: 'Why does this page help with SEO and AI answers?',
-        shortAnswer: 'Because it gives a direct answer, links to live city pages, includes FAQs, and keeps the booking path visible.',
-        answer: 'This page works for SEO and AEO because it answers the service question directly, links into city-specific routes, includes FAQ content, and emits structured data. It is designed to be readable by both human visitors and answer engines.',
+        question: 'Why does this page make booking easier?',
+        shortAnswer: 'Because it answers the service question directly, links to live city pages, and keeps the booking path visible.',
+        answer: 'This page makes booking easier because it answers the service question directly, links into city-specific routes, includes FAQ content, and keeps the next step visible instead of making you dig for it.',
       },
     ],
     cta: {
@@ -561,15 +576,20 @@ export async function buildServiceNearMePageModel(
     summaryBullets: [
       `The “near me” route is tied to ${activeCities.length} active Shoe Glitch cities.`,
       areaCount > 0 ? `Those cities currently map to ${areaCount} active service areas.` : 'Mail-in remains the fallback where local handling is still expanding.',
-      `This page is built for local-intent SEO and AI answers, not generic national traffic.`,
+      service.slug === 'sneaker-cleaning'
+        ? 'The deeper routes include steam-assisted cleaning above the entry tier.'
+        : service.slug === 'shoe-restoration'
+          ? 'Restoration routes combine steam-assisted prep with the recovery work that follows.'
+          : 'Use the nearest route to confirm local handling before you book.',
+      `This page is built for local-intent searches, not generic national traffic.`,
       'The correct next move is to choose the nearest city page or run a ZIP coverage check.',
     ],
     sections: [
       {
         heading: `How Shoe Glitch answers “${service.name.toLowerCase()} near me”`,
         paragraphs: [
-          `The best “near me” page should not just stuff location terms into copy. It should translate the local-intent query into real markets, real service areas, and a visible conversion path.`,
-          `For Shoe Glitch, that means showing active cities, linking to the city and service pages, and giving visitors a direct route into coverage or booking instead of trapping them in a generic landing page.`,
+          `A strong “near me” page should do more than repeat location terms. It should translate local intent into real markets, real service areas, and a visible next step.`,
+          `For Shoe Glitch, that means showing active cities, linking to city and service pages, and giving visitors a direct route into coverage or booking instead of trapping them in a generic landing page.`,
         ],
       },
       {
@@ -586,8 +606,8 @@ export async function buildServiceNearMePageModel(
       {
         heading: 'Why this route matters for SEO and AEO',
         paragraphs: [
-          '“Near me” searches are common commercial-intent searches. This route gives Google and AI answer tools a clean page that explains how Shoe Glitch handles local discovery without inventing fake service coverage.',
-          'Because the page ties directly into cities, service areas, booking, and coverage, it behaves like a real conversion page rather than a thin SEO trick.',
+          '“Near me” searches are strong commercial-intent searches. This route explains how Shoe Glitch handles local discovery without inventing fake service coverage.',
+          'Because the page ties directly into cities, service areas, booking, and coverage, it behaves like a real service page instead of filler copy.',
         ],
       },
     ],

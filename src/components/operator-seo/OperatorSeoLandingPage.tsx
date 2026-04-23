@@ -85,7 +85,7 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
             <aside className="space-y-4 xl:sticky xl:top-24">
               <Card className="p-6">
                 <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                  Conversion path
+                  How to get started
                 </div>
                 <h2 className="h-display mt-4 text-[clamp(2rem,4vw,3rem)] leading-[0.95]">
                   {model.cta.headline}
@@ -121,7 +121,7 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
                       <div className="flex items-center justify-between gap-4">
                         <div className="font-semibold text-ink">{field.label}</div>
                         <span className={`text-[11px] font-semibold uppercase tracking-[0.22em] ${field.live ? 'text-cyan' : 'text-ink/35'}`}>
-                          {field.live ? 'Live now' : 'Scaffolded next'}
+                          {field.live ? 'Included now' : 'Coming soon'}
                         </span>
                       </div>
                       <div className="mt-1 text-sm text-ink/60">{field.helper}</div>
@@ -232,7 +232,7 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
               Frequently asked questions
             </div>
             <h2 className="h-display mt-4 text-[clamp(2.1rem,4vw,3.2rem)] leading-[0.95] text-ink">
-              Straight answers for search and AI.
+              Straight answers before you apply.
             </h2>
           </div>
           <div className="mt-8 grid gap-4 lg:grid-cols-2">

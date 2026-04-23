@@ -16,6 +16,9 @@ export default async function CoveragePage() {
         <p className="text-ink/70 max-w-2xl text-lg mb-12">
           Enter your ZIP to see if local pickup is live in your area. Every market supports mail-in.
         </p>
+        <p className="max-w-2xl text-sm leading-7 text-ink/60">
+          Once the route is confirmed, every package above Fresh Start can move into steam-assisted cleaning as part of the deeper service process.
+        </p>
         <CoverageChecker />
       </section>
 

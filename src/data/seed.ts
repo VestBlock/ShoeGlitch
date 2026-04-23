@@ -144,7 +144,7 @@ export const seedServices: Service[] = [
     name: 'Fresh Start',
     tagline: 'Quick refresh for lightly worn pairs.',
     description:
-      'A light exterior clean covering upper and midsole. Best for sneakers worn a handful of times that need a quick reset.',
+      'A light exterior clean covering upper and midsole without steam treatment. Best for sneakers worn a handful of times that need a quick reset.',
     category: 'clean',
     basePrice: 40, // lowered — better entry price
     estimatedTurnaroundDays: 3,
@@ -158,7 +158,7 @@ export const seedServices: Service[] = [
     name: 'Full Reset',
     tagline: 'Our signature full clean. Most popular.',
     description:
-      'A complete clean — upper, sole, midsole, and interior refresh. The default choice for everyday sneakers.',
+      'A complete steam-assisted clean — upper, sole, midsole, and interior refresh. The default choice for everyday sneakers.',
     category: 'clean',
     basePrice: 70, // bumped — widens gap from Fresh Start, recommended tier
     estimatedTurnaroundDays: 4,
@@ -172,7 +172,7 @@ export const seedServices: Service[] = [
     name: 'Fabric Rescue',
     tagline: 'Delicate materials, done right.',
     description:
-      'Specialty treatment for suede, mesh, knit, and canvas. Stain lifting and texture restoration with material-safe agents.',
+      'Specialty treatment for suede, mesh, knit, and canvas. Stain lifting, texture restoration, and material-safe steam-assisted cleaning where appropriate.',
     category: 'specialty',
     basePrice: 75,
     estimatedTurnaroundDays: 5,
@@ -186,7 +186,7 @@ export const seedServices: Service[] = [
     name: 'Revival Package',
     tagline: 'Deep restoration for heavily worn shoes.',
     description:
-      'Our flagship restoration: deep clean, deodorizing, sole care, minor touch-up work, and reconditioning. For pairs that need a second life.',
+      'Our flagship restoration: steam-assisted deep clean, deodorizing, sole care, minor touch-up work, and reconditioning. For pairs that need a second life.',
     category: 'restoration',
     basePrice: 150, // bumped — was underpriced
     estimatedTurnaroundDays: 8,

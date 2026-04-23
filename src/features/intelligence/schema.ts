@@ -17,9 +17,9 @@ export const INTELLIGENCE_FAQS = [
   },
   {
     question: 'How should I read market strength if resale data is incomplete?',
-    shortAnswer: 'Treat placeholder market values as directional until confidence rises.',
+    shortAnswer: 'Treat early market values as directional until stronger pricing confidence comes in.',
     answer:
-      'The MVP uses transparent placeholder logic when live market inputs are thin. Market strength should be read as a ranking hint for what to watch next, not a guarantee. Confidence scores make that explicit and keep weak data from pretending to be certain.',
+      'When live market inputs are thin, market strength should be read as a ranking hint for what to watch next, not a guarantee. Confidence scores make that explicit and keep weaker data from pretending to be more certain than it is.',
   },
 ];
 

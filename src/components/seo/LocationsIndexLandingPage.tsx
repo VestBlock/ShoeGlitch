@@ -132,7 +132,7 @@ export default function LocationsIndexLandingPage({ model }: { model: SeoLocatio
         <div className="rounded-[2rem] border border-ink/10 bg-white/82 p-6 shadow-[0_20px_70px_rgba(10,15,31,0.06)] backdrop-blur-xl md:p-8">
           <div className="max-w-3xl">
             <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Frequently asked questions</div>
-            <h2 className="h-display mt-4 text-[clamp(2.1rem,4vw,3.2rem)] leading-[0.95] text-ink">Straight answers for search and AI.</h2>
+            <h2 className="h-display mt-4 text-[clamp(2.1rem,4vw,3.2rem)] leading-[0.95] text-ink">Straight answers about where Shoe Glitch operates.</h2>
           </div>
           <div className="mt-8 grid gap-4 lg:grid-cols-2">
             {model.faqs.map((faq) => (

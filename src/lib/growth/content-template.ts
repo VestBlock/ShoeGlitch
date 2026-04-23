@@ -66,11 +66,12 @@ export function buildTemplateContent(spec: GrowthRouteSpec): GrowthPageContent {
     metaDescription: `${h1} from Shoe Glitch. ${keywordAngle} Get pickup, drop-off, or mail-in support, transparent pricing context, and a fast way to book.`,
     h1,
     intro: `${topic} should make the next step obvious. This page gives you a direct answer, a clear explanation of what to expect, and an easy way to book or request a quote with Shoe Glitch.`,
-    quickAnswer: `${h1} is best handled by a service that can document condition, explain the process, and match the right cleaning or restoration approach to the pair. Shoe Glitch offers pickup, drop-off, and mail-in options, plus intake photo tracking so customers in ${locationLabel} can move from quote to completion without guesswork.`,
-    longAnswer: `${h1} usually comes down to three things: the material, the condition, and how much finish work is needed after the cleaning itself. For customers in ${locationLabel}, the best outcome comes from starting with clear intake photos, choosing the right service level, and using a provider that can show progress instead of relying on vague updates. Shoe Glitch is built around that kind of visibility, which makes it easier to handle ${painPoint} while keeping the process simple for the customer.`,
+    quickAnswer: `${h1} is best handled by a service that can document condition, explain the process, and match the right cleaning or restoration approach to the pair. Shoe Glitch offers pickup, drop-off, and mail-in options, plus intake photo tracking so customers in ${locationLabel} can move from quote to completion without guesswork. Every package above the entry tier also moves into steam-assisted cleaning as part of the deeper care process.`,
+    longAnswer: `${h1} usually comes down to three things: the material, the condition, and how much finish work is needed after the cleaning itself. For customers in ${locationLabel}, the best outcome comes from starting with clear intake photos, choosing the right service level, and using a provider that can show progress instead of relying on vague updates. Shoe Glitch is built around that kind of visibility, which makes it easier to handle ${painPoint} while keeping the process simple for the customer. When the pair needs more than a quick exterior reset, packages above the entry tier move into steam-assisted cleaning before deeper finish work or restoration steps.`,
     summaryBullets: [
       `${h1} works best when the service matches the shoe material and level of wear.`,
       `Shoe Glitch supports pickup, drop-off, and mail-in options so booking is flexible.`,
+      `Packages above the entry tier move into steam-assisted cleaning for deeper care.`,
       `Each order can include intake photos, status tracking, and direct follow-through from quote to return.`,
       `Customers in ${locationLabel} can use this page to compare options and move into a quote fast.`,
     ],
@@ -90,7 +91,7 @@ export function buildTemplateContent(spec: GrowthRouteSpec): GrowthPageContent {
       {
         heading: `How Shoe Glitch approaches ${coreService.toLowerCase()} in ${locationLabel}`,
         paragraphs: [
-          `Shoe Glitch is designed to reduce friction around premium sneaker and shoe care. Instead of sending visitors into a dead-end contact page, the experience focuses on action: choose the service, confirm the location, upload intake photos, and move into booking. That workflow supports ${topic} because it turns an uncertain search into a tracked order.`,
+          `Shoe Glitch is designed to reduce friction around premium sneaker and shoe care. Instead of sending visitors into a dead-end contact page, the experience focuses on action: choose the service, confirm the location, upload intake photos, and move into booking. That workflow supports ${topic} because it turns an uncertain search into a tracked order. It also gives the page room to explain the real process, including when steam-assisted cleaning is part of the job and when the lightest tier intentionally stays simpler.`,
           `This also improves conversion quality. Customers who understand what they are booking tend to provide better notes, better photos, and better expectations from the start. That matters when a pair needs cleaning, whitening, restoration, or careful material-specific handling, because the better the intake, the cleaner the handoff to the actual service workflow.`,
         ],
       },

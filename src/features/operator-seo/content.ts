@@ -169,7 +169,7 @@ export async function buildOperatorsIndexPageModel(): Promise<OperatorSeoModel> 
     leadFields: [...leadFields],
     featuredCities: cities.slice(0, 6),
     earningsFrame:
-      'Frame earnings as territory-based opportunity, route quality, and service mix rather than fabricated monthly-income claims.',
+      'Frame earnings around territory support, route quality, and service mix instead of unrealistic monthly-income promises.',
   };
 }
 
@@ -235,7 +235,7 @@ export async function buildBecomeOperatorPageModel(): Promise<OperatorSeoModel> 
       {
         heading: 'How to apply',
         paragraphs: [
-          'The conversion path is simple: review the opportunity, choose your city or city of interest, understand the tier fit, then move into the live operator application flow already running on ShoeGlitch.',
+          'The next step is simple: review the opportunity, choose your city or city of interest, understand the tier fit, then move into the live operator application flow already running on ShoeGlitch.',
         ],
       },
     ],
@@ -247,10 +247,10 @@ export async function buildBecomeOperatorPageModel(): Promise<OperatorSeoModel> 
           'ShoeGlitch provides operator kits, service certification, brand standards, and a city-aware operating path designed to turn local sneaker-care demand into a cleaner business opportunity.',
       },
       {
-        question: 'What is the main conversion path from this page?',
+        question: 'What is the main next step from this page?',
         shortAnswer: 'The live operator application at /operator/apply.',
         answer:
-          'The main live conversion path is the existing operator application at /operator/apply. This page exists to qualify intent and route the right applicants into that flow with better city and role context.',
+          'The main next step is the existing operator application at /operator/apply. This page exists to qualify intent and route the right applicants into that flow with better city and role context.',
       },
       {
         question: 'Can this expand city by city?',
@@ -272,7 +272,7 @@ export async function buildBecomeOperatorPageModel(): Promise<OperatorSeoModel> 
     leadFields: [...leadFields],
     featuredCities: cities.slice(0, 6),
     earningsFrame:
-      'Use realistic language: better territory support, route quality, and service mix can improve operator economics, but no page should fabricate guaranteed earnings.',
+      'Better territory support, route quality, and service mix can improve operator earnings over time, but no page should promise guaranteed income.',
   };
 }
 
@@ -342,7 +342,7 @@ export async function buildOperatorCityPageModel(citySlug: string): Promise<Oper
       {
         heading: 'How to apply or express interest',
         paragraphs: [
-          'The live conversion path is the operator application. This page adds the local context, so applicants from the city know why the opportunity exists and what ShoeGlitch expects before they submit.',
+          'The main next step is the operator application. This page adds the local context, so applicants from the city know why the opportunity exists and what ShoeGlitch expects before they submit.',
         ],
       },
     ],
@@ -471,10 +471,10 @@ export async function buildPickupDropoffOperatorCityPageModel(
           'Not exactly. The pickup and drop-off role is logistics-first, though it can sit alongside broader operator growth. Some applicants may start here and later expand into cleaning or restoration-support responsibilities.',
       },
       {
-        question: 'What is the live conversion path from this page?',
+        question: 'What is the main next step from this page?',
         shortAnswer: 'The existing operator application with city context.',
         answer:
-          'The live conversion path from this page is the existing operator application. This page adds role and city context so applicants understand what kind of opportunity they are stepping into before they apply.',
+          'The main next step from this page is the existing operator application. This page adds role and city context so applicants understand what kind of opportunity they are stepping into before they apply.',
       },
     ],
     cta: {
@@ -516,7 +516,7 @@ export async function buildStartSneakerCleaningBusinessPageModel(): Promise<Oper
     summaryBullets: [
       'Explain the real work, not just the dream.',
       'Show the difference between solo guesswork and a structured operator model.',
-      'Move searchers into a real conversion path when they are ready.',
+      'Give serious applicants a clear next step when they are ready.',
     ],
     whoItsFor: [
       'People researching sneaker cleaning as a real local business.',
@@ -531,7 +531,7 @@ export async function buildStartSneakerCleaningBusinessPageModel(): Promise<Oper
     whatShoeGlitchProvides: [
       'Structured operator kits and training.',
       'Brand standards and route-ready systems.',
-      'A stronger conversion path from search intent into actual operator application.',
+      'A stronger route from search intent into the real operator application.',
     ],
     operatorResponsibilities: [
       'Take the work seriously as an operating role, not a hobby.',
@@ -682,10 +682,10 @@ export async function buildShoeRestorationSideHustlePageModel(): Promise<Operato
           'Not automatically. The safer path is usually to prove broader operator capability first, then expand into higher-trust restoration work as skill and consistency are demonstrated.',
       },
       {
-        question: 'What is the conversion path from this guide?',
+        question: 'What is the next step from this guide?',
         shortAnswer: 'Explore the operator system, then apply through the live operator application.',
         answer:
-          'The conversion path from this guide is to explore the operator system and then use the existing operator application. The page exists to answer serious restoration-intent searches without pretending the opportunity is effortless.',
+          'The next step from this guide is to explore the operator system and then use the existing operator application. The page exists to answer serious restoration-intent searches without pretending the opportunity is effortless.',
       },
     ],
     cta: {

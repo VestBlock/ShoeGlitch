@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "seo:manifest": "npx tsx scripts/seo/export-route-manifest.ts public/seo/route-manifest.json",
+    "seo:release-manifest": "npx tsx scripts/releases/export-content-manifest.ts public/seo/release-content-manifest.json",
+    "seo:qa": "npx tsx scripts/seo/verify-site-routes.ts",
+    "seo:automation": "npx tsx scripts/seo/run-automation.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

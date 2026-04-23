@@ -71,6 +71,9 @@ This repo now includes a reusable automation layer for ShoeGlitch city and servi
 - `curl http://localhost:3000/api/seo/manifest`
 - `npx tsx scripts/releases/export-content-manifest.ts`
 - `curl http://localhost:3000/api/seo/release-manifest`
+- `npx tsx scripts/seo/verify-site-routes.ts`
+- `npx tsx scripts/seo/run-automation.ts`
+- `npm run seo:automation`
 
 ## What the manifest now tracks
 - route family (`hub`, `city`, `area`, `near-me`)
@@ -113,14 +116,13 @@ That keeps the content engine active without turning the site into a thin page f
 3. add “designer sneaker cleaning”, “sole whitening”, and other service-intent route families on the same model
 
 ## Recommended recurring jobs
-- `SEO Route Refresh`
+- `SEO Automation Sweep`
   - export `public/seo/route-manifest.json`
-  - compare city, area, and near-me coverage drift
-  - surface missing internal-link or schema issues in new route families
-- `Release Content Refresh`
   - export `public/seo/release-content-manifest.json`
-  - keep release-family page generation inside the current KicksDB budget
-  - surface new release, worth-restoring, how-to-clean, and release-alert slugs
-- `SEO QA Sweep`
-  - spot-check representative hub, city, release, cleaning, and alert routes
+  - verify representative public, SEO, operator, intelligence, and API routes
   - confirm metadata, schema, and CTA surfaces still render after automation updates
+
+## Steam-cleaning messaging rule
+- Steam-assisted cleaning is part of every service package above Fresh Start.
+- Fresh Start remains the lightest entry tier and does not include steam treatment.
+- Operator kit pages should make it clear that the highest tier includes the commercial steam cleaner brush setup used on premium jobs.

@@ -37,7 +37,7 @@ export default function ReleaseAlertsLandingPage({ model }: { model: ReleasePage
 
               <div className="mt-7 grid gap-4 md:grid-cols-[minmax(0,1.1fr)_300px]">
                 <div className="rounded-[1.5rem] border border-ink/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.94),rgba(236,244,255,0.84))] p-5">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">AI-readable alert summary</div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Alert summary</div>
                   <p className="mt-3 text-base leading-7 text-ink/72">{model.aiSummary}</p>
                 </div>
                 <div className="rounded-[1.5rem] border border-ink/10 bg-bone-soft p-5">

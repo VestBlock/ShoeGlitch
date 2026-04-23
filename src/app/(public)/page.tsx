@@ -24,6 +24,10 @@ export default async function HomePage() {
       label: 'Tracked all the way through',
       detail: 'The order keeps its notes, status, and service history from intake to final return.',
     },
+    {
+      label: 'Steam where it matters',
+      detail: 'Steam-assisted cleaning is part of every package above Fresh Start, so deeper jobs get more than a surface wipe-down.',
+    },
   ];
 
   return (
@@ -63,7 +67,7 @@ export default async function HomePage() {
               Real jobs. <em className="h-italic">Real tracking.</em>
             </h2>
             <p className="text-ink/70 max-w-md mb-6">
-              Every order gets a unique code, photo-backed intake notes, and a tracked status pipeline that stays visible across customer, operator, and admin views.
+              Every order gets a unique code, photo-backed intake notes, and a tracked status pipeline that stays visible across customer, operator, and admin views. Steam-assisted cleaning is built into every package above Fresh Start.
             </p>
             <Link href="/book" className="btn-glitch">Start your order →</Link>
           </div>
@@ -75,7 +79,7 @@ export default async function HomePage() {
                   <Badge tone="glitch" className="bg-white text-glitch">In Cleaning</Badge>
                 </div>
                 <div className="h-display text-3xl mb-1">Travis Scott 1s</div>
-                <div className="text-sm text-white/70">Milwaukee · Full Reset + Ice Recovery</div>
+                <div className="text-sm text-white/70">Milwaukee · Full Reset + Steam Assist + Ice Recovery</div>
                 <div className="mt-6">
                   <div className="h-1.5 rounded-full bg-white/20">
                     <div className="h-full rounded-full bg-white w-[55%]" />
@@ -162,7 +166,7 @@ export default async function HomePage() {
                 Become a Shoe Glitch operator.
               </h3>
               <p className="text-ink/70 max-w-lg">
-                Certified training. Branded equipment kit. Exclusive territory.
+                Certified training. Branded equipment kit. Exclusive territory. Top operator tiers include the steam cleaner brush setup used on the deeper packages.
               </p>
             </div>
             <Link href="/operator" className="btn-glitch shrink-0">Apply now →</Link>

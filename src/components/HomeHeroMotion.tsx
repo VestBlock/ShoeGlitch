@@ -15,6 +15,10 @@ const trustItems = [
     detail: 'Photos, notes, and status updates stay attached to the order from drop-off to return.',
   },
   {
+    label: 'Steam-assisted above entry tier',
+    detail: 'Every package above Fresh Start uses steam-assisted cleaning as part of the deeper process.',
+  },
+  {
     label: 'Pickup, drop-off, or mail-in',
     detail: 'Use the local route if we serve your city or mail your pair in from anywhere.',
   },
@@ -96,7 +100,7 @@ export default function HomeHeroMotion({
               for Your <em className="h-italic text-glitch">Sneakers.</em>
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-ink/68">
-              Pickup, drop-off, or mail-in. Start with intake photos, track every step, and bring your pair back with a cleaner finish and sharper detail.
+              Pickup, drop-off, or mail-in. Start with intake photos, track every step, and move into a steam-assisted clean on every package above Fresh Start.
             </p>
           </div>
 
@@ -213,7 +217,7 @@ export default function HomeHeroMotion({
                 <div className="max-w-[22rem] rounded-[1.35rem] border border-white/18 bg-ink/12 px-4 py-4 shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-sm md:px-5">
                   <div className="text-[10px] uppercase tracking-[0.3em] text-white/70">Book with confidence</div>
                   <div className="mt-2 text-sm leading-6 text-white [text-shadow:0_2px_18px_rgba(7,20,44,0.55)]">
-                    Pick the route, upload the intake photos, and let the order stay tracked all the way through return.
+                    Pick the route, upload the intake photos, and let the order move into the right clean, including steam-assisted treatment above the entry tier.
                   </div>
                   <div className="mt-4 flex flex-wrap gap-3">
                     <Link href="/book" className="btn-glitch">

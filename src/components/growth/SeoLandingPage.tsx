@@ -176,7 +176,7 @@ export default function SeoLandingPage({
               Frequently asked questions
             </div>
             <h2 className="h-display mt-4 text-[clamp(2.2rem,4vw,3.4rem)] leading-[0.95] text-ink">
-              Direct answers for search and AI.
+              Direct answers before you book.
             </h2>
           </div>
 

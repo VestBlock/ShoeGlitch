@@ -49,7 +49,7 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
               <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">{model.intro}</p>
 
               <div className="mt-7 rounded-[1.5rem] border border-glitch/16 bg-[linear-gradient(135deg,rgba(255,255,255,0.9),rgba(235,244,255,0.82))] p-5">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">AI-readable summary</div>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">At a glance</div>
                 <p className="mt-3 text-base leading-7 text-ink/72">{model.aiSummary}</p>
               </div>
 
@@ -310,7 +310,7 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                   Frequently asked
                 </div>
                 <h2 className="h-display mt-4 text-[clamp(2.1rem,4vw,3.2rem)] leading-[0.95] text-ink">
-                  Release answers written for search and AI.
+                  Straight answers about this release.
                 </h2>
               </div>
               <div className="mt-8 grid gap-4 lg:grid-cols-2">

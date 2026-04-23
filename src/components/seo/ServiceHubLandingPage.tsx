@@ -166,7 +166,7 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
 
             <Card className="p-6">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                Conversion path
+                Best next step
               </div>
               <h2 className="h-display mt-4 text-[clamp(2rem,4vw,3rem)] leading-[0.95]">{model.cta.headline}</h2>
               <p className="mt-4 text-sm leading-7 text-ink/66">{model.cta.body}</p>
@@ -190,7 +190,7 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
               Frequently asked questions
             </div>
             <h2 className="h-display mt-4 text-[clamp(2.1rem,4vw,3.2rem)] leading-[0.95] text-ink">
-              Straight answers for search and AI.
+              Straight answers before you book.
             </h2>
           </div>
           <div className="mt-8 grid gap-4 lg:grid-cols-2">
