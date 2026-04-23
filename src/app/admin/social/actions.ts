@@ -170,6 +170,24 @@ export async function scanSocialDraftsAction() {
   finish(`Social scan created ${summary.created} drafts and skipped ${summary.skippedDuplicates} duplicates.`);
 }
 
+export async function createMoreSocialDraftsAction(formData: FormData) {
+  await requireSuperAdmin();
+
+  const requested = Number.parseInt(String(formData.get('limit') ?? '8'), 10);
+  const limit = Number.isFinite(requested) ? Math.min(Math.max(requested, 4), 32) : 8;
+
+  const summary = await runDailySocialDraftScan(limit);
+  await recordAutomationRun({
+    task: 'social-scan-more',
+    status: summary.failed > 0 ? 'failed' : 'success',
+    message: `Created ${summary.created} drafts from a ${limit}-candidate scan, skipped ${summary.skippedDuplicates}, failed ${summary.failed}.`,
+    metadata: { limit, ...summary },
+  });
+
+  revalidatePath('/admin/social');
+  finish(`Create more drafts scanned ${limit} candidates, created ${summary.created}, and skipped ${summary.skippedDuplicates}.`);
+}
+
 export async function publishApprovedSocialAction() {
   await requireSuperAdmin();
 

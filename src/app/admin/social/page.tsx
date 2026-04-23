@@ -5,6 +5,7 @@ import { Badge, Card, StatusDot } from '@/components/ui';
 import { buildAdminSocialSummary } from '@/features/admin/social-reporting';
 import {
   approveSocialDraftAction,
+  createMoreSocialDraftsAction,
   failSocialDraftAction,
   publishApprovedSocialAction,
   returnSocialDraftAction,
@@ -83,6 +84,18 @@ export default async function AdminSocialPage({
           <div className="flex flex-wrap gap-3">
             <form action={scanSocialDraftsAction}>
               <button className="btn-glitch-ghost">Scan for drafts</button>
+            </form>
+            <form action={createMoreSocialDraftsAction} className="flex items-center gap-2">
+              <input type="hidden" name="limit" value="8" />
+              <button className="btn-glitch-ghost">Create 8 more</button>
+            </form>
+            <form action={createMoreSocialDraftsAction} className="flex items-center gap-2">
+              <input type="hidden" name="limit" value="16" />
+              <button className="btn-glitch-ghost">Create 16 more</button>
+            </form>
+            <form action={createMoreSocialDraftsAction} className="flex items-center gap-2">
+              <input type="hidden" name="limit" value="24" />
+              <button className="btn-glitch-ghost">Create 24 more</button>
             </form>
             <form action={publishApprovedSocialAction}>
               <button className="btn-glitch">Schedule approved</button>
