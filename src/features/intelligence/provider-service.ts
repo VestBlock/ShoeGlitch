@@ -2,7 +2,6 @@ import { FEED_QUERIES } from '@/features/intelligence/catalog';
 import { kicksDbProvider } from '@/features/intelligence/providers/kicksdb';
 import { mockSneakerProvider } from '@/features/intelligence/providers/mock';
 import { nikePublicProvider } from '@/features/intelligence/providers/nike-public';
-import { sneaksApiProvider } from '@/features/intelligence/providers/sneaks';
 import type {
   NormalizedSneaker,
   ProviderHealth,
@@ -33,10 +32,6 @@ export async function searchSneakers(input: ProviderSearchInput) {
   return safeSearch(input, new Date());
 }
 
-export async function compareSneaksSearch(input: ProviderSearchInput) {
-  return sneaksApiProvider.search(input, new Date());
-}
-
 export async function searchNikePublicSneakers(input: ProviderSearchInput) {
   return nikePublicProvider.search(input, new Date());
 }
@@ -59,10 +54,6 @@ export async function getSneakerProduct(idOrSlug: string): Promise<ProviderProdu
   }
 
   return mockSneakerProvider.getProduct(idOrSlug, now);
-}
-
-export async function compareSneaksProduct(idOrSlug: string) {
-  return sneaksApiProvider.getProduct(idOrSlug, new Date());
 }
 
 export async function getNikePublicProduct(idOrSlug: string) {

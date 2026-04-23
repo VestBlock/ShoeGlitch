@@ -7,7 +7,7 @@ const PRICES = { starter: 349, pro: 599, luxury: 899 };
 export default async function OperatorApplyPage({
   searchParams,
 }: {
-  searchParams: { tier?: string; city?: string; focus?: string };
+  searchParams: { tier?: string; city?: string; focus?: string; availability?: string };
 }) {
   const tier = (searchParams.tier as 'starter' | 'pro' | 'luxury') || 'pro';
   const cities = await db.cities.all();
@@ -24,6 +24,14 @@ export default async function OperatorApplyPage({
         : searchParams.focus === 'cleaning'
           ? 'Cleaning focus'
           : null;
+  const availabilityLabel =
+    searchParams.availability === 'nights-weekends'
+      ? 'Availability: nights & weekends'
+      : searchParams.availability === 'part-time-weekday'
+        ? 'Availability: part-time weekdays'
+        : searchParams.availability === 'full-time-ready'
+          ? 'Availability: ready for full-time territory work'
+          : null;
 
   return (
     <section className="container-x pt-10 pb-24 max-w-3xl mx-auto">
@@ -38,6 +46,7 @@ export default async function OperatorApplyPage({
         <div className="mb-8 rounded-[1.25rem] border border-ink/10 bg-bone-soft px-5 py-4 text-sm text-ink/70">
           Applying with <strong>{selectedCity.name}, {selectedCity.state}</strong> preselected.
           {focusLabel ? <> <span className="text-glitch/85">{focusLabel}.</span></> : null}
+          {availabilityLabel ? <> <span className="text-ink/65">{availabilityLabel}.</span></> : null}
         </div>
       ) : null}
 
@@ -68,7 +77,12 @@ export default async function OperatorApplyPage({
           </div>
           <div>
             <label className="label">Experience</label>
-            <textarea name="experience" className="input min-h-[100px]" placeholder="Cleaning / restoration experience." />
+            <textarea
+              name="experience"
+              className="input min-h-[100px]"
+              defaultValue={focusLabel || availabilityLabel ? [focusLabel, availabilityLabel].filter(Boolean).join(' · ') : undefined}
+              placeholder="Cleaning / restoration experience."
+            />
           </div>
           <div>
             <label className="label">Why Shoe Glitch?</label>

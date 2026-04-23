@@ -61,7 +61,6 @@ Purpose:
 
 Main files:
 - `src/features/intelligence/providers/kicksdb.ts`
-- `src/features/intelligence/providers/sneaks.ts`
 - `src/features/intelligence/providers/mock.ts`
 - `src/features/intelligence/providers/normalize.ts`
 - `src/features/intelligence/provider-service.ts`

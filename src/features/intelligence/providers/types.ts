@@ -1,4 +1,4 @@
-export type SneakerProviderKey = 'kicksdb' | 'nike-public' | 'mock' | 'sneaks';
+export type SneakerProviderKey = 'kicksdb' | 'nike-public' | 'mock';
 
 export interface NormalizedSneakerSize {
   label: string;

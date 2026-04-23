@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Badge, Card } from '@/components/ui';
 import { buildSeoSchemas } from '@/features/seo/schema';
 import type { SeoPageModel } from '@/features/seo/types';
+import TrustProofStrip from '@/components/TrustProofStrip';
 
 export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
   const schemas = buildSeoSchemas(model);
@@ -57,6 +58,26 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
                   </ul>
                 </div>
               </div>
+
+              <TrustProofStrip
+                className="mt-8"
+                items={[
+                  {
+                    label: 'Built to convert, not stall',
+                    detail: 'These pages route straight into booking, coverage, and the right service path instead of stopping at information.',
+                  },
+                  {
+                    label: 'Grounded in real coverage',
+                    detail: model.serviceAreas.length > 0
+                      ? `${model.city.name} is tied to active service areas, so the local claim stays real.`
+                      : 'Mail-in stays available while local coverage expands.',
+                  },
+                  {
+                    label: 'Readable by people and AI',
+                    detail: 'Direct answers, FAQs, and schema sit near the top so the page is useful before it gets long.',
+                  },
+                ]}
+              />
             </div>
 
             <aside className="space-y-4 xl:sticky xl:top-24">
@@ -124,6 +145,31 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
           </article>
 
           <div className="space-y-6">
+            <Card className="p-6">
+              <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
+                Not sure which route fits?
+              </div>
+              <h2 className="h-display mt-4 text-[clamp(1.9rem,3vw,2.8rem)] leading-[0.96] text-ink">
+                Start with the fastest next action.
+              </h2>
+              <div className="mt-4 space-y-3">
+                <Link
+                  href="/coverage"
+                  className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
+                >
+                  <div className="font-semibold text-ink">Check your ZIP first</div>
+                  <div className="mt-1 text-sm text-ink/60">Use this if you need to know whether pickup or drop-off is live for your area.</div>
+                </Link>
+                <Link
+                  href="/services"
+                  className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
+                >
+                  <div className="font-semibold text-ink">Compare services</div>
+                  <div className="mt-1 text-sm text-ink/60">Use this if you still need to decide between cleaning, restoration, or local handling.</div>
+                </Link>
+              </div>
+            </Card>
+
             <Card className="p-6">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
                 Conversion path

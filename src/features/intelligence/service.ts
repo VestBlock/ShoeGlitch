@@ -17,12 +17,6 @@ function describeProvider(item: NormalizedSneaker) {
         sourceName: 'Nike SNKRS public feed',
         marketConfidence: 58,
       };
-    case 'sneaks':
-      return {
-        sourceType: 'snapshot' as const,
-        sourceName: 'Sneaks API comparison',
-        marketConfidence: 50,
-      };
     default:
       return {
         sourceType: 'fallback' as const,

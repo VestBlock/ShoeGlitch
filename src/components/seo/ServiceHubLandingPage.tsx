@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Badge, Card } from '@/components/ui';
 import { buildServiceHubSchemas } from '@/features/seo/schema';
 import type { SeoServiceHubModel } from '@/features/seo/types';
+import TrustProofStrip from '@/components/TrustProofStrip';
 
 export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubModel }) {
   const schemas = buildServiceHubSchemas(model);
@@ -57,6 +58,24 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
                   </ul>
                 </div>
               </div>
+
+              <TrustProofStrip
+                className="mt-8"
+                items={[
+                  {
+                    label: 'Clear service answer',
+                    detail: 'The page explains what the service is, who it fits, and where to go next instead of reading like a generic category page.',
+                  },
+                  {
+                    label: 'Linked to live markets',
+                    detail: `The hub routes straight into ${model.featuredCities.length} active city pages and their related booking paths.`,
+                  },
+                  {
+                    label: 'Built for action',
+                    detail: 'Each section is designed to move visitors toward booking, coverage checking, or comparing the right service path.',
+                  },
+                ]}
+              />
             </div>
 
             <aside className="space-y-4 xl:sticky xl:top-24">
@@ -122,21 +141,45 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
             </div>
           </article>
 
-          <Card className="p-6">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-              Conversion path
-            </div>
-            <h2 className="h-display mt-4 text-[clamp(2rem,4vw,3rem)] leading-[0.95]">{model.cta.headline}</h2>
-            <p className="mt-4 text-sm leading-7 text-ink/66">{model.cta.body}</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href={model.cta.primaryHref} className="btn-glitch">
-                {model.cta.primaryLabel}
-              </Link>
-              <Link href={model.cta.secondaryHref} className="btn-outline">
-                {model.cta.secondaryLabel}
-              </Link>
-            </div>
-          </Card>
+          <div className="space-y-6">
+            <Card className="p-6">
+              <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
+                Choose your next move
+              </div>
+              <div className="mt-4 space-y-3">
+                <Link
+                  href="/coverage"
+                  className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
+                >
+                  <div className="font-semibold text-ink">Need local coverage first?</div>
+                  <div className="mt-1 text-sm text-ink/60">Check whether pickup or drop-off is live before you choose the service route.</div>
+                </Link>
+                <Link
+                  href="/services"
+                  className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
+                >
+                  <div className="font-semibold text-ink">Need the right service first?</div>
+                  <div className="mt-1 text-sm text-ink/60">Compare the menu if you still need help separating clean, restoration, and route logistics.</div>
+                </Link>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
+                Conversion path
+              </div>
+              <h2 className="h-display mt-4 text-[clamp(2rem,4vw,3rem)] leading-[0.95]">{model.cta.headline}</h2>
+              <p className="mt-4 text-sm leading-7 text-ink/66">{model.cta.body}</p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link href={model.cta.primaryHref} className="btn-glitch">
+                  {model.cta.primaryLabel}
+                </Link>
+                <Link href={model.cta.secondaryHref} className="btn-outline">
+                  {model.cta.secondaryLabel}
+                </Link>
+              </div>
+            </Card>
+          </div>
         </div>
       </section>
 

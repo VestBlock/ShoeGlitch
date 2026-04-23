@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { compareSneaksProduct, getNikePublicProduct, getSneakerProduct } from '@/features/intelligence/provider-service';
+import { getNikePublicProduct, getSneakerProduct } from '@/features/intelligence/provider-service';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -12,11 +12,9 @@ export async function GET(request: Request) {
 
   try {
     const result =
-      provider === 'sneaks'
-        ? await compareSneaksProduct(id)
-        : provider === 'nike-public'
-          ? await getNikePublicProduct(id)
-          : await getSneakerProduct(id);
+      provider === 'nike-public'
+        ? await getNikePublicProduct(id)
+        : await getSneakerProduct(id);
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(

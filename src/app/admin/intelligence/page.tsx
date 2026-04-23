@@ -2,9 +2,9 @@ import { Badge } from '@/components/ui';
 import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import {
-  compareSneaksProduct,
-  compareSneaksSearch,
   getSneakerProduct,
+  getNikePublicProduct,
+  searchNikePublicSneakers,
   searchSneakers,
 } from '@/features/intelligence/provider-service';
 import { runWatchlistScanAction } from '@/app/admin/intelligence/actions';
@@ -25,9 +25,9 @@ export default async function AdminIntelligencePage({
   const searchResult =
     query || sku ? await searchSneakers({ query: query || undefined, sku: sku || undefined, limit: 5 }) : null;
   const detailResult = id ? await getSneakerProduct(id) : null;
-  const sneaksSearchResult =
-    query || sku ? await compareSneaksSearch({ query: query || undefined, sku: sku || undefined, limit: 5 }) : null;
-  const sneaksDetailResult = id ? await compareSneaksProduct(id) : null;
+  const nikeSearchResult =
+    query || sku ? await searchNikePublicSneakers({ query: query || undefined, sku: sku || undefined, limit: 5 }) : null;
+  const nikeDetailResult = id ? await getNikePublicProduct(id) : null;
 
   return (
     <section className="container-x py-10">
@@ -83,15 +83,15 @@ export default async function AdminIntelligencePage({
           </pre>
         </div>
         <div className="rounded-[1.6rem] border border-ink/10 bg-white/82 p-5">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Sneaks-API search comparison</div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Nike public fallback search</div>
           <pre className="mt-4 overflow-x-auto rounded-[1rem] bg-bone-soft p-4 text-xs leading-6 text-ink/78">
-            {JSON.stringify(sneaksSearchResult, null, 2)}
+            {JSON.stringify(nikeSearchResult, null, 2)}
           </pre>
         </div>
         <div className="rounded-[1.6rem] border border-ink/10 bg-white/82 p-5">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Sneaks-API product comparison</div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Nike public fallback product</div>
           <pre className="mt-4 overflow-x-auto rounded-[1rem] bg-bone-soft p-4 text-xs leading-6 text-ink/78">
-            {JSON.stringify(sneaksDetailResult, null, 2)}
+            {JSON.stringify(nikeDetailResult, null, 2)}
           </pre>
         </div>
       </div>

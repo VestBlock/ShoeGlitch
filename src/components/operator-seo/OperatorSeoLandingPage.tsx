@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Badge, Card } from '@/components/ui';
 import { buildOperatorSeoSchemas } from '@/features/operator-seo/schema';
 import type { OperatorSeoModel } from '@/features/operator-seo/types';
+import TrustProofStrip from '@/components/TrustProofStrip';
+import OperatorPrequalCard from '@/components/OperatorPrequalCard';
 
 export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoModel }) {
   const schemas = buildOperatorSeoSchemas(model);
@@ -58,6 +60,26 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
                   </ul>
                 </div>
               </div>
+
+              <TrustProofStrip
+                className="mt-8"
+                items={[
+                  {
+                    label: 'Qualified operator intent',
+                    detail: 'These pages are built to move operator-search traffic into a real application or city-interest path, not just gather views.',
+                  },
+                  {
+                    label: 'Grounded in live markets',
+                    detail: model.city
+                      ? `${model.city.name} is tied to a real ShoeGlitch market context before the page makes local claims.`
+                      : 'The hub routes into live and opening markets instead of generic recruiting copy.',
+                  },
+                  {
+                    label: 'Clear next step',
+                    detail: 'City pages, role pages, and the live application all stay connected so the opportunity feels concrete quickly.',
+                  },
+                ]}
+              />
             </div>
 
             <aside className="space-y-4 xl:sticky xl:top-24">
@@ -160,6 +182,8 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
           </article>
 
           <div className="space-y-6">
+            <OperatorPrequalCard citySlug={model.city?.slug} cityName={model.city?.name} />
+
             <Card className="p-6">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
                 Best next moves

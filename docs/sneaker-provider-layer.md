@@ -12,16 +12,16 @@ This project uses a provider-to-normalized-model architecture for sneaker data.
 ## Current providers
 
 - `kicksdb`: primary live provider
+- `nike-public`: public fallback provider for release/product coverage
 - `mock`: fallback provider when live data is unavailable
-- `sneaks-api`: comparison-only provider for admin/testing workflows
 
 ## Files
 
 - `src/features/intelligence/providers/types.ts`
 - `src/features/intelligence/providers/normalize.ts`
 - `src/features/intelligence/providers/kicksdb.ts`
+- `src/features/intelligence/providers/nike-public.ts`
 - `src/features/intelligence/providers/mock.ts`
-- `src/features/intelligence/providers/sneaks.ts`
 - `src/features/intelligence/providers/cache.ts`
 - `src/features/intelligence/provider-service.ts`
 
@@ -67,7 +67,6 @@ Supabase cache persistence also requires the existing project Supabase variables
 ## Current limitation
 
 The live UI is ready for KicksDB, but cache persistence requires the migration below to be applied before Supabase-backed caching becomes active.
-Sneaks-API is intentionally not part of the public feed dependency chain. It exists for comparison, backup investigation, and normalization checks only.
 
 ## Local development fallback
 
