@@ -51,7 +51,7 @@ function buildWorthRestoringFaqs(item: ReleasePageModel['item']): ReleaseFaq[] {
 
 export async function buildWorthRestoringPageModel(slug: string): Promise<ReleasePageModel | undefined> {
   const item = await getSneakerBySlug(slug, { includeNikePublic: false });
-  if (!item || !isWorthRestoring(item)) return undefined;
+  if (!item || item.provider === 'nike-public' || !isWorthRestoring(item)) return undefined;
 
   const cities = (await getActiveSeoCities()).slice(0, 2);
   const editorial = getReleaseEditorialBySlug(item.slug);

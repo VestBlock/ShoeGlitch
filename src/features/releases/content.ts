@@ -169,7 +169,7 @@ function buildFaqs(model: ReleasePageModel['item']): ReleaseFaq[] {
 
 export async function buildReleasePageModel(slug: string): Promise<ReleasePageModel | undefined> {
   const item = await getSneakerBySlug(slug, { includeNikePublic: false });
-  if (!item) return undefined;
+  if (!item || item.provider === 'nike-public') return undefined;
 
   const path = `/releases/${item.slug}`;
   const editorial = getReleaseEditorialBySlug(item.slug);

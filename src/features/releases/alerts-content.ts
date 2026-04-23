@@ -36,7 +36,7 @@ function buildAlertFaqs(item: ReleasePageModel['item']): ReleaseFaq[] {
 
 export async function buildReleaseAlertsPageModel(slug: string): Promise<ReleasePageModel | undefined> {
   const item = await getSneakerBySlug(slug, { includeNikePublic: false });
-  if (!item || !isAlertCandidate(item)) return undefined;
+  if (!item || item.provider === 'nike-public' || !isAlertCandidate(item)) return undefined;
 
   const cities = (await getActiveSeoCities()).slice(0, 2);
   const editorial = getReleaseEditorialBySlug(item.slug);
