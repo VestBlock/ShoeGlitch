@@ -22,6 +22,25 @@ function fallbackImageUrl() {
   return `${SITE_URL}/ShoeTest-poster.png`;
 }
 
+function buildSeoSocialImageUrl(
+  pageType: SocialPageType,
+  model: SeoPageModel | SeoServiceHubModel | SeoLocationsIndexModel,
+) {
+  const params = new URLSearchParams({
+    title: model.title,
+    eyebrow: model.eyebrow,
+    location:
+      'city' in model && model.city?.name
+        ? model.city.name
+        : model.title.includes('Locations')
+          ? 'Locations'
+          : 'Shoe Glitch',
+    kind: 'service' in model && model.service?.slug ? model.service.slug : pageType,
+  });
+
+  return `${SITE_URL}/api/social-image?${params.toString()}`;
+}
+
 function isoOrNow(value?: string | null) {
   return value ?? new Date().toISOString();
 }
@@ -69,7 +88,7 @@ function extractFromSeoModel(
     sourceKind: 'seo-engine',
     title: model.title,
     shortSummary: summary,
-    imageUrl: fallbackImageUrl(),
+    imageUrl: buildSeoSocialImageUrl(pageType, model),
     publishDate: null,
     sourceUpdatedAt: new Date().toISOString(),
     metadata: {

@@ -38,6 +38,36 @@ function sortByPriority(items: SneakerFeedItem[]) {
   });
 }
 
+function mixProviders(items: SneakerFeedItem[]) {
+  const nike = items.filter((item) => item.provider === 'nike-public');
+  const primary = items.filter((item) => item.provider !== 'nike-public');
+
+  if (nike.length === 0) return items;
+
+  const frontloaded: SneakerFeedItem[] = [];
+  const nikeTarget = Math.min(6, nike.length);
+  let nikeUsed = 0;
+  let primaryIndex = 0;
+  let nikeIndex = 0;
+
+  while (frontloaded.length < Math.min(items.length, 24) && (primaryIndex < primary.length || nikeIndex < nike.length)) {
+    for (let i = 0; i < 3 && primaryIndex < primary.length && frontloaded.length < 24; i += 1) {
+      frontloaded.push(primary[primaryIndex]);
+      primaryIndex += 1;
+    }
+    if (nikeUsed < nikeTarget && nikeIndex < nike.length && frontloaded.length < 24) {
+      frontloaded.push(nike[nikeIndex]);
+      nikeIndex += 1;
+      nikeUsed += 1;
+    }
+  }
+
+  const used = new Set(frontloaded.map((item) => `${item.provider}:${item.externalId}:${item.sku}`));
+  const remainder = items.filter((item) => !used.has(`${item.provider}:${item.externalId}:${item.sku}`));
+
+  return [...frontloaded, ...remainder];
+}
+
 function mergeUnique(items: SneakerFeedItem[]) {
   const seen = new Set<string>();
   const merged: SneakerFeedItem[] = [];
@@ -245,7 +275,7 @@ function mapNormalizedToFeedItem(item: NormalizedSneaker): SneakerFeedItem {
 export async function getSneakerFeed(): Promise<SneakerFeedResult> {
   const featured = await buildFeaturedSneakerSet();
   const merged = mergeUnique(featured.items.map(mapNormalizedToFeedItem));
-  const items = sortByPriority(merged);
+  const items = mixProviders(sortByPriority(merged));
   const usedFallbackData = featured.usedFallbackData;
 
   return {

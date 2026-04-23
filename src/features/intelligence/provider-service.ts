@@ -10,6 +10,10 @@ import type {
   ProviderSearchResult,
 } from '@/features/intelligence/providers/types';
 
+function isNikeFootwear(item: NormalizedSneaker) {
+  return item.provider === 'nike-public' && item.category?.toUpperCase() === 'FOOTWEAR';
+}
+
 async function safeSearch(input: ProviderSearchInput, now: Date): Promise<ProviderSearchResult> {
   try {
     const result = await kicksDbProvider.search(input, now);
@@ -80,17 +84,15 @@ export async function buildFeaturedSneakerSet() {
     // Fall through to public provider.
   }
 
-  if (merged.size < targetPoolSize) {
-    try {
-      const publicResult = await nikePublicProvider.search({ limit: Math.max(18, targetPoolSize - merged.size) }, now);
-      sourceHealth.push(publicResult.health);
-      for (const item of publicResult.items) {
-        const key = `${item.provider}:${item.externalId}:${item.sku}`;
-        if (!merged.has(key)) merged.set(key, item);
-      }
-    } catch {
-      // Fall through to mock provider.
+  try {
+    const publicResult = await nikePublicProvider.search({ limit: Math.max(18, targetPoolSize) }, now);
+    sourceHealth.push(publicResult.health);
+    for (const item of publicResult.items.filter(isNikeFootwear)) {
+      const key = `${item.provider}:${item.externalId}:${item.sku}`;
+      if (!merged.has(key)) merged.set(key, item);
     }
+  } catch {
+    // Fall through to mock provider.
   }
 
   if (merged.size === 0) {
