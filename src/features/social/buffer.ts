@@ -89,6 +89,17 @@ function buildInstagramMetadataBlock() {
       }`;
 }
 
+function resolveDueAt(value: string) {
+  const requested = new Date(value);
+  const fallback = new Date(Date.now() + 15 * 60 * 1000);
+
+  if (Number.isNaN(requested.getTime()) || requested.getTime() <= Date.now()) {
+    return fallback.toISOString();
+  }
+
+  return requested.toISOString();
+}
+
 export function getBufferAvailability(): BufferAvailability {
   return getConfig()
     ? { configured: true }
@@ -169,6 +180,8 @@ export async function scheduleBufferInstagramPost(record: SocialQueueRecord): Pr
     throw new Error('No Instagram channel is available in Buffer. Add BUFFER_INSTAGRAM_CHANNEL_ID or connect an Instagram channel.');
   }
 
+  const dueAt = resolveDueAt(record.recommendedScheduleAt);
+
   const query = `
     mutation CreatePost {
       createPost(input: {
@@ -176,7 +189,7 @@ export async function scheduleBufferInstagramPost(record: SocialQueueRecord): Pr
         channelId: ${gqlString(channelId)}
         schedulingType: automatic
         mode: customScheduled
-        dueAt: ${gqlString(record.recommendedScheduleAt)}${buildAssetsBlock(record.imageUrl)}${buildInstagramMetadataBlock()}
+        dueAt: ${gqlString(dueAt)}${buildAssetsBlock(record.imageUrl)}${buildInstagramMetadataBlock()}
       }) {
         ... on PostActionSuccess {
           post {
@@ -211,7 +224,7 @@ export async function scheduleBufferInstagramPost(record: SocialQueueRecord): Pr
 
   return {
     externalPostId: result.post.id,
-    scheduledAt: result.post.dueAt ?? record.recommendedScheduleAt,
+    scheduledAt: result.post.dueAt ?? dueAt,
     metadata: {
       bufferStatus: result.post.status ?? 'scheduled',
       bufferChannelId: result.post.channelId ?? channelId,
