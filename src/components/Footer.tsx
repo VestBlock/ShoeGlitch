@@ -5,6 +5,22 @@ export default function Footer() {
     <footer className="bg-ink text-bone mt-32 relative overflow-hidden">
       <div className="absolute inset-0 matrix-strip opacity-20" />
       <div className="container-x py-20 relative">
+        <div className="section-outline-dark mb-10 p-5 md:p-7">
+          <div className="relative z-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-2xl">
+              <div className="text-[10px] uppercase tracking-[0.30em] text-cyan/80">Choose the route</div>
+              <h3 className="h-display mt-3 text-3xl leading-[0.95] text-bone md:text-4xl">
+                Local handoff, nationwide mail-in, or sneaker intelligence first.
+              </h3>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/book" className="btn-glitch">Book now →</Link>
+              <Link href="/mail-in" className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink">Mail-in →</Link>
+              <Link href="/intelligence" className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink">Intelligence →</Link>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
           <div className="col-span-2">
             <div className="mb-6">
@@ -15,20 +31,20 @@ export default function Footer() {
               Don&rsquo;t let your <em className="h-italic text-cyan">good ones</em> die dirty.
             </h3>
             <p className="text-bone/60 max-w-sm text-sm">
-              A multi-city network of sneaker specialists, sole-color experts, and quality-obsessed operators. Started in Milwaukee.
+              A premium sneaker-care system with local pickup routes, nationwide mail-in support, and an intelligence layer that keeps the next booking close.
             </p>
           </div>
           <Col title="Customers">
-            <Link href="/services">Services</Link>
-            <Link href="/coverage">Coverage</Link>
-            <Link href="/mail-in">Mail-In</Link>
             <Link href="/book">Book</Link>
+            <Link href="/services">Services</Link>
+            <Link href="/mail-in">Mail-In</Link>
+            <Link href="/locations">Locations</Link>
+            <Link href="/intelligence">Intelligence</Link>
           </Col>
           <Col title="Operators">
-            <Link href="/operator">Become an operator</Link>
-            <Link href="/cleaner">Cleaner portal</Link>
-            <Link href="/city-manager">City ops</Link>
-            <Link href="/admin">HQ admin</Link>
+            <Link href="/operator">Operators</Link>
+            <Link href="/operator/apply">Apply</Link>
+            <Link href="/login">Sign in</Link>
           </Col>
           <Col title="Live cities">
             <span className="text-cyan font-semibold">Milwaukee, WI (HQ)</span>

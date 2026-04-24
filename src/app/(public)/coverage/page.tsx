@@ -17,7 +17,7 @@ export default async function CoveragePage() {
           Enter your ZIP to see if local pickup is live in your area. Every market supports mail-in.
         </p>
         <p className="max-w-2xl text-sm leading-7 text-ink/60">
-          Once the route is confirmed, every package above Fresh Start can move into steam-assisted cleaning as part of the deeper service process.
+          Once the route is confirmed, customers can choose between Basic, Pro, and Elite. Steam Clean is built into every tier.
         </p>
         <CoverageChecker />
       </section>

@@ -10,6 +10,20 @@ import type {
   ProviderSearchResult,
 } from '@/features/intelligence/providers/types';
 
+function providerFailureHealth(
+  provider: { key: string; label: string },
+  now: Date,
+  error: unknown,
+): ProviderHealth {
+  return {
+    key: provider.key,
+    label: provider.label,
+    status: 'degraded',
+    message: error instanceof Error ? error.message : `${provider.label} failed.`,
+    lastAttemptAt: now.toISOString(),
+  };
+}
+
 function isNikeFootwear(item: NormalizedSneaker) {
   return item.provider === 'nike-public' && item.category?.toUpperCase() === 'FOOTWEAR';
 }
@@ -87,7 +101,8 @@ export async function buildFeaturedSneakerSet(options?: { includeNikePublic?: bo
         if (!merged.has(key)) merged.set(key, item);
       }
     }
-  } catch {
+  } catch (error) {
+    sourceHealth.push(providerFailureHealth(kicksDbProvider, now, error));
     // Fall through to public provider.
   }
 
@@ -99,7 +114,8 @@ export async function buildFeaturedSneakerSet(options?: { includeNikePublic?: bo
         const key = `${item.provider}:${item.externalId}:${item.sku}`;
         if (!merged.has(key)) merged.set(key, item);
       }
-    } catch {
+    } catch (error) {
+      sourceHealth.push(providerFailureHealth(nikePublicProvider, now, error));
       // Fall through to mock provider.
     }
   }

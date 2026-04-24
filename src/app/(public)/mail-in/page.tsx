@@ -18,7 +18,7 @@ export default async function MailInPage() {
           Mail-in is open nationwide. Local city coverage only controls pickup and drop-off routes.
         </p>
         <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/60">
-          That includes the same deeper service process used in local markets, with steam-assisted cleaning built into every package above Fresh Start.
+          That includes the same Basic, Pro, and Elite service path used in local markets, with Steam Clean built into every tier.
         </p>
         <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/60">
           Need a box? Add <strong>{MAIL_IN_BOX_KIT_NAME}</strong> at checkout for <strong>${MAIL_IN_BOX_KIT_PRICE}</strong>. If you skip it, you can still use your own box or buy one at the carrier store when you drop off the shipment. {MAIL_IN_BOX_KIT_DELAY}

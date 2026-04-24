@@ -32,7 +32,7 @@ export default function TermsPage() {
         <h2>2. Services</h2>
         <p>
           Shoe Glitch provides professional sneaker and shoe cleaning, restoration,
-          deodorizing, specialty fabric treatment, yellowing reversal, repainting, and
+          deodorizing, De-crease treatment, yellowing reversal, repainting, and
           related add-on services. Customers may select local pickup, drop-off, or mail-in
           fulfillment options, depending on market availability.
         </p>
@@ -56,12 +56,9 @@ export default function TermsPage() {
 
         <h3>Current listed services include</h3>
         <ul>
-          <li>Fresh Start ($40) — basic exterior cleaning without steam treatment</li>
-          <li>Full Reset ($70) — steam-assisted deep clean plus deodorize</li>
-          <li>Fabric Rescue ($75) — specialty fabric treatment with material-safe steam-assisted cleaning where appropriate</li>
-          <li>Revival Package ($150) — full restoration with steam-assisted deep cleaning and reconditioning</li>
-          <li>Ice Recovery ($50) — yellowing reversal on transparent or icy soles</li>
-          <li>Sole Color services ($45–$110) — heel and sole repainting, including red-bottom touch-ups on Louboutin-style shoes</li>
+          <li>Basic ($40) — Steam Clean, upper cleaning, sole cleaning, lace cleaning, and routine finishing</li>
+          <li>Pro ($70) — everything in Basic plus the De-crease method and light paint touch-ups</li>
+          <li>Elite ($150 starting) — everything in Pro plus Ice method work, basic-color repaint touch-ups, and the highest restoration path we offer</li>
           <li>Add-ons including Street Shield, Lace Lab, Fresh Core, and Detail Fix</li>
         </ul>
 
@@ -81,9 +78,10 @@ export default function TermsPage() {
           Shoe Glitch does not guarantee removal of every stain, odor, discoloration, crease,
           or defect. Some materials, including exotic leathers, delicate suede, aged
           adhesives, and heavily worn footwear, may respond unpredictably to cleaning or
-          restoration. Cosmetic color services are refresh treatments and are not structural
-          repairs or sole replacements. Results vary based on the condition of the shoes at
-          intake.
+          restoration. Cosmetic color services are basic-color refresh treatments only and
+          are not structural repairs, sole replacements, or complex custom-color work unless
+          Shoe Glitch expressly agrees otherwise. Results vary based on the condition of the
+          shoes at intake.
         </p>
 
         <h2>7. Damage, Risk of Loss, and Liability</h2>

@@ -66,6 +66,32 @@ const STEPS = [
   'Review',
 ];
 
+const SERVICE_ALIASES: Record<string, string> = {
+  'fresh-start': 'basic',
+  'full-reset': 'pro',
+  'revival-package': 'elite',
+  'fabric-rescue': 'pro',
+  'ice-recovery': 'elite',
+  'sole-color': 'elite',
+  'red-bottom-touchup': 'elite',
+  'full-sole-repaint': 'elite',
+};
+
+const BOOKING_TIER_DETAILS: Record<string, { label: string; includes: string[] }> = {
+  basic: {
+    label: 'Routine refresh',
+    includes: ['Steam Clean baseline', 'Upper and sole cleaning', 'Lace cleaning'],
+  },
+  pro: {
+    label: 'Most popular',
+    includes: ['Everything in Basic', 'De-crease method', 'Light paint touch-ups'],
+  },
+  elite: {
+    label: 'Full restoration',
+    includes: ['Everything in Pro', 'Ice method work', 'Basic-color repaint touch-ups'],
+  },
+};
+
 export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
   const search = useSearchParams();
   const router = useRouter();
@@ -147,7 +173,8 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
     if (!catalog) return;
     if (primaryServiceId) return;
     if (initialService) {
-      const m = catalog.primary.find((s) => s.slug === initialService);
+      const normalizedService = SERVICE_ALIASES[initialService] ?? initialService;
+      const m = catalog.primary.find((s) => s.slug === normalizedService);
       if (m) { setPrimaryServiceId(m.id); return; }
     }
     setPrimaryServiceId(catalog.primary[0]?.id ?? '');
@@ -484,38 +511,62 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
         {/* STEP 3 — Service */}
         {step === 3 && catalog && (
           <Panel
-            title="Pick your service."
-            subtitle={`Pricing reflects ${fulfillmentMethod === 'mailin' ? `${mailInCity?.name ?? 'our national'} mail-in hub` : currentCity?.name}. Steam-assisted cleaning is included in every package above Fresh Start.`}
+            title="Pick your tier."
+            subtitle={`Pricing reflects ${fulfillmentMethod === 'mailin' ? `${mailInCity?.name ?? 'our national'} mail-in hub` : currentCity?.name}. Steam Clean is built into Basic, Pro, and Elite.`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {catalog.primary.map((s) => (
                 <button
                   key={s.id}
                   onClick={() => setPrimaryServiceId(s.id)}
-                  className={cn('card p-5 text-left card-lift', primaryServiceId === s.id && 'ring-2 ring-ink')}
+                  className={cn(
+                    'card p-5 text-left card-lift border-2 border-ink/10',
+                    primaryServiceId === s.id && 'ring-2 ring-ink border-ink',
+                  )}
                 >
-                  <div className="flex items-start justify-between">
-                    <h4 className="h-display text-2xl">{s.name}</h4>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink/45">
+                        {BOOKING_TIER_DETAILS[s.slug]?.label ?? 'Care tier'}
+                      </div>
+                      <h4 className="h-display mt-2 text-2xl">{s.name}</h4>
+                    </div>
                     <div className="h-display text-xl">${s.resolvedPrice}</div>
                   </div>
                   <p className="text-xs text-ink/50 italic mt-1">{s.tagline}</p>
                   <p className="text-xs text-ink/70 mt-2 line-clamp-2">{s.description}</p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {s.slug === 'fresh-start' ? (
+                    {s.slug === 'basic' ? (
                       <span className="rounded-full border border-ink/10 bg-bone-soft px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/55">
-                        Entry tier · no steam
+                        Routine refresh
+                      </span>
+                    ) : s.slug === 'pro' ? (
+                      <span className="rounded-full border border-glitch/20 bg-glitch/8 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-glitch/85">
+                        De-crease + touch-up
                       </span>
                     ) : (
-                      <span className="rounded-full border border-glitch/20 bg-glitch/8 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-glitch/85">
-                        Steam-assisted
+                      <span className="rounded-full border border-cyan/20 bg-cyan/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan">
+                        Full restoration
                       </span>
                     )}
+                  </div>
+                  <div className="mt-4 rounded-[1.1rem] border border-ink/10 bg-bone-soft px-4 py-4">
+                    <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/45">Included</div>
+                    <ul className="mt-2 space-y-1.5 text-xs leading-5 text-ink/62">
+                      {(BOOKING_TIER_DETAILS[s.slug]?.includes ?? []).map((item) => (
+                        <li key={item}>• {item}</li>
+                      ))}
+                    </ul>
                   </div>
                 </button>
               ))}
             </div>
 
-            <div className="mt-10">
+            <div className="mt-8 rounded-[1.35rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm leading-6 text-ink/62">
+              Basic covers routine Steam Clean refreshes. Pro adds the De-crease method and light touch-ups. Elite opens the full restoration path, including Ice method work and basic-color repaint touch-ups.
+            </div>
+
+            <div className="mt-8 border-t border-ink/10 pt-8">
               <label className="label">Add-ons (optional)</label>
               <div className="flex flex-wrap gap-2">
                 {catalog.addOns.map((a) => (
@@ -525,9 +576,6 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
                   </button>
                 ))}
               </div>
-            </div>
-            <div className="mt-6 rounded-[1.35rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm leading-6 text-ink/62">
-              Fresh Start stays lighter for quick resets. Full Reset, Fabric Rescue, Revival, and deeper packages move into steam-assisted cleaning so the process can do more than surface-level work.
             </div>
           </Panel>
         )}

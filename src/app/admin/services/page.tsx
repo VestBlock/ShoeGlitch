@@ -9,7 +9,8 @@ export default async function AdminServices() {
   const session = await getSession();
   if (!session || session.role !== 'super_admin') redirect('/login');
 
-  const [services, cities] = await Promise.all([db.services.all(), db.cities.active()]);
+  const [allServices, cities] = await Promise.all([db.services.all(), db.cities.active()]);
+  const services = allServices.filter((service) => service.active);
 
   // Preload all pricing overrides in one fetch per service
   const overrides = await Promise.all(
@@ -27,7 +28,7 @@ export default async function AdminServices() {
   return (
     <DashboardShell currentPath="/admin/services" pageTitle="Services & pricing">
       <p className="text-ink/60 mb-8 max-w-xl">
-        Edit base prices once; override per city as markets demand.
+        Edit the live Basic, Pro, Elite, and add-on prices once; override per city as markets demand.
       </p>
 
       <div className="space-y-5">

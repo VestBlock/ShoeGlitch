@@ -5,47 +5,84 @@ import { Badge, Card } from '@/components/ui';
 import TrustProofStrip from '@/components/TrustProofStrip';
 
 export const metadata: Metadata = {
-  title: 'Sneaker cleaning and restoration services | ShoeGlitch',
+  title: 'Basic, Pro, and Elite sneaker care | ShoeGlitch',
   description:
-    'Compare ShoeGlitch sneaker cleaning, steam-assisted deep cleaning, restoration, sole care, pickup, drop-off, and mail-in services.',
+    'Compare ShoeGlitch Basic, Pro, and Elite sneaker care tiers, plus add-ons for pickup, drop-off, and nationwide mail-in orders.',
 };
 
 const SERVICE_GUIDE = [
   {
-    title: 'Start with a clean',
-    bestFor: 'Daily pairs, mesh runners, and visible dirt or salt.',
-    route: '/book?service=fresh-start',
+    title: 'Pick Basic',
+    bestFor: 'Daily pairs, quick refreshes, and routine Steam Clean work.',
+    route: '/book?service=basic',
   },
   {
-    title: 'Go restoration',
-    bestFor: 'Scuffs, sole yellowing, heavy wear, or a pair you want to keep long-term.',
-    route: '/book?service=full-reset',
+    title: 'Move into Pro',
+    bestFor: 'Creasing, visible wear, and pairs that need more than a standard clean.',
+    route: '/book?service=pro',
   },
   {
-    title: 'Use pickup or mail-in',
-    bestFor: 'When you want the easiest handoff and tracked updates instead of guessing next steps.',
-    route: '/pickup-dropoff',
+    title: 'Step up to Elite',
+    bestFor: 'Collector pairs, repaint work, Ice method jobs, and full restorations.',
+    route: '/book?service=elite',
   },
 ] as const;
 
+const TIER_DETAILS: Record<string, {
+  tone: 'default' | 'acid' | 'neon' | 'glitch';
+  label: string;
+  includes: string[];
+  note?: string;
+}> = {
+  svc_fresh_start: {
+    tone: 'neon',
+    label: 'Routine refresh',
+    includes: [
+      'Steam Clean baseline',
+      'Upper and sole cleaning',
+      'Lace cleaning',
+      'Routine finishing',
+    ],
+  },
+  svc_full_reset: {
+    tone: 'acid',
+    label: 'Most popular',
+    includes: [
+      'Everything in Basic',
+      'De-crease method',
+      'Deeper detailing',
+      'Light paint touch-ups',
+    ],
+  },
+  svc_revival: {
+    tone: 'glitch',
+    label: 'Full restoration',
+    includes: [
+      'Everything in Pro',
+      'Ice method work',
+      'Basic-color repaint touch-ups',
+      'High-restoration routing, including rebottom evaluation for qualifying pairs',
+    ],
+    note: 'Elite repaint coverage is limited to basic colors. Complex custom colorways are not included by default.',
+  },
+};
+
 export default async function ServicesPage() {
-  const allPrimary = await db.services.primary();
-  const cleanServices = allPrimary.filter(s => s.category === 'clean' || s.category === 'specialty' || s.category === 'restoration');
-  const luxuryServices = allPrimary.filter(s => s.category === 'luxury');
+  const cleanServices = await db.services.primary();
   const addOns = await db.services.addOns();
 
   return (
     <>
       <section className="container-x pt-10 pb-16">
-        <Badge className="mb-6">The catalog</Badge>
+        <Badge className="mb-6">Services</Badge>
         <h1 className="h-display text-[clamp(3rem,8vw,7rem)] leading-[0.88] mb-6">
-          Every job, <em className="h-italic text-glitch">named and priced.</em>
+          Pick the level your <em className="h-italic text-glitch">pair actually needs.</em>
         </h1>
         <p className="text-ink/70 max-w-2xl text-lg">
           Pricing shown is the national default. Your city may have local pricing — you&rsquo;ll see the final number at checkout.
         </p>
         <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/62">
-          Steam-assisted cleaning is included in every package above Fresh Start. The lowest tier stays lighter on purpose, while deeper packages move into steam, interior refresh, and stronger finish work.
+          We keep the customer menu to three clear tiers: Basic, Pro, and Elite. Steam Clean is built into all three, then the correction and restoration work expands as you move up.
         </p>
         <TrustProofStrip
           className="mt-8"
@@ -56,30 +93,38 @@ export default async function ServicesPage() {
             },
             {
               label: 'Built around the pair',
-              detail: 'Cleaning, restoration, steam-assisted deep care, sole work, and add-ons all stack into one tracked order.',
+              detail: 'Basic, Pro, and Elite keep the menu simple while still covering routine care, correction work, and full restoration.',
             },
             {
               label: 'Use the route that fits',
               detail: 'Pickup, drop-off, and mail-in stay in the same booking flow so the handoff stays clear.',
             },
             {
-              label: 'Steam where it belongs',
-              detail: 'Fresh Start stays entry-level. Every package above it moves into steam-assisted cleaning as part of the deeper process.',
+              label: 'Steam is standard',
+              detail: 'Steam Clean is part of every tier, then Pro and Elite add the heavier correction and restoration work.',
             },
           ]}
         />
       </section>
 
       <section className="container-x pb-16">
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
-          <Card className="p-7">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">Need the right service fast?</div>
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:items-start">
+          <Card className="p-7 border-2 border-ink/10">
+            <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">Choose by outcome</div>
             <h2 className="h-display mt-4 text-[clamp(2.2rem,4vw,3.6rem)] leading-[0.96]">
-              Start with the outcome, not the menu.
+              Start with what the pair needs.
             </h2>
             <p className="mt-4 text-base leading-7 text-ink/68">
-              Most customers only need one question answered: does this pair need a quick clean, a deeper steam-assisted service, or the easiest route to hand it off?
+              Most customers only need one answer: is this a routine refresh, a correction job, or a full restoration?
             </p>
+            <div className="mt-6 rounded-[1.4rem] border border-ink/10 bg-bone-soft px-5 py-5">
+              <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink/45">Quick guide</div>
+              <div className="mt-3 space-y-3 text-sm leading-6 text-ink/62">
+                <p><strong className="text-ink">Basic</strong> is for regular care and visible dirt.</p>
+                <p><strong className="text-ink">Pro</strong> is for creases, visible wear, and light correction.</p>
+                <p><strong className="text-ink">Elite</strong> is for collector pairs, icy soles, repaint work, and major restoration.</p>
+              </div>
+            </div>
           </Card>
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -87,7 +132,7 @@ export default async function ServicesPage() {
               <Link
                 key={item.title}
                 href={item.route}
-                className="rounded-[1.6rem] border border-ink/10 bg-white/80 p-5 shadow-[0_18px_40px_rgba(10,15,31,0.06)] transition hover:-translate-y-1 hover:border-glitch/20 hover:bg-white"
+                className="rounded-[1.6rem] border-2 border-ink/10 bg-white/80 p-5 shadow-[0_18px_40px_rgba(10,15,31,0.06)] transition hover:-translate-y-1 hover:border-glitch/20 hover:bg-white"
               >
                 <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Best for</div>
                 <h3 className="h-display mt-3 text-3xl leading-[0.96] text-ink">{item.title}</h3>
@@ -100,14 +145,23 @@ export default async function ServicesPage() {
       </section>
 
       <section className="container-x pb-16">
-        <h2 className="h-display text-3xl mb-6">
-          <span className="font-mono text-sm text-glitch">CLEANING + RESTORATION</span>
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="font-mono text-xs uppercase tracking-[0.24em] text-glitch/85">Three core tiers</div>
+            <h2 className="h-display text-3xl">A cleaner menu, with clearer expectations.</h2>
+          </div>
+          <p className="max-w-xl text-sm leading-6 text-ink/60">
+            Steam Clean stays consistent across all three tiers. The difference is how much correction, finish work, and restoration support the pair needs after that baseline.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {cleanServices.map((s) => (
-            <Card key={s.id} className="p-8 card-lift">
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="h-display text-4xl">{s.name}</h3>
+            <Card key={s.id} className="p-8 card-lift border-2 border-ink/10">
+              <div className="flex items-start justify-between mb-5">
+                <div>
+                  <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink/45">{TIER_DETAILS[s.id]?.label}</div>
+                  <h3 className="h-display mt-2 text-4xl">{s.name}</h3>
+                </div>
                 <div className="text-right">
                   <div className="text-xs uppercase tracking-widest text-ink/40">from</div>
                   <div className="h-display text-3xl">
@@ -117,28 +171,29 @@ export default async function ServicesPage() {
                 </div>
               </div>
               <p className="text-sm text-ink/50 italic mb-4">{s.tagline}</p>
-              <p className="text-ink/70 mb-6">{s.description}</p>
-              <div className="mb-6 flex flex-wrap gap-2">
-                {s.slug !== 'fresh-start' && s.category !== 'luxury' && <Badge tone="acid">Steam-assisted</Badge>}
-                {s.category === 'clean' && <Badge tone="neon">Best for visible dirt</Badge>}
-                {s.category === 'restoration' && <Badge tone="acid">Best for deeper recovery</Badge>}
-                {s.category === 'specialty' && <Badge>Best for material-specific care</Badge>}
-                {s.slug === 'fresh-start' && <Badge>Entry tier</Badge>}
+              <p className="text-ink/70 mb-5">{s.description}</p>
+              <div className="mb-5 flex flex-wrap gap-2">
+                <Badge tone={TIER_DETAILS[s.id]?.tone ?? 'default'}>{TIER_DETAILS[s.id]?.label}</Badge>
+                <Badge>Steam Clean included</Badge>
+                <Badge>{s.estimatedTurnaroundDays} day turnaround</Badge>
               </div>
-              {s.slug === 'fresh-start' ? (
-                <p className="mb-6 text-xs leading-6 text-ink/55">
-                  Fresh Start is the only package that skips steam so the entry tier stays lighter and faster.
-                </p>
-              ) : s.category !== 'luxury' ? (
-                <p className="mb-6 text-xs leading-6 text-ink/55">
-                  This package includes steam-assisted cleaning as part of the deeper process.
+              <div className="mb-6 rounded-[1.35rem] border border-ink/10 bg-bone-soft px-5 py-5">
+                <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink/45">Included</div>
+                <ul className="mt-3 space-y-2 text-sm text-ink/62">
+                  {(TIER_DETAILS[s.id]?.includes ?? []).map((item) => (
+                    <li key={item}>• {item}</li>
+                  ))}
+                </ul>
+              </div>
+              {TIER_DETAILS[s.id]?.note ? (
+                <p className="mb-6 rounded-[1.15rem] border border-glitch/15 bg-glitch/5 px-4 py-4 text-xs leading-6 text-ink/55">
+                  {TIER_DETAILS[s.id]?.note}
                 </p>
               ) : null}
               <div className="flex items-center justify-between pt-4 border-t border-ink/10">
                 <div className="flex gap-2 flex-wrap">
-                  <Badge>{s.category}</Badge>
                   {s.rushEligible && <Badge tone="acid">Rush OK</Badge>}
-                  <Badge>{s.estimatedTurnaroundDays}d turnaround</Badge>
+                  <Badge>{s.category}</Badge>
                 </div>
                 <Link href={`/book?service=${s.slug}`} className="btn-primary py-2 px-4 text-xs shrink-0">
                   Book →
@@ -149,42 +204,19 @@ export default async function ServicesPage() {
         </div>
       </section>
 
-      <section className="bg-ink text-bone py-16 relative overflow-hidden">
-        <div className="absolute inset-0 matrix-strip opacity-20" />
-        <div className="container-x relative">
-          <h2 className="h-display text-3xl mb-2">
-            <span className="font-mono text-sm text-cyan">SOLE COLOR</span>
-          </h2>
-          <p className="text-bone/60 mb-8 max-w-xl">
-            Professional sole repaint for heels — red bottoms, black soles, custom colors.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {luxuryServices.map((s) => (
-              <div key={s.id} className="rounded-card border border-bone/15 p-8 hover:border-cyan transition bg-bone/5">
-                <Badge tone="glitch" className="bg-cyan text-ink mb-3">{s.category}</Badge>
-                <h3 className="h-display text-3xl mb-2">{s.name}</h3>
-                <p className="text-sm text-bone/60 italic mb-4">{s.tagline}</p>
-                <div className="h-display text-3xl mb-4">
-                  ${s.priceMin ?? s.basePrice}
-                  {s.priceMax && <span className="text-bone/40 text-lg"> — ${s.priceMax}</span>}
-                </div>
-                <p className="text-xs text-bone/60 mb-6">{s.description}</p>
-                <Link href={`/book?service=${s.slug}`} className="btn bg-cyan text-ink hover:bg-white w-full justify-center text-xs py-2">
-                  Book →
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="container-x py-16">
-        <h2 className="h-display text-3xl mb-6">
-          <span className="font-mono text-sm text-glitch">ADD-ONS</span>
-        </h2>
+        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="font-mono text-xs uppercase tracking-[0.24em] text-glitch/85">Optional add-ons</div>
+            <h2 className="h-display text-3xl">Small extras, if the pair needs them.</h2>
+          </div>
+          <p className="max-w-xl text-sm leading-6 text-ink/60">
+            Add-ons stay separate so the main tiers stay simple. Choose them only when the pair needs extra protection, lace work, interior refresh, or spot correction.
+          </p>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {addOns.map((s) => (
-            <Card key={s.id} className="p-6 card-lift">
+            <Card key={s.id} className="p-6 card-lift border-2 border-ink/10">
               <h3 className="h-display text-2xl mb-1">{s.name}</h3>
               <p className="text-xs text-ink/50 mb-4">{s.tagline}</p>
               <div className="h-display text-xl">

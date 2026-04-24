@@ -33,7 +33,7 @@ export default async function HomePage() {
     },
     {
       label: 'Steam where it matters',
-      detail: 'Steam-assisted cleaning is part of every package above Fresh Start, so deeper jobs get more than a surface wipe-down.',
+      detail: 'Steam Clean is part of Basic, Pro, and Elite, so every order starts from the same care baseline.',
     },
   ];
 
@@ -49,8 +49,47 @@ export default async function HomePage() {
           <TrustProofStrip items={trustItems} />
         </div>
 
+        <div className="container-x relative pb-14 md:pb-18">
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              {
+                eyebrow: 'Fastest route',
+                title: 'Book local pickup or drop-off',
+                detail: 'Use local city coverage when you want the easiest handoff and live order tracking.',
+                href: '/book',
+                cta: 'Start booking →',
+              },
+              {
+                eyebrow: 'Nationwide',
+                title: 'Ship pairs in from anywhere',
+                detail: 'Mail-in stays open nationwide, with prepaid labels, tracking, and an optional box kit.',
+                href: '/mail-in',
+                cta: 'See mail-in →',
+              },
+              {
+                eyebrow: 'Research first',
+                title: 'Use Intelligence before you book',
+                detail: 'Check releases, care scores, restoration upside, and watchlist signals before you commit.',
+                href: '/intelligence',
+                cta: 'Open intelligence →',
+              },
+            ].map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                className="rounded-[1.7rem] border border-ink/10 bg-white/82 p-6 shadow-[0_18px_44px_rgba(10,15,31,0.07)] transition hover:-translate-y-1 hover:border-glitch/20 hover:bg-white"
+              >
+                <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">{item.eyebrow}</div>
+                <h2 className="h-display mt-3 text-3xl leading-[0.96] text-ink">{item.title}</h2>
+                <p className="mt-3 text-sm leading-6 text-ink/65">{item.detail}</p>
+                <div className="mt-5 text-sm font-semibold text-glitch">{item.cta}</div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
         <div className="container-x relative pb-14 md:pb-20">
-          <div className="relative overflow-hidden rounded-[2rem] border border-glitch/20 bg-white/78 p-6 shadow-[0_26px_80px_rgba(10,15,31,0.10)] backdrop-blur-xl md:p-8">
+          <div className="section-shell pulse-border p-6 md:p-8">
             <div className="absolute -right-16 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-cyan/20 blur-3xl" />
             <div className="absolute -left-20 bottom-0 h-36 w-36 rounded-full bg-glitch/15 blur-3xl" />
             <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
@@ -82,7 +121,7 @@ export default async function HomePage() {
           <div className="track py-5 relative">
             {Array.from({ length: 2 }).map((_, index) => (
               <div key={index} className="flex items-center gap-12 pr-12 whitespace-nowrap">
-                {['FRESH START', 'FULL RESET', 'FABRIC RESCUE', 'REVIVAL', 'ICE RECOVERY', 'SOLE COLOR', 'RED BOTTOM', 'STREET SHIELD', 'LACE LAB'].map((item) => (
+                {['BASIC', 'PRO', 'ELITE', 'STEAM CLEAN', 'DE-CREASE METHOD', 'ICE METHOD', 'STREET SHIELD', 'LACE LAB', 'DETAIL FIX'].map((item) => (
                   <span key={item} className="h-display text-4xl md:text-5xl flex items-center gap-12">
                     <span>{item}</span>
                     <span className="text-cyan">✦</span>
@@ -94,19 +133,23 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container-x py-24">
-        <div className="grid grid-cols-1 gap-8 items-center md:grid-cols-2">
+      <section className="container-x py-20 md:py-24">
+        <div className="section-shell p-7 md:p-10">
+          <div className="grid grid-cols-1 gap-8 items-center md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <div>
             <Badge className="mb-4">Live right now</Badge>
             <h2 className="h-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.9] mb-6">
               Real jobs. <em className="h-italic">Real tracking.</em>
             </h2>
             <p className="text-ink/70 max-w-md mb-6">
-              Every order gets a unique code, photo-backed intake notes, and a tracked status pipeline that stays visible across customer, operator, and admin views. Steam-assisted cleaning is built into every package above Fresh Start.
+              Every order gets a unique code, photo-backed intake notes, and a tracked status pipeline that stays visible across customer, operator, and admin views. Steam Clean is built into Basic, Pro, and Elite.
             </p>
-            <Link href="/book" className="btn-glitch">Start your order →</Link>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/book" className="btn-glitch">Start your order →</Link>
+              <Link href="/mail-in" className="btn-outline">Nationwide mail-in →</Link>
+            </div>
           </div>
-          <div className="space-y-4">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
             <Card className="card-glitch grain relative overflow-hidden">
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
@@ -114,7 +157,7 @@ export default async function HomePage() {
                   <Badge tone="glitch" className="bg-white text-glitch">In Cleaning</Badge>
                 </div>
                 <div className="h-display text-3xl mb-1">Travis Scott 1s</div>
-                <div className="text-sm text-white/70">Milwaukee · Full Reset + Steam Assist + Ice Recovery</div>
+                <div className="text-sm text-white/70">Milwaukee · Pro + Street Shield</div>
                 <div className="mt-6">
                   <div className="h-1.5 rounded-full bg-white/20">
                     <div className="h-full rounded-full bg-white w-[55%]" />
@@ -122,11 +165,46 @@ export default async function HomePage() {
                 </div>
               </div>
             </Card>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              <div className="section-outline p-5">
+                <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">Care routes</div>
+                <div className="mt-3 grid grid-cols-3 gap-3">
+                  {[
+                    ['Basic', 'Steam refresh'],
+                    ['Pro', 'De-crease + touch-up'],
+                    ['Elite', 'Restoration path'],
+                  ].map(([title, detail]) => (
+                    <div key={title} className="rounded-[1.1rem] border border-ink/10 bg-bone-soft px-4 py-4">
+                      <div className="text-sm font-semibold text-ink">{title}</div>
+                      <div className="mt-1 text-xs leading-5 text-ink/58">{detail}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="section-shell-dark p-5">
+                <div className="relative z-10 grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+                  {[
+                    ['Mail-in open', 'Nationwide', 'Prepaid inbound label + optional box kit'],
+                    ['Pickup cities', `${activeCityCount} active`, 'Cities stay focused on local handoff only'],
+                    ['Intelligence loop', 'Feed → watch → book', 'Research and booking stay connected'],
+                  ].map(([eyebrow, value, detail]) => (
+                    <div key={eyebrow} className="section-outline-dark p-4">
+                      <div className="text-[11px] uppercase tracking-[0.28em] text-cyan/80">{eyebrow}</div>
+                      <div className="mt-2 h-display text-3xl text-bone">{value}</div>
+                      <div className="mt-2 text-sm leading-6 text-bone/62">{detail}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
         </div>
       </section>
 
-      <section className="container-x py-16">
+      <section className="container-x py-16 md:py-20">
         <div className="flex flex-col gap-6 mb-12 md:flex-row md:items-end md:justify-between">
           <div>
             <Badge className="mb-4">01 — The menu</Badge>
@@ -139,7 +217,7 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => (
-            <Link key={service.id} href={`/book?service=${service.slug}`} className="card card-lift p-6 flex min-h-[260px] flex-col justify-between group">
+            <Link key={service.id} href={`/book?service=${service.slug}`} className="card card-lift p-6 flex min-h-[280px] flex-col justify-between group">
               <div>
                 <div className="flex items-start justify-between mb-4">
                   <span className="font-mono text-xs text-ink/40">0{index + 1}</span>
@@ -157,6 +235,22 @@ export default async function HomePage() {
               </div>
             </Link>
           ))}
+        </div>
+        <div className="mt-8 section-outline flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
+          <div>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/80">Cleaner decision-making</div>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/65">
+              Use one tier, then stack only the extras the pair actually needs. That keeps the booking path simple and stops the page from reading like a giant repair menu.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/services" className="btn-outline">
+              Compare all tiers →
+            </Link>
+            <Link href="/mail-in" className="btn-outline">
+              Mail-in nationwide →
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -193,7 +287,7 @@ export default async function HomePage() {
       </section>
 
       <section className="container-x pb-16">
-        <Card className="p-12 border-2 border-glitch/30 bg-gradient-to-br from-glitch/5 to-cyan/10">
+        <Card className="p-8 md:p-12 border-2 border-glitch/30 bg-gradient-to-br from-glitch/8 via-white to-cyan/10 shadow-[0_26px_80px_rgba(10,15,31,0.12)]">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <div>
               <Badge tone="glitch" className="mb-4">For operators</Badge>

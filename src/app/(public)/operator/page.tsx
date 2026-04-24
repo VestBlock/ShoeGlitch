@@ -106,7 +106,7 @@ export default function OperatorPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
             { t: 'Tiered platform fee', d: 'Basic starts with a higher platform fee because support is lighter. Pro lowers the fee with stronger tools. Luxury has the lowest fee because it is treated like a city-partner path.' },
-            { t: 'Real training', d: 'Video certification modules per service, including when to use steam-assisted cleaning versus a lighter exterior-only pass. Submit a test pair before luxury jobs route to you.' },
+            { t: 'Real training', d: 'Video certification modules per tier, including how Basic, Pro, and Elite differ in correction and restoration scope. Submit a test pair before luxury jobs route to you.' },
             { t: 'Consumables at cost+10%', d: 'Refill your oxidation solution, paints, and protectants through the operator portal at near-wholesale prices.' },
             { t: 'Marketing and territory', d: 'Basic and Pro operators market themselves locally. Luxury operators can qualify for ShoeGlitch-supported digital ad spend and an exclusive territory with clear performance standards.' },
           ].map((f) => (

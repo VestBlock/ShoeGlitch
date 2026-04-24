@@ -114,7 +114,7 @@ export default function HowToCleanLandingPage({ model }: { model: ReleasePageMod
                   <h2>Why this shoe needs a real cleaning plan</h2>
                   <p>{model.recommendation.body}</p>
                   <p>
-                    On Shoe Glitch, the deeper cleaning routes move into steam-assisted treatment above the entry tier. That matters because many pairs need more than a surface reset once dirt settles into the upper, lining, or stitch lines.
+                    On Shoe Glitch, Basic, Pro, and Elite all start with Steam Clean. That matters because many pairs need more than a surface reset once dirt settles into the upper, lining, or stitch lines.
                   </p>
                   <ul>
                     {model.recommendation.bullets.map((bullet) => (

@@ -18,7 +18,7 @@ export default function OperatorTrainingModule({
           <h2 className="h-display text-3xl">{title}</h2>
         </div>
         <Badge tone="acid">
-          Steam-assisted cleaning is part of every package above Fresh Start
+          Steam Clean is part of Basic, Pro, and Elite
         </Badge>
       </div>
 
@@ -31,8 +31,8 @@ export default function OperatorTrainingModule({
               and mistake prevention. They are here to sharpen technique, not replace the ShoeGlitch standard.
             </p>
             <p>
-              In our workflow, steam-assisted cleaning is used in every customer package above Fresh Start, and Pro +
-              Luxury operators also receive the ice box setup for higher-tier work.
+              In our workflow, Steam Clean is the baseline across Basic, Pro, and Elite. Pro and Luxury operators also
+              receive the ice box setup for higher-tier work.
             </p>
             <p>
               Best watch order: laundry system first, then mesh, suede, Jordan 4, and finally icy-sole restoration.

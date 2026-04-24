@@ -33,10 +33,10 @@ export const OPERATOR_TIERS: Record<OperatorTierId, OperatorTierDefinition> = {
       'Brush set (horsehair, soft, stiff)',
       'Cleaning solution (60-day supply)',
       'Cleaner app access',
-      'Fresh Start + Full Reset certification',
+      'Basic + Pro workflow certification',
       'Open-market routing as jobs are available',
     ],
-    unlocks: ['Fresh Start', 'Full Reset', 'Lace Lab', 'Detail Fix'],
+    unlocks: ['Basic', 'Lace Lab', 'Detail Fix'],
   },
   pro: {
     id: 'pro',
@@ -54,10 +54,10 @@ export const OPERATOR_TIERS: Record<OperatorTierId, OperatorTierDefinition> = {
       'Fabric-specific tools (suede, mesh, knit)',
       'Ice box + Ice Recovery solution',
       'Material-safe chemistry pack',
-      'Revival certification training',
+      'Pro correction certification training',
       'Priority routing as performance and city demand allow',
     ],
-    unlocks: ['All Basic services', 'Fabric Rescue', 'Revival Package', 'Ice Recovery', 'Fresh Core', 'Street Shield'],
+    unlocks: ['All Basic services', 'Pro', 'Fresh Core', 'Street Shield'],
     featured: true,
   },
   luxury: {
@@ -75,13 +75,13 @@ export const OPERATOR_TIERS: Record<OperatorTierId, OperatorTierDefinition> = {
       'Commercial steam cleaner brush system for premium/high-volume jobs',
       'Ice box + Ice Recovery solution',
       'Fine detail brush set (sizes 0-6)',
-      'Louboutin-matched red lacquer + black/custom',
+      'Basic-color repaint kit',
       'Sole prep solution + masking tape',
       'Drying rack',
-      'Sole color certification + mentorship',
+      'Elite restoration certification + mentorship',
       'Area-level digital ad support after activation',
     ],
-    unlocks: ['All Pro services', 'Sole Color', 'Red Bottom Touch-Up', 'Full Sole Repaint'],
+    unlocks: ['All Pro services', 'Elite', 'Basic-color repaint touch-ups', 'Ice method workflows'],
   },
 };
 
@@ -93,4 +93,3 @@ export function getOperatorTierDefinition(tier: string | null | undefined): Oper
   }
   return OPERATOR_TIERS.pro;
 }
-

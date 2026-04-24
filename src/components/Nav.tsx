@@ -6,10 +6,10 @@ import { StatusDot } from '@/components/ui';
 
 const NAV_ITEMS = [
   { href: '/services', label: 'Services' },
-  { href: '/coverage', label: 'Coverage' },
   { href: '/mail-in', label: 'Mail-In' },
-  { href: '/operator', label: 'Become an Operator' },
-  { href: '/book', label: 'Book' },
+  { href: '/locations', label: 'Locations' },
+  { href: '/intelligence', label: 'Intelligence' },
+  { href: '/operator', label: 'Operators' },
 ] as const;
 
 export default async function Nav({ theme = 'light' }: { theme?: 'light' | 'dark' }) {
@@ -17,19 +17,38 @@ export default async function Nav({ theme = 'light' }: { theme?: 'light' | 'dark
   const dark = theme === 'dark';
 
   return (
-    <header className={cn('relative z-40 w-full', dark ? 'bg-ink text-bone' : 'bg-bone text-ink')}>
-      <div className="container-x py-5">
-        <div className="flex items-center justify-between gap-4">
+    <header
+      className={cn(
+        'sticky top-0 z-40 w-full border-b backdrop-blur-xl',
+        dark ? 'border-white/10 bg-ink/90 text-bone' : 'border-ink/8 bg-bone/78 text-ink',
+      )}
+    >
+      <div className="container-x py-4">
+        <div
+          className={cn(
+            'flex items-center justify-between gap-4 rounded-[1.5rem] border px-4 py-4 shadow-[0_18px_40px_rgba(10,15,31,0.08)] md:px-5',
+            dark ? 'border-white/10 bg-white/6 text-bone' : 'border-ink/10 bg-white/78 text-ink',
+          )}
+        >
           <Link href="/" className="group flex flex-col leading-none">
-            <span className="h-display text-[clamp(1.6rem,2vw,2rem)] tracking-tight">Shoe Glitch</span>
+            <span className="h-display text-[clamp(1.6rem,2vw,2rem)] tracking-tight group-hover:text-glitch transition">Shoe Glitch</span>
             <span className={cn('text-[10px] uppercase tracking-[0.25em]', dark ? 'text-bone/50' : 'text-ink/50')}>
-              multi-city sole-care
+              luxury sneaker care
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-8 text-sm md:flex">
+          <nav className="hidden items-center gap-2 text-sm md:flex">
             {NAV_ITEMS.map((item) => (
-              <Link key={item.href} href={item.href} className="hover:text-glitch transition">
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'rounded-full border border-transparent px-3 py-2 font-medium transition',
+                  dark
+                    ? 'text-bone/72 hover:border-cyan/18 hover:bg-white/6 hover:text-cyan'
+                    : 'text-ink/72 hover:border-glitch/18 hover:bg-glitch/6 hover:text-glitch',
+                )}
+              >
                 {item.label}
               </Link>
             ))}
@@ -60,7 +79,6 @@ export default async function Nav({ theme = 'light' }: { theme?: 'light' | 'dark
               href={item.href}
               className={cn(
                 'rounded-[1.1rem] border px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] transition',
-                index === NAV_ITEMS.length - 1 && 'col-span-2 text-center',
                 dark
                   ? 'border-bone/15 bg-bone/5 text-bone/80 hover:border-cyan hover:text-cyan'
                   : 'border-ink/10 bg-white text-ink/70 hover:border-glitch hover:text-glitch',

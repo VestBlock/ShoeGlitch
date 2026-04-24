@@ -15,8 +15,8 @@ const trustItems = [
     detail: 'Photos, notes, and status updates stay attached to the order from drop-off to return.',
   },
   {
-    label: 'Steam-assisted above entry tier',
-    detail: 'Every package above Fresh Start uses steam-assisted cleaning as part of the deeper process.',
+    label: 'Steam Clean in every tier',
+    detail: 'Basic, Pro, and Elite all start with Steam Clean, then the correction and restoration work expands from there.',
   },
   {
     label: 'Pickup, drop-off, or mail-in',
@@ -82,9 +82,11 @@ export default function HomeHeroMotion({
       <div className="absolute inset-x-[10%] top-[8%] h-[46%] rounded-[3rem] bg-glitch/8 blur-[120px]" />
       <div className="absolute left-[4%] top-[16%] h-24 w-24 rounded-full bg-cyan/10 blur-[90px]" />
       <div className="absolute right-[12%] top-[10%] h-24 w-24 rounded-full bg-glitch/10 blur-[96px]" />
+      <div className="float-orbit absolute right-[18%] top-[18%] hidden h-20 w-20 rounded-full border border-glitch/15 bg-white/45 lg:block" />
 
       <div className="relative grid gap-6 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:items-stretch">
-        <div className="relative order-2 flex flex-col rounded-[2rem] border border-ink/10 bg-white/72 p-6 shadow-[0_26px_70px_rgba(10,15,31,0.10)] backdrop-blur-xl lg:order-1 lg:p-8">
+        <div className="relative order-2 flex flex-col rounded-[2rem] border border-ink/10 bg-white/74 p-6 shadow-[0_26px_70px_rgba(10,15,31,0.10)] backdrop-blur-xl lg:order-1 lg:p-8">
+          <div className="accent-divider absolute inset-x-6 top-0" />
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-ink/10 bg-white/75 px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-ink/70 shadow-[0_10px_30px_rgba(10,15,31,0.06)] md:text-[11px]">
             <span className="h-2 w-2 rounded-full bg-cyan" />
             Built in Milwaukee · Serving {activeCityCount} cities
@@ -100,7 +102,7 @@ export default function HomeHeroMotion({
               for Your <em className="h-italic text-glitch">Sneakers.</em>
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-ink/68">
-              Pickup, drop-off, or mail-in. Start with intake photos, track every step, and move into a steam-assisted clean on every package above Fresh Start.
+              Pickup, drop-off, or mail-in. Start with intake photos, track every step, and choose between Basic, Pro, or Elite depending on how much correction or restoration the pair needs.
             </p>
           </div>
 
@@ -108,8 +110,8 @@ export default function HomeHeroMotion({
             <Link href="/book" className="btn-glitch">
               Book a clean →
             </Link>
-            <Link href="/coverage" className="btn-outline">
-              Check your ZIP
+            <Link href="/locations" className="btn-outline">
+              See locations
             </Link>
             <Link
               href="/services"
@@ -119,7 +121,22 @@ export default function HomeHeroMotion({
             </Link>
           </div>
 
-          <TrustProofStrip items={[...trustItems]} className="mt-8" />
+          <div className="mt-8">
+            <TrustProofStrip items={[...trustItems]} />
+          </div>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            {[
+              ['Three clean paths', 'Local pickup, drop-off, or nationwide mail-in'],
+              ['One intake standard', 'Photos, notes, and pricing travel with the order'],
+              ['Luxury finish', 'Steam baseline, correction, then restoration as needed'],
+            ].map(([title, detail]) => (
+              <div key={title} className="rounded-[1.25rem] border border-ink/10 bg-bone-soft/80 p-4 shadow-[0_14px_28px_rgba(10,15,31,0.04)]">
+                <div className="text-sm font-semibold text-ink">{title}</div>
+                <div className="mt-2 text-xs leading-5 text-ink/58">{detail}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <motion.div
@@ -217,17 +234,17 @@ export default function HomeHeroMotion({
                 <div className="max-w-[22rem] rounded-[1.35rem] border border-white/18 bg-ink/12 px-4 py-4 shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-sm md:px-5">
                   <div className="text-[10px] uppercase tracking-[0.3em] text-white/70">Book with confidence</div>
                   <div className="mt-2 text-sm leading-6 text-white [text-shadow:0_2px_18px_rgba(7,20,44,0.55)]">
-                    Pick the route, upload the intake photos, and let the order move into the right clean, including steam-assisted treatment above the entry tier.
+                    Pick the route, upload the intake photos, and let the order move into the right tier, from a fast Steam Clean refresh to full restoration work.
                   </div>
                   <div className="mt-4 flex flex-wrap gap-3">
                     <Link href="/book" className="btn-glitch">
                       Book now →
                     </Link>
                     <Link
-                      href="/coverage"
+                      href="/locations"
                       className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 text-sm font-semibold text-bone backdrop-blur-xl transition hover:border-cyan/40 hover:text-cyan"
                     >
-                      Check your ZIP
+                      See locations
                     </Link>
                   </div>
                 </div>

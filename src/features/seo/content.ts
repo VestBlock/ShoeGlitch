@@ -50,11 +50,11 @@ function buildServiceIntentCopy(serviceSlug: SeoServiceSlug) {
   if (serviceSlug === 'sneaker-cleaning') {
     return {
       promise:
-        'Sneaker cleaning intent is about getting from dirty pair to booked order fast, with enough detail that the customer knows pickup, drop-off, or mail-in is real and that deeper packages move into steam-assisted cleaning.',
+        'Sneaker cleaning intent is about getting from dirty pair to booked order fast, with enough detail that the customer knows pickup, drop-off, or mail-in is real and can understand the difference between Basic, Pro, and Elite.',
       faq:
         'People searching for sneaker cleaning usually want a direct answer on service fit, coverage, whether the process goes deeper than a wipe-down, and the fastest way to start the order.',
       expectation:
-        'The best sneaker-cleaning page explains what kind of pair fits the service, where Shoe Glitch is active, when steam-assisted cleaning is part of the process, and which next action gets the pair into the workflow immediately.',
+        'The best sneaker-cleaning page explains what kind of pair fits the service, where Shoe Glitch is active, how Basic, Pro, and Elite differ, and which next action gets the pair into the workflow immediately.',
       examples: [
         'white leather or mesh pairs that show dirt quickly',
         'daily-wear sneakers that need a deep clean instead of replacement',
@@ -66,11 +66,11 @@ function buildServiceIntentCopy(serviceSlug: SeoServiceSlug) {
   if (serviceSlug === 'shoe-restoration') {
     return {
       promise:
-        'Restoration intent is about deciding whether a pair is worth saving and what kind of steam-assisted cleaning, finish correction, and recovery work justifies the spend before booking.',
+        'Restoration intent is about deciding whether a pair is worth saving and what kind of Steam Clean, finish correction, and recovery work justifies the spend before booking.',
       faq:
         'Restoration searches come from people dealing with yellowing, sole issues, faded finish, or collector pairs that deserve more than a quick wipe-down.',
       expectation:
-        'A strong restoration page needs to help a visitor decide whether the pair is a cleaning-first job or a deeper repair and finish job, then guide them into the correct booking path with the right level of steam-assisted prep and recovery work.',
+        'A strong restoration page needs to help a visitor decide whether the pair is a Basic, Pro, or Elite job, then guide them into the correct booking path with the right level of prep and recovery work.',
       examples: [
         'older collector pairs with visible sole or finish issues',
         'retro silhouettes where value and preservation matter',
@@ -123,9 +123,9 @@ export async function buildServiceCityPageModel(
       `${service.name} is available for customers in ${cityLabel}.`,
       `Current market coverage includes ${areaSummary}.`,
       service.slug === 'sneaker-cleaning'
-        ? 'Every package above Fresh Start moves into steam-assisted cleaning as part of the deeper process.'
+        ? 'Shoe Glitch now uses a three-tier menu: Basic, Pro, and Elite, with Steam Clean built into every tier.'
         : service.slug === 'shoe-restoration'
-          ? 'Restoration routes pair deeper recovery work with steam-assisted cleaning before finish corrections.'
+          ? 'Restoration routes move through the Elite-level recovery path, with Steam Clean, correction work, and higher-detail finish steps layered together.'
           : 'Use the coverage flow first so the local route stays clear before booking.',
       `Shoe Glitch supports booking through pickup, drop-off, or mail-in depending on the job and market.`,
       `The fastest next step is to check coverage and start an order with intake details.`,
@@ -225,9 +225,9 @@ export async function buildServiceAreaPageModel(
       `${area.name} is part of the live ${city.name} market coverage.`,
       area.zips.length > 0 ? `Common ZIPs tied to this service area include ${zipSummary}.` : `Use the coverage checker for ZIP-level confirmation in ${area.name}.`,
       service.slug === 'sneaker-cleaning'
-        ? 'Every package above Fresh Start uses steam-assisted cleaning as part of the deeper service path.'
+        ? 'Basic, Pro, and Elite all start with Steam Clean, then layer in correction or restoration work depending on the pair.'
         : service.slug === 'shoe-restoration'
-          ? 'Restoration routes layer steam-assisted prep into the work before finish corrections and recovery steps.'
+          ? 'Restoration routes layer Steam Clean prep into the work before finish corrections and recovery steps.'
           : 'Use the coverage checker for the exact handoff path before booking.',
       `${service.name} can route into pickup, drop-off, or mail-in depending on the job and local coverage.`,
       `The safest next step is to confirm your ZIP, then start the order with intake details.`,
@@ -326,7 +326,7 @@ export async function buildCityHubPageModel(citySlug: string): Promise<SeoPageMo
         heading: `What makes the ${city.name} page useful`,
         paragraphs: [
           `A local page should do more than repeat the city name. For ${cityLabel}, the page has to connect actual coverage, the live booking flow, and the services people are most likely to search for: sneaker cleaning, restoration, and pickup or drop-off logistics.`,
-          `That combination makes the page useful for both SEO and AEO. Search engines can understand the local intent, and AI tools can extract a clear answer about what Shoe Glitch does in ${city.name} and where the visitor should go next. It also gives Shoe Glitch room to explain the real process, including steam-assisted cleaning on the deeper service tiers.`,
+          `That combination makes the page useful for both SEO and AEO. Search engines can understand the local intent, and AI tools can extract a clear answer about what Shoe Glitch does in ${city.name} and where the visitor should go next. It also gives Shoe Glitch room to explain the real process, including how Basic, Pro, and Elite map to the work.`,
         ],
       },
       {
@@ -489,9 +489,9 @@ export async function buildServiceHubPageModel(
       `Shoe Glitch uses this hub to explain ${service.name.toLowerCase()} without hiding the booking path.`,
       `Supported city pages currently include ${cityList.slice(0, 3).join(', ')}${cityList.length > 3 ? `, and ${cityList.length - 3} more` : ''}.`,
       service.slug === 'sneaker-cleaning'
-        ? 'Every package above Fresh Start moves into steam-assisted cleaning before the deeper finish work starts.'
+        ? 'The customer menu stays focused on Basic, Pro, and Elite, with Steam Clean built into every tier.'
         : service.slug === 'shoe-restoration'
-          ? 'Restoration routes pair steam-assisted cleaning with finish correction and recovery work.'
+          ? 'Restoration routes pair Steam Clean with finish correction and higher-recovery work.'
           : 'The route keeps coverage and booking logic clear before you move into the order.',
       `The page connects directly to booking, service comparison, and local market routes.`,
       `The goal is conversion-ready search traffic, not thin service copy.`,
@@ -501,7 +501,7 @@ export async function buildServiceHubPageModel(
         heading: `What ${service.name.toLowerCase()} means at Shoe Glitch`,
         paragraphs: [
           intent.faq,
-          `This hub page exists so visitors can understand what ${service.name.toLowerCase()} covers before choosing a city page, a coverage check, or the booking flow. For cleaning and restoration, that also means explaining when steam-assisted cleaning is part of the process and when the lightest tier stays simpler by design.`,
+          `This hub page exists so visitors can understand what ${service.name.toLowerCase()} covers before choosing a city page, a coverage check, or the booking flow. For cleaning and restoration, that also means explaining how Basic, Pro, and Elite differ without turning the service menu into guesswork.`,
         ],
         bullets: intent.examples,
       },
@@ -577,9 +577,9 @@ export async function buildServiceNearMePageModel(
       `The “near me” route is tied to ${activeCities.length} active Shoe Glitch cities.`,
       areaCount > 0 ? `Those cities currently map to ${areaCount} active service areas.` : 'Mail-in remains the fallback where local handling is still expanding.',
       service.slug === 'sneaker-cleaning'
-        ? 'The deeper routes include steam-assisted cleaning above the entry tier.'
+        ? 'The cleaning route explains how Basic, Pro, and Elite differ without burying the booking path.'
         : service.slug === 'shoe-restoration'
-          ? 'Restoration routes combine steam-assisted prep with the recovery work that follows.'
+          ? 'Restoration routes combine Steam Clean prep with the recovery work that follows.'
           : 'Use the nearest route to confirm local handling before you book.',
       `This page is built for local-intent searches, not generic national traffic.`,
       'The correct next move is to choose the nearest city page or run a ZIP coverage check.',

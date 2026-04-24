@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import DashboardShell from '@/components/DashboardShell';
 import { Badge, Card, StatusDot } from '@/components/ui';
@@ -17,6 +18,29 @@ export default async function AdminAnalyticsPage() {
           <StatusDot tone={summary.status === 'live' ? 'ok' : summary.status === 'empty' ? 'warn' : 'error'} /> {summary.status}
         </Badge>
         <Badge>{summary.totals.trackedRoutes} tracked routes</Badge>
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4 mb-10">
+        <Link href="/admin/automation" className="rounded-[1.2rem] border border-ink/10 bg-white px-5 py-4 transition hover:border-glitch/25 hover:bg-bone-soft">
+          <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-glitch/80">Run checks</div>
+          <div className="mt-2 font-semibold text-ink">Open automation control</div>
+          <div className="mt-1 text-sm text-ink/58">Refresh SEO, social, and watchlist jobs from one place.</div>
+        </Link>
+        <Link href="/admin/social" className="rounded-[1.2rem] border border-ink/10 bg-white px-5 py-4 transition hover:border-glitch/25 hover:bg-bone-soft">
+          <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-glitch/80">Traffic to content</div>
+          <div className="mt-2 font-semibold text-ink">Open social queue</div>
+          <div className="mt-1 text-sm text-ink/58">Turn feed and release momentum into queued posts.</div>
+        </Link>
+        <Link href="/admin/orders" className="rounded-[1.2rem] border border-ink/10 bg-white px-5 py-4 transition hover:border-glitch/25 hover:bg-bone-soft">
+          <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-glitch/80">Revenue follow-through</div>
+          <div className="mt-2 font-semibold text-ink">Open orders</div>
+          <div className="mt-1 text-sm text-ink/58">Check whether traffic is becoming paid work.</div>
+        </Link>
+        <Link href="/services" className="rounded-[1.2rem] border border-ink/10 bg-white px-5 py-4 transition hover:border-glitch/25 hover:bg-bone-soft">
+          <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-glitch/80">Public view</div>
+          <div className="mt-2 font-semibold text-ink">Open services page</div>
+          <div className="mt-1 text-sm text-ink/58">Compare the live customer-facing pricing and tier flow.</div>
+        </Link>
       </div>
 
       {summary.message ? (
@@ -128,7 +152,7 @@ export default async function AdminAnalyticsPage() {
           <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Top routes</div>
           <div className="mt-5 space-y-3">
             {summary.topRoutes.length > 0 ? summary.topRoutes.map((route) => (
-              <div key={route.routePath} className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
+              <Link key={route.routePath} href={route.routePath} className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4 transition hover:border-glitch/20 hover:bg-white">
                 <div className="flex items-center justify-between gap-4">
                   <div className="font-semibold text-ink">{route.routePath}</div>
                   <Badge>{route.family}</Badge>
@@ -139,7 +163,7 @@ export default async function AdminAnalyticsPage() {
                 {route.lastSeenAt ? (
                   <div className="mt-1 text-xs text-ink/48">Last seen {new Date(route.lastSeenAt).toLocaleString()}</div>
                 ) : null}
-              </div>
+              </Link>
             )) : (
               <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm text-ink/62">
                 Top routes will appear here as tracked traffic arrives.
