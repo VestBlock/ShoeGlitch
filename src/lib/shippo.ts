@@ -93,12 +93,12 @@ export function buildMailInPackingInstructions(order: Order) {
   return {
     parcel,
     bullets: [
-      'Use a sturdy corrugated shipping box instead of an envelope or soft mailer.',
+      'If you do not already have a box, bring the shoes to the carrier store listed on the label and buy a sturdy corrugated box there.',
       `For ${order.pairCount} pair${order.pairCount === 1 ? '' : 's'}, aim for a ${parcel.referenceBox} or something close.`,
       'Wrap each pair in clean paper or put each pair in its own plastic bag so they do not rub together in transit.',
       'Do not send the original collectible shoe box unless you want it returned as part of the order.',
       'Lightly stuff the toes with packing paper so the shape holds during transit.',
-      'Tape every seam, print the prepaid label, and drop the package with the carrier shown on the label.',
+      'Tape every seam, print the prepaid label, and hand the package to the same carrier shown on the label.',
     ],
   };
 }

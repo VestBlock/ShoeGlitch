@@ -25,8 +25,8 @@ export default async function MailInPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           {[
             { n: '01', t: 'Book online', d: 'Pick a service, upload photos, pay.' },
-            { n: '02', t: 'Pack carefully', d: 'Use the original box if you can.' },
-            { n: '03', t: 'Ship it in', d: "We'll email instructions with the hub address, then route it into the right clean or restoration process." },
+            { n: '02', t: 'Bring or buy a box', d: 'If you already have a sturdy box, use it. If not, take the shoes to the carrier store on the label and buy one there.' },
+            { n: '03', t: 'Ship it in', d: "We&rsquo;ll email the prepaid label and hub address, then route the pair into the right clean or restoration process." },
             { n: '04', t: 'Track & receive', d: 'Live status from receipt through return shipping.' },
           ].map((s) => (
             <Card key={s.n} className="p-6">
@@ -58,7 +58,7 @@ export default async function MailInPage() {
         <Card className="card-ink p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
             <h3 className="h-display text-4xl">Ready to ship them in?</h3>
-            <p className="text-bone/60 mt-2">Start a mail-in order and we&rsquo;ll email packing instructions.</p>
+            <p className="text-bone/60 mt-2">Start a mail-in order and we&rsquo;ll email a prepaid label, packing steps, and the carrier to bring the shoes to if you still need a box.</p>
           </div>
           <Link href="/book?mode=mailin" className="btn-glitch shrink-0">Start mail-in →</Link>
         </Card>

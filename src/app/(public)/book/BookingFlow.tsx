@@ -573,7 +573,7 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
 
             {fulfillmentMethod === 'mailin' && (
               <div className="card p-5 mb-6 bg-bone-soft">
-                <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {mailInCity?.hubAddress ?? 'Our central hub'} — once payment clears, we&rsquo;ll email a prepaid label plus packing steps.</p>
+                <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {mailInCity?.hubAddress ?? 'Our central hub'} — once payment clears, we&rsquo;ll email a prepaid label plus packing steps. If you don&rsquo;t already have a box, you can bring the shoes to the carrier store on the label and buy one there before handing it over.</p>
               </div>
             )}
 
