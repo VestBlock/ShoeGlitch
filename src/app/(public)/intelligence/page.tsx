@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import GrowthTracker from '@/components/growth/GrowthTracker';
+import OrbitalScene from '@/components/OrbitalScene';
 import SneakerFeedClient from '@/components/intelligence/SneakerFeedClient';
 import { Badge } from '@/components/ui';
 import { getSneakerFeed } from '@/features/intelligence/service';
@@ -84,14 +85,14 @@ export default async function IntelligencePage() {
               <aside className="section-shell-dark p-5 md:p-6">
                 <div className="relative z-10">
                   <div className="section-kicker !border-cyan/15 !bg-white/8 !text-cyan">Monetization lane</div>
-                  <h2 className="h-display mt-4 text-3xl leading-[0.96] text-bone md:text-4xl">
-                    Intelligence Pro is the cleanest premium layer.
+                  <div className="mt-4">
+                    <OrbitalScene className="min-h-[240px] border-white/10" accent="#00e5ff" glow="#ff4d6d" />
+                  </div>
+                  <h2 className="h-display mt-5 text-3xl leading-[0.96] text-bone md:text-4xl">
+                    Premium alerts are the product.
                   </h2>
-                  <p className="mt-4 text-sm leading-6 text-bone/68">
-                    Keep the main feed free for discovery, then charge for the behavior that matters most: faster alerts, deeper watchlists, better digests, and stronger personal filtering.
-                  </p>
 
-                  <div className="mt-6 grid gap-3">
+                  <div className="mt-5 grid gap-3">
                     {[
                       ['Free', 'Open feed + search + service hooks'],
                       ['Pro alerts', 'Unlimited watchlists, instant alerting, weekly digest'],
@@ -130,7 +131,7 @@ export default async function IntelligencePage() {
             </h2>
           </div>
           <p className="max-w-xl text-sm leading-6 text-ink/62">
-            Start with release timing, then sort by care demand, market strength, collector value, or service fit. Every result should either inform a service offer or create a smarter watchlist.
+            Less blog, more decision engine. Every card should either push a booking, a watchlist save, or a stronger release read.
           </p>
         </div>
 

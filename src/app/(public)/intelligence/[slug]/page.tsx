@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import GrowthTracker from '@/components/growth/GrowthTracker';
 import IntelligenceSignals from '@/components/intelligence/IntelligenceSignals';
+import OrbitalScene from '@/components/OrbitalScene';
 import { Badge } from '@/components/ui';
 import { buildSneakerDetailSchemas, INTELLIGENCE_FAQS } from '@/features/intelligence/schema';
 import { getSneakerBySlug } from '@/features/intelligence/service';
@@ -57,11 +58,11 @@ export default async function SneakerDetailPage({
       <section className="relative overflow-hidden bg-bone">
         <div className="absolute inset-0 matrix-strip opacity-20 pointer-events-none" />
         <div className="container-x relative py-12 md:py-16">
-          <div className="grid gap-8 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
-            <article className="rounded-[2rem] border border-ink/10 bg-white/82 p-6 shadow-[0_24px_70px_rgba(10,15,31,0.06)] backdrop-blur-xl md:p-8">
+          <div className="grid gap-8 xl:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
+            <article className="section-shell p-6 md:p-8">
               <Badge className="mb-5">Sneaker intelligence detail</Badge>
               <h1 className="h-display text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.94] text-ink">{item.name}</h1>
-              <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">{item.description}</p>
+              <p className="mt-4 max-w-3xl text-base leading-7 text-ink/66">{item.description}</p>
 
               <div className="mt-8 grid gap-4 md:grid-cols-2">
                 <div
@@ -71,7 +72,7 @@ export default async function SneakerDetailPage({
                   }}
                 />
                 <div className="space-y-4">
-                  <div className="rounded-[1.4rem] border border-ink/10 bg-bone-soft p-5">
+                  <div className="section-outline p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
                       Release snapshot
                     </div>
@@ -87,7 +88,7 @@ export default async function SneakerDetailPage({
                     </div>
                   </div>
 
-                  <div className="rounded-[1.4rem] border border-ink/10 bg-white p-5">
+                  <div className="section-outline p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
                       Score summary
                     </div>
@@ -96,7 +97,7 @@ export default async function SneakerDetailPage({
                     </div>
                   </div>
 
-                  <div className="rounded-[1.4rem] border border-ink/10 bg-white p-5">
+                  <div className="section-outline p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
                       Size and market view
                     </div>
@@ -141,12 +142,15 @@ export default async function SneakerDetailPage({
             </article>
 
             <aside className="space-y-5 xl:sticky xl:top-24">
-              <div className="rounded-[1.6rem] border border-ink/10 bg-white/82 p-5 shadow-[0_20px_55px_rgba(10,15,31,0.06)] backdrop-blur-xl">
+              <div className="section-shell-dark p-5">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
                   Next action
                 </div>
-                <h2 className="h-display mt-4 text-3xl text-ink">Move while the pair is fresh.</h2>
-                <p className="mt-3 text-sm leading-6 text-ink/66">
+                <div className="mt-4">
+                  <OrbitalScene className="min-h-[220px] border-white/10" />
+                </div>
+                <h2 className="h-display mt-5 text-3xl text-bone">Move while the pair is fresh.</h2>
+                <p className="mt-3 text-sm leading-6 text-bone/66">
                   {item.primaryCta.kind === 'book-restoration'
                     ? 'This one leans restoration-first. Use the feed to capture intent before the pair ages into a harder job.'
                     : item.primaryCta.kind === 'join-waitlist'
@@ -157,18 +161,18 @@ export default async function SneakerDetailPage({
                   <Link href={item.primaryCta.href} className="btn-glitch" data-growth-cta={item.primaryCta.label}>
                     {item.primaryCta.label}
                   </Link>
-                  <Link href={item.secondaryCta.href} className="btn-outline" data-growth-cta={item.secondaryCta.label}>
+                  <Link href={item.secondaryCta.href} className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink" data-growth-cta={item.secondaryCta.label}>
                     {item.secondaryCta.label}
                   </Link>
                   {item.marketUrl ? (
-                    <Link href={item.marketUrl} className="btn-outline" target="_blank" data-growth-cta="Open market">
+                    <Link href={item.marketUrl} className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink" target="_blank" data-growth-cta="Open market">
                       Open market
                     </Link>
                   ) : null}
                 </div>
               </div>
 
-              <div className="rounded-[1.6rem] border border-ink/10 bg-white/82 p-5 shadow-[0_20px_55px_rgba(10,15,31,0.06)] backdrop-blur-xl">
+              <div className="section-shell p-5">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
                   Frequently asked
                 </div>

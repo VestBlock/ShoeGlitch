@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { db } from '@/lib/db';
+import OrbitalScene from '@/components/OrbitalScene';
 import { Badge, Card } from '@/components/ui';
 import TrustProofStrip from '@/components/TrustProofStrip';
 
@@ -74,56 +75,79 @@ export default async function ServicesPage() {
   return (
     <>
       <section className="container-x pt-10 pb-16">
-        <Badge className="mb-6">Services</Badge>
-        <h1 className="h-display text-[clamp(3rem,8vw,7rem)] leading-[0.88] mb-6">
-          Pick the level your <em className="h-italic text-glitch">pair actually needs.</em>
-        </h1>
-        <p className="text-ink/70 max-w-2xl text-lg">
-          Pricing shown is the national default. Your city may have local pricing — you&rsquo;ll see the final number at checkout.
-        </p>
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/62">
-          We keep the customer menu to three clear tiers: Basic, Pro, and Elite. Steam Clean is built into all three, then the correction and restoration work expands as you move up.
-        </p>
-        <TrustProofStrip
-          className="mt-8"
-          items={[
-            {
-              label: 'See pricing before checkout',
-              detail: 'Quotes update live based on city, route, service mix, and rush selection.',
-            },
-            {
-              label: 'Built around the pair',
-              detail: 'Basic, Pro, and Elite keep the menu simple while still covering routine care, correction work, and full restoration.',
-            },
-            {
-              label: 'Use the route that fits',
-              detail: 'Pickup, drop-off, and mail-in stay in the same booking flow so the handoff stays clear.',
-            },
-            {
-              label: 'Steam is standard',
-              detail: 'Steam Clean is part of every tier, then Pro and Elite add the heavier correction and restoration work.',
-            },
-          ]}
-        />
+        <div className="section-shell p-6 md:p-8">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(320px,0.85fr)] lg:items-center">
+            <div>
+              <Badge className="mb-6">Services</Badge>
+              <h1 className="h-display text-[clamp(3rem,8vw,6.8rem)] leading-[0.86] mb-5">
+                Three tiers.
+                <br />
+                <em className="h-italic text-glitch">Zero clutter.</em>
+              </h1>
+              <p className="max-w-2xl text-lg leading-8 text-ink/68">
+                Pick Basic, Pro, or Elite. Steam Clean stays standard. The correction and restoration work scales up only when the pair actually needs it.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link href="/book" className="btn-glitch">Book a tier →</Link>
+                <Link href="/mail-in" className="btn-outline">Nationwide mail-in →</Link>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)]">
+              <OrbitalScene className="min-h-[320px]" />
+              <div className="grid gap-4">
+                {[
+                  ['Basic', 'Routine refresh', 'Steam Clean, upper/sole work, lace cleaning'],
+                  ['Pro', 'Most popular', 'De-crease method, deeper detail, light touch-ups'],
+                  ['Elite', 'Restoration path', 'Ice method, basic-color repaint touch-ups, major recovery'],
+                ].map(([title, label, detail]) => (
+                  <div key={title} className="section-outline p-4">
+                    <div className="text-[11px] uppercase tracking-[0.28em] text-glitch/80">{label}</div>
+                    <div className="mt-2 h-display text-3xl text-ink">{title}</div>
+                    <div className="mt-2 text-sm leading-6 text-ink/62">{detail}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <TrustProofStrip
+            className="mt-8"
+            items={[
+              {
+                label: 'See pricing before checkout',
+                detail: 'Quotes update live based on city, route, service mix, and rush selection.',
+              },
+              {
+                label: 'Use the route that fits',
+                detail: 'Pickup, drop-off, and mail-in stay in one booking flow so the handoff stays clear.',
+              },
+              {
+                label: 'Steam is standard',
+                detail: 'Every tier starts from the same Steam Clean baseline before correction work begins.',
+              },
+            ]}
+          />
+        </div>
       </section>
 
       <section className="container-x pb-16">
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:items-start">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-start">
           <Card className="p-7 border-2 border-ink/10">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">Choose by outcome</div>
             <h2 className="h-display mt-4 text-[clamp(2.2rem,4vw,3.6rem)] leading-[0.96]">
               Start with what the pair needs.
             </h2>
-            <p className="mt-4 text-base leading-7 text-ink/68">
-              Most customers only need one answer: is this a routine refresh, a correction job, or a full restoration?
-            </p>
-            <div className="mt-6 rounded-[1.4rem] border border-ink/10 bg-bone-soft px-5 py-5">
-              <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink/45">Quick guide</div>
-              <div className="mt-3 space-y-3 text-sm leading-6 text-ink/62">
-                <p><strong className="text-ink">Basic</strong> is for regular care and visible dirt.</p>
-                <p><strong className="text-ink">Pro</strong> is for creases, visible wear, and light correction.</p>
-                <p><strong className="text-ink">Elite</strong> is for collector pairs, icy soles, repaint work, and major restoration.</p>
-              </div>
+            <div className="mt-6 grid gap-3">
+              {[
+                'Basic is for regular care and visible dirt.',
+                'Pro is for creases, visible wear, and light correction.',
+                'Elite is for collector pairs, icy soles, repaint work, and major restoration.',
+              ].map((line) => (
+                <div key={line} className="rounded-[1.1rem] border border-ink/10 bg-bone-soft px-4 py-3 text-sm leading-6 text-ink/62">
+                  {line}
+                </div>
+              ))}
             </div>
           </Card>
 
@@ -151,7 +175,7 @@ export default async function ServicesPage() {
             <h2 className="h-display text-3xl">A cleaner menu, with clearer expectations.</h2>
           </div>
           <p className="max-w-xl text-sm leading-6 text-ink/60">
-            Steam Clean stays consistent across all three tiers. The difference is how much correction, finish work, and restoration support the pair needs after that baseline.
+            Less reading. Better decisions. The only real question is how far the pair needs to be pushed after the Steam Clean baseline.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -171,7 +195,7 @@ export default async function ServicesPage() {
                 </div>
               </div>
               <p className="text-sm text-ink/50 italic mb-4">{s.tagline}</p>
-              <p className="text-ink/70 mb-5">{s.description}</p>
+              <p className="text-sm leading-6 text-ink/66 mb-5">{s.description}</p>
               <div className="mb-5 flex flex-wrap gap-2">
                 <Badge tone={TIER_DETAILS[s.id]?.tone ?? 'default'}>{TIER_DETAILS[s.id]?.label}</Badge>
                 <Badge>Steam Clean included</Badge>

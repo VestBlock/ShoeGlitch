@@ -1,6 +1,7 @@
 import { adidasMonitorSource } from '@/features/intelligence/monitors/adidas';
 import { createBlockedAwareSource } from '@/features/intelligence/monitors/blocked';
 import { footLockerMonitorSource } from '@/features/intelligence/monitors/footlocker';
+import { retailMonitorStore } from '@/features/intelligence/monitors/store';
 import type { RetailMonitorEntry, RetailMonitorSnapshot, RetailMonitorSource } from '@/features/intelligence/monitors/types';
 import type { SneakerEventRecord } from '@/features/intelligence/watchlist/types';
 
@@ -70,8 +71,85 @@ export async function getRetailMonitorSnapshot(): Promise<RetailMonitorSnapshot>
   };
 }
 
+export async function persistRetailMonitorSnapshot() {
+  const snapshot = await getRetailMonitorSnapshot();
+  const ready = await retailMonitorStore.isReady();
+  if (!ready) {
+    return {
+      snapshot,
+      persisted: false,
+      diffs: [],
+      latestSnapshot: null,
+    };
+  }
+
+  const previous = await retailMonitorStore.latestSnapshot();
+  const [previousEntries, knownEntryIds] = await Promise.all([
+    previous ? retailMonitorStore.listEntriesBySnapshot(previous.id) : Promise.resolve([]),
+    retailMonitorStore.listKnownEntryIds(),
+  ]);
+
+  const previousIds = new Set(previousEntries.map((entry) => entry.id));
+  const currentIds = new Set(snapshot.entries.map((entry) => entry.id));
+
+  const created = await retailMonitorStore.createSnapshot({
+    generatedAt: snapshot.generatedAt,
+    entryCount: snapshot.entries.length,
+    health: snapshot.health,
+  });
+  await retailMonitorStore.replaceSnapshotEntries(created.id, snapshot.entries);
+
+  const diffs: Array<{
+    source: string;
+    sourceLabel: string;
+    entryId: string | null;
+    diffKind: 'new' | 'returned' | 'missing';
+    payload: Record<string, unknown>;
+  }> = [
+    ...snapshot.entries
+      .filter((entry) => !previousIds.has(entry.id))
+      .map((entry) => {
+        const diffKind: 'new' | 'returned' = knownEntryIds.has(entry.id) ? 'returned' : 'new';
+        return {
+          source: entry.source,
+          sourceLabel: entry.sourceLabel,
+          entryId: entry.id,
+          diffKind,
+          payload: {
+            name: entry.name,
+            brand: entry.brand,
+            sku: entry.sku,
+            url: entry.url,
+          },
+        };
+      }),
+    ...previousEntries
+      .filter((entry) => !currentIds.has(entry.id))
+      .map((entry) => ({
+        source: entry.source,
+        sourceLabel: entry.sourceLabel,
+        entryId: entry.id,
+        diffKind: 'missing' as const,
+        payload: {
+          name: entry.name,
+          brand: entry.brand,
+          sku: entry.sku,
+          url: entry.url,
+        },
+      })),
+  ];
+
+  const persistedDiffs = await retailMonitorStore.createDiffs(created.id, diffs);
+
+  return {
+    snapshot,
+    persisted: true,
+    latestSnapshot: created,
+    diffs: persistedDiffs,
+  };
+}
+
 export async function getRetailMonitorEvents(limit = 40): Promise<SneakerEventRecord[]> {
   const snapshot = await getRetailMonitorSnapshot();
   return snapshot.entries.slice(0, limit).map(entryToSneakerEvent);
 }
-

@@ -7,6 +7,7 @@ import {
   searchNikePublicSneakers,
   searchSneakers,
 } from '@/features/intelligence/provider-service';
+import { retailMonitorStore } from '@/features/intelligence/monitors/store';
 import { getRetailMonitorSnapshot } from '@/features/intelligence/monitors/service';
 import { runRetailMonitorRefreshAction, runWatchlistScanAction } from '@/app/admin/intelligence/actions';
 
@@ -30,6 +31,10 @@ export default async function AdminIntelligencePage({
     query || sku ? await searchNikePublicSneakers({ query: query || undefined, sku: sku || undefined, limit: 5 }) : null;
   const nikeDetailResult = id ? await getNikePublicProduct(id) : null;
   const retailSnapshot = await getRetailMonitorSnapshot();
+  const [monitorReady, recentMonitorDiffs] = await Promise.all([
+    retailMonitorStore.isReady().catch(() => false),
+    retailMonitorStore.listRecentDiffs(10).catch(() => []),
+  ]);
 
   return (
     <section className="container-x py-10">
@@ -108,6 +113,32 @@ export default async function AdminIntelligencePage({
               </a>
             ))}
           </div>
+        </div>
+
+        <div className="mt-6 rounded-[1.2rem] border border-ink/10 bg-white p-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Monitor history</div>
+            <span className={monitorReady ? 'badge-glitch !bg-cyan !text-ink' : 'badge'}>{monitorReady ? 'Persistence ready' : 'Needs SQL migration'}</span>
+          </div>
+          {recentMonitorDiffs.length > 0 ? (
+            <div className="mt-4 space-y-3">
+              {recentMonitorDiffs.map((diff) => (
+                <div key={diff.id} className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <div className="text-sm font-semibold text-ink">{diff.sourceLabel}</div>
+                      <div className="mt-1 text-xs uppercase tracking-[0.22em] text-ink/45">{diff.diffKind}</div>
+                    </div>
+                    <div className="text-sm text-ink/62">{String(diff.payload.name ?? diff.payload.sku ?? 'Snapshot change')}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-4 text-sm leading-6 text-ink/62">
+              No persisted monitor diffs yet. Run the refresh action after the retail monitor history migration is installed.
+            </p>
+          )}
         </div>
       </div>
 

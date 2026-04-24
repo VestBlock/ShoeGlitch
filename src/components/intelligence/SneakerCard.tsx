@@ -12,11 +12,12 @@ function flagTone(flag: SneakerFeedItem['opportunityFlags'][number]) {
 
 export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
   return (
-    <Card className="overflow-hidden p-0 shadow-[0_20px_56px_rgba(10,15,31,0.08)]">
+    <Card className="group overflow-hidden p-0 shadow-[0_20px_56px_rgba(10,15,31,0.08)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_30px_80px_rgba(10,15,31,0.14)]">
       <div className="relative h-60 overflow-hidden bg-[linear-gradient(180deg,#0a2456_0%,#10397d_100%)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.22),transparent_28%),linear-gradient(180deg,rgba(8,33,77,0.06),rgba(8,33,77,0.46))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_24%,rgba(0,229,255,0.22),transparent_20%),radial-gradient(circle_at_26%_78%,rgba(255,77,109,0.18),transparent_22%)]" />
         <div
-          className="absolute inset-0 bg-center bg-no-repeat"
+          className="absolute inset-0 bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-105"
           style={{
             backgroundImage: `url(${item.media.thumbnailUrl})`,
             backgroundSize: 'contain',
@@ -50,9 +51,9 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
           </div>
         </div>
 
-        <p className="mt-4 text-sm leading-6 text-ink/66">{item.description}</p>
+        <p className="mt-4 text-sm leading-6 text-ink/66 max-h-[4.5rem] overflow-hidden">{item.description}</p>
 
-        <div className="mt-5">
+        <div className="mt-5 rounded-[1.2rem] border border-ink/10 bg-bone-soft/80 p-4">
           <IntelligenceSignals item={item} />
         </div>
 
@@ -65,7 +66,7 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
         </div>
 
         <div className="mt-5 flex items-end justify-between gap-4">
-          <div>
+          <div className="max-w-[19rem]">
             <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Market snapshot</div>
             <div className="mt-2 text-base font-semibold text-ink">
               {item.market.estimatedResale
@@ -74,7 +75,7 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
                   ? `$${item.priceSummary.lowestAsk}`
                   : 'Awaiting market data'}
             </div>
-            <div className="mt-1 text-xs text-ink/50">{item.rankingNote}</div>
+            <div className="mt-1 max-h-[2.6rem] overflow-hidden text-xs leading-5 text-ink/50">{item.rankingNote}</div>
           </div>
           <div className="flex flex-wrap justify-end gap-2">
             <Link

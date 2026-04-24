@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/rbac';
 import { getSession } from '@/lib/session';
 import { runMockWatchlistScan } from '@/features/intelligence/watchlist/service';
-import { getRetailMonitorSnapshot } from '@/features/intelligence/monitors/service';
+import { persistRetailMonitorSnapshot } from '@/features/intelligence/monitors/service';
 
 export async function runWatchlistScanAction() {
   const session = await getSession();
@@ -17,6 +17,6 @@ export async function runWatchlistScanAction() {
 export async function runRetailMonitorRefreshAction() {
   const session = await getSession();
   requireRole(session, 'super_admin');
-  await getRetailMonitorSnapshot();
+  await persistRetailMonitorSnapshot();
   revalidatePath('/admin/intelligence');
 }
