@@ -6,6 +6,7 @@ import { db } from '@/lib/db';
 import { quote, type QuoteInput } from '@/lib/pricing';
 import { flowFor, nextAllowedStatuses } from '@/lib/status';
 import { shortId, orderCode } from '@/lib/utils';
+import { createMailInLabel, type MailInLabelResult } from '@/lib/shippo';
 import type {
   Order,
   OrderEvent,
@@ -193,6 +194,29 @@ export async function chargeOrder(_orderId: string): Promise<never> {
   throw new Error('Legacy chargeOrder is disabled. Use the Stripe checkout and webhook flow.');
 }
 
-export async function createReturnLabel(_orderId: string): Promise<never> {
-  throw new Error('Return label generation is not connected yet. Use manual fulfillment until a shipping provider is wired.');
+export async function createReturnLabel(orderId: string): Promise<MailInLabelResult> {
+  const order = await db.orders.byId(orderId);
+  if (!order) {
+    throw new Error('Order not found.');
+  }
+  if (order.fulfillmentMethod !== 'mailin') {
+    throw new Error('Return labels are only created for mail-in orders.');
+  }
+  if (order.mailInLabelUrl && order.mailInShippoTransactionId) {
+    throw new Error('A mail-in label already exists for this order.');
+  }
+
+  const [customer, city] = await Promise.all([
+    db.customers.byId(order.customerId),
+    db.cities.byId(order.cityId),
+  ]);
+
+  if (!customer) {
+    throw new Error('Customer not found for this order.');
+  }
+  if (!city) {
+    throw new Error('City not found for this order.');
+  }
+
+  return createMailInLabel({ order, customer, city });
 }

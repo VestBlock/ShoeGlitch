@@ -67,6 +67,29 @@ export default async function BookSuccessPage({
         </div>
       </Card>
 
+      {order.fulfillmentMethod === 'mailin' && (
+        <Card className="p-8 mb-8 text-left">
+          <div className="font-mono text-xs text-ink/40 mb-2">Mail-in shipping</div>
+          <div className="text-sm text-ink/70">
+            {order.mailInLabelUrl
+              ? 'Your prepaid inbound label is ready below and has also been emailed to you.'
+              : 'We’re generating your prepaid inbound label now. Check your inbox, then refresh this page if it does not appear immediately.'}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-3">
+            {order.mailInLabelUrl ? (
+              <a href={order.mailInLabelUrl} target="_blank" rel="noreferrer" className="btn-glitch">
+                Download prepaid label →
+              </a>
+            ) : null}
+            {order.mailInTrackingUrl ? (
+              <a href={order.mailInTrackingUrl} target="_blank" rel="noreferrer" className="btn-outline">
+                Track parcel
+              </a>
+            ) : null}
+          </div>
+        </Card>
+      )}
+
       <PhotoUploadSection orderId={order.id} />
 
       <div className="flex justify-center gap-3 flex-wrap mt-8">

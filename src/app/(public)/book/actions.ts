@@ -69,6 +69,17 @@ export async function submitBookingAction(data: z.input<typeof BookingSchema>) {
       : parsed.shoeBrand?.trim();
   const resolvedShoeTitle = parsed.shoeModelName?.trim() || parsed.customShoeType?.trim();
 
+  if (
+    (parsed.fulfillmentMethod === 'pickup' || parsed.fulfillmentMethod === 'mailin') &&
+    (!parsed.addressLine1 || !parsed.addressCity || !parsed.addressState || !parsed.addressZip)
+  ) {
+    throw new Error(
+      parsed.fulfillmentMethod === 'mailin'
+        ? 'A ship-from address is required for prepaid mail-in labels.'
+        : 'A pickup address is required before booking.',
+    );
+  }
+
   const session = await getSession();
   let customerId: string;
   if (session?.role === 'customer') {
@@ -80,6 +91,16 @@ export async function submitBookingAction(data: z.input<typeof BookingSchema>) {
 
   const pickupAddress =
     parsed.fulfillmentMethod === 'pickup' && parsed.addressLine1
+      ? {
+          line1: parsed.addressLine1,
+          line2: parsed.addressLine2,
+          city: parsed.addressCity ?? '',
+          state: parsed.addressState ?? '',
+          zip: parsed.addressZip ?? '',
+        }
+      : undefined;
+  const returnAddress =
+    parsed.fulfillmentMethod === 'mailin' && parsed.addressLine1
       ? {
           line1: parsed.addressLine1,
           line2: parsed.addressLine2,
@@ -110,6 +131,7 @@ export async function submitBookingAction(data: z.input<typeof BookingSchema>) {
     ),
     conditionIssues: parsed.conditionIssues,
     pickupAddress,
+    returnAddress,
     scheduledPickupAt: parsed.scheduledPickupAt,
   });
 

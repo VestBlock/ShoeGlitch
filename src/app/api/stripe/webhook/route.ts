@@ -14,6 +14,7 @@ import { db } from '@/lib/db';
 import {
   sendAbandonedBookingFollowUp,
   sendAdminSystemAlert,
+  sendMailInShippingLabel,
   sendOperatorBookingAlert,
   sendOperatorKitPaymentConfirmation,
   sendOrderConfirmation,
@@ -24,6 +25,7 @@ import { appendEvent } from '@/services/orders';
 import { getOperatorTierDefinition } from '@/features/operators/tiers';
 import type { Order } from '@/types';
 import { createAdminSupabaseClient } from '@/lib/supabase/admin';
+import { createMailInLabel, isShippoConfigured } from '@/lib/shippo';
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -99,27 +101,87 @@ export async function POST(req: Request) {
               db.cleaners.byCity(order.cityId),
             ]);
             const city = cities.find((c) => c.id === order.cityId) ?? null;
+            let emailOrder = updated;
+
+            if (
+              customer &&
+              city &&
+              updated.fulfillmentMethod === 'mailin' &&
+              !updated.mailInLabelUrl &&
+              !updated.mailInShippoTransactionId
+            ) {
+              if (!isShippoConfigured()) {
+                await sendAdminSystemAlert({
+                  subject: 'Shippo not configured for mail-in labels',
+                  badge: 'Shipping setup',
+                  heading: 'A paid mail-in order needs a label, but Shippo is not configured.',
+                  body: `<p style="font-size:15px;color:#4B5563;margin:0;">Order <strong>${updated.code}</strong> was paid, but <code>SHIPPO_API_KEY</code> is missing. No prepaid label was generated.</p>`,
+                  cta: { href: `https://shoeglitch.com/admin/orders/${updated.id}`, label: 'Open order →' },
+                });
+              } else {
+                try {
+                  const label = await createMailInLabel({ order: updated, customer, city });
+                  emailOrder = {
+                    ...updated,
+                    mailInLabelUrl: label.labelUrl,
+                    mailInTrackingNumber: label.trackingNumber,
+                    mailInTrackingUrl: label.trackingUrl,
+                    mailInCarrier: label.carrier,
+                    mailInServiceLevel: label.serviceLevel,
+                    mailInShippoShipmentId: label.shipmentId,
+                    mailInShippoTransactionId: label.transactionId,
+                    mailInLabelCreatedAt: label.labelCreatedAt,
+                    mailInLabelCost: label.labelCost,
+                    mailInLabelCurrency: label.labelCurrency,
+                    updatedAt: new Date().toISOString(),
+                  };
+                  await db.orders.upsert(emailOrder);
+                  await appendEvent(
+                    emailOrder.id,
+                    emailOrder.status,
+                    'system',
+                    undefined,
+                    `Prepaid mail-in label created${label.trackingNumber ? ` — ${label.trackingNumber}` : ''}`,
+                  );
+                  await sendMailInShippingLabel({ order: emailOrder, customer, city });
+                } catch (shippoErr: any) {
+                  console.error('[shippo] mail-in label generation failed:', shippoErr?.message ?? shippoErr);
+                  await sendAdminSystemAlert({
+                    subject: 'Mail-in label generation failed',
+                    badge: 'Shippo alert',
+                    heading: 'A paid mail-in order did not get its prepaid label.',
+                    body: `
+                      <p style="font-size:15px;color:#4B5563;margin:0 0 16px 0;">Order <strong>${updated.code}</strong> was paid, but Shippo could not create the inbound label.</p>
+                      <p style="font-size:14px;color:#6B7280;margin:0;">Reason: ${shippoErr?.message ?? 'Unknown Shippo error'}</p>
+                    `,
+                    cta: { href: `https://shoeglitch.com/admin/orders/${updated.id}`, label: 'Review order →' },
+                  });
+                }
+              }
+            }
+
             if (customer) {
-              await sendOrderConfirmation({ order: updated, customer, city });
+              await sendOrderConfirmation({ order: emailOrder, customer, city });
             } else {
               console.warn(`[email] customer ${order.customerId} not found for order ${order.code}`);
             }
-            await sendOperatorBookingAlert({ order: updated, city, cleaners });
+            await sendOperatorBookingAlert({ order: emailOrder, city, cleaners });
             await sendAdminSystemAlert({
               subject: 'New paid booking',
               badge: 'Booking alert',
               heading: 'A new Shoe Glitch booking was paid and confirmed.',
               body: `
                 <table style="width:100%;border-collapse:collapse;">
-                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Order</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${updated.code}</td></tr>
+                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Order</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${emailOrder.code}</td></tr>
                   <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Customer</td><td style="padding:8px 0;text-align:right;font-weight:600;">${customer?.name ?? 'Unknown customer'}</td></tr>
                   <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Email</td><td style="padding:8px 0;text-align:right;font-weight:600;">${customer?.email ?? 'Unknown'}</td></tr>
-                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">City</td><td style="padding:8px 0;text-align:right;font-weight:600;">${city?.name ?? updated.cityId}</td></tr>
-                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Fulfillment</td><td style="padding:8px 0;text-align:right;font-weight:600;text-transform:capitalize;">${updated.fulfillmentMethod}</td></tr>
-                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Total</td><td style="padding:8px 0;text-align:right;font-weight:600;">$${updated.total}</td></tr>
+                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">City</td><td style="padding:8px 0;text-align:right;font-weight:600;">${city?.name ?? emailOrder.cityId}</td></tr>
+                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Fulfillment</td><td style="padding:8px 0;text-align:right;font-weight:600;text-transform:capitalize;">${emailOrder.fulfillmentMethod}</td></tr>
+                  <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Total</td><td style="padding:8px 0;text-align:right;font-weight:600;">$${emailOrder.total}</td></tr>
+                  ${emailOrder.mailInTrackingNumber ? `<tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Mail-in tracking</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${emailOrder.mailInTrackingNumber}</td></tr>` : ''}
                 </table>
               `,
-              cta: { href: `https://shoeglitch.com/admin/orders/${updated.id}`, label: 'Review booking →' },
+              cta: { href: `https://shoeglitch.com/admin/orders/${emailOrder.id}`, label: 'Review booking →' },
             });
           } catch (emailErr: any) {
             console.error('[email] order confirmation failed:', emailErr?.message ?? emailErr);

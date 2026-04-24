@@ -14,6 +14,7 @@ import {
   extractPickupWindowFromNotes,
   pickupWindowLabel,
 } from '@/lib/pickup-window';
+import { buildMailInPackingInstructions } from '@/lib/shippo';
 import { getOperatorTierDefinition } from '@/features/operators/tiers';
 import type { Order, Customer, City, Cleaner } from '@/types';
 
@@ -125,6 +126,42 @@ export async function sendOrderConfirmation(params: {
   }
 }
 
+export async function sendMailInShippingLabel(params: {
+  order: Order;
+  customer: Customer;
+  city: City;
+}): Promise<void> {
+  const resend = getResend();
+  if (!resend) return;
+
+  if (!params.order.mailInLabelUrl) {
+    console.warn(`[email] mail-in label missing for ${params.order.code}`);
+    return;
+  }
+
+  const subject = `Your prepaid mail-in label — ${params.order.code}`;
+  const html = renderMailInShippingLabelHtml(params);
+  const text = renderMailInShippingLabelText(params);
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: params.customer.email,
+      replyTo: REPLY_TO,
+      subject,
+      html,
+      text,
+    });
+    if (error) {
+      console.error('[email] resend error on sendMailInShippingLabel:', error);
+    } else {
+      console.log(`[email] sent mail-in label to ${params.customer.email} for ${params.order.code}`);
+    }
+  } catch (err: any) {
+    console.error('[email] exception in sendMailInShippingLabel:', err?.message ?? err);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Templates
 // ---------------------------------------------------------------------------
@@ -210,7 +247,7 @@ function renderOrderConfirmationHtml(args: {
         <a href="${SITE_URL}/customer/orders/${order.id}" style="display:block;text-align:center;background:#1E90FF;color:#FFFFFF;text-decoration:none;font-weight:600;padding:14px 24px;border-radius:12px;margin-bottom:20px;">View order details →</a>
 
         <p style="font-size:13px;color:#6B7280;line-height:1.5;margin:0;">
-          Questions? Reply to this email or reach us at <a href="mailto:shoeglitch@gmail.com" style="color:#1E90FF;">shoeglitch@gmail.com</a>.
+          Questions? Reply to this email or reach us at <a href="mailto:${REPLY_TO}" style="color:#1E90FF;">${REPLY_TO}</a>.
         </p>
       </div>
 
@@ -250,10 +287,79 @@ function renderOrderConfirmationText(args: {
   lines.push('');
   lines.push(`View order: ${SITE_URL}/customer/orders/${order.id}`);
   lines.push('');
-  lines.push('Questions? Reply to this email or shoeglitch@gmail.com');
+  lines.push(`Questions? Reply to this email or ${REPLY_TO}`);
   lines.push('');
   lines.push('— Shoe Glitch');
   return lines.join('\n');
+}
+
+function renderMailInShippingLabelHtml(args: {
+  order: Order;
+  customer: Customer;
+  city: City;
+}): string {
+  const { order, customer, city } = args;
+  const labelUrl = order.mailInLabelUrl ?? `${SITE_URL}/customer/orders/${order.id}`;
+  const packing = buildMailInPackingInstructions(order);
+  const instructions = packing.bullets
+    .map(
+      (bullet) =>
+        `<li style="margin:0 0 10px 0;color:#4B5563;line-height:1.6;">${escapeHtml(bullet)}</li>`,
+    )
+    .join('');
+  const hubAddress = city.hubAddress ?? 'our national mail-in hub';
+
+  return simpleShell({
+    badge: 'Mail-in label ready',
+    heading: `Your prepaid label is ready, ${escapeHtml(customer.name.split(' ')[0])}.`,
+    body: `
+      <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">
+        Your order <strong>${escapeHtml(order.code)}</strong> is paid and we generated your prepaid inbound label.
+      </p>
+      <table style="width:100%;border-collapse:collapse;margin:0 0 20px 0;">
+        <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Ship to</td><td style="padding:8px 0;text-align:right;font-weight:600;">${escapeHtml(hubAddress)}</td></tr>
+        ${order.mailInCarrier ? `<tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Carrier</td><td style="padding:8px 0;text-align:right;font-weight:600;">${escapeHtml(order.mailInCarrier)}</td></tr>` : ''}
+        ${order.mailInTrackingNumber ? `<tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Tracking</td><td style="padding:8px 0;text-align:right;font-family:'SF Mono',Menlo,monospace;font-weight:600;">${escapeHtml(order.mailInTrackingNumber)}</td></tr>` : ''}
+      </table>
+      <div style="background:#F4F7FB;border-radius:12px;padding:18px 20px;margin:0 0 20px 0;">
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#6B7280;margin-bottom:10px;">Packing checklist</div>
+        <ul style="padding-left:18px;margin:0;">${instructions}</ul>
+      </div>
+      <p style="font-size:14px;color:#6B7280;line-height:1.6;margin:0;">
+        Print the label, tape it to the outside of the box, and drop the package with ${escapeHtml(order.mailInCarrier ?? 'the carrier on the label')}. Once the carrier scans it, your tracking will also stay on your Shoe Glitch order page.
+      </p>
+    `,
+    cta: { href: labelUrl, label: 'Download prepaid label →' },
+  });
+}
+
+function renderMailInShippingLabelText(args: {
+  order: Order;
+  customer: Customer;
+  city: City;
+}): string {
+  const { order, customer, city } = args;
+  const packing = buildMailInPackingInstructions(order);
+  const lines = [
+    `${customer.name.split(' ')[0]}, your prepaid Shoe Glitch mail-in label is ready.`,
+    '',
+    `Order: ${order.code}`,
+    `Ship to: ${city.hubAddress ?? 'our national mail-in hub'}`,
+    order.mailInCarrier ? `Carrier: ${order.mailInCarrier}` : null,
+    order.mailInTrackingNumber ? `Tracking: ${order.mailInTrackingNumber}` : null,
+    '',
+    'Packing checklist:',
+    ...packing.bullets.map((bullet) => `- ${bullet}`),
+    '',
+    `Download label: ${order.mailInLabelUrl}`,
+    `${order.mailInTrackingUrl ? `Tracking link: ${order.mailInTrackingUrl}` : `Order page: ${SITE_URL}/customer/orders/${order.id}`}`,
+    '',
+    `Questions? Reply to this email or ${REPLY_TO}`,
+    '',
+    '— Shoe Glitch',
+  ];
+
+  return lines.filter(Boolean).join('\n');
 }
 
 function escapeHtml(s: string): string {
@@ -1071,7 +1177,7 @@ function simpleShell(args: { badge: string; heading: string; body: string; cta?:
         ${body}
         ${cta ? `<a href="${cta.href}" style="display:block;text-align:center;background:#1E90FF;color:#FFFFFF;text-decoration:none;font-weight:600;padding:14px 24px;border-radius:12px;margin-top:20px;">${escapeHtml(cta.label)}</a>` : ''}
         <p style="font-size:13px;color:#6B7280;line-height:1.5;margin:24px 0 0 0;">
-          Questions? Reply to this email or reach us at <a href="mailto:shoeglitch@gmail.com" style="color:#1E90FF;">shoeglitch@gmail.com</a>.
+          Questions? Reply to this email or reach us at <a href="mailto:${REPLY_TO}" style="color:#1E90FF;">${REPLY_TO}</a>.
         </p>
       </div>
       <div style="text-align:center;padding:24px 0;color:#9CA3AF;font-size:11px;">

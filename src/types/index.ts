@@ -196,6 +196,16 @@ export interface Order {
 
   pickupAddress?: Address;
   returnAddress?: Address;
+  mailInLabelUrl?: string;
+  mailInTrackingNumber?: string;
+  mailInTrackingUrl?: string;
+  mailInCarrier?: string;
+  mailInServiceLevel?: string;
+  mailInShippoShipmentId?: string;
+  mailInShippoTransactionId?: string;
+  mailInLabelCreatedAt?: string;
+  mailInLabelCost?: number;
+  mailInLabelCurrency?: string;
 
   subtotal: number;
   pickupFee: number;

@@ -107,6 +107,33 @@ export default async function CustomerOrderDetail({ params }: { params: { id: st
               </div>
             </Card>
           )}
+          {order.fulfillmentMethod === 'mailin' && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-1">Mail-in label</div>
+              {order.mailInLabelUrl ? (
+                <>
+                  <div className="text-sm text-ink/70 mb-3">
+                    {order.mailInCarrier ?? 'Prepaid label ready'}
+                    {order.mailInTrackingNumber ? ` · ${order.mailInTrackingNumber}` : ''}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <a href={order.mailInLabelUrl} target="_blank" rel="noreferrer" className="btn-primary">
+                      Download label →
+                    </a>
+                    {order.mailInTrackingUrl ? (
+                      <a href={order.mailInTrackingUrl} target="_blank" rel="noreferrer" className="btn-outline">
+                        Track shipment
+                      </a>
+                    ) : null}
+                  </div>
+                </>
+              ) : (
+                <div className="text-sm text-ink/60">
+                  We&rsquo;re generating your prepaid label now. Check your inbox, then refresh this page in a moment.
+                </div>
+              )}
+            </Card>
+          )}
         </div>
       </div>
 

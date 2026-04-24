@@ -75,12 +75,33 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
   }
   const customer = await db.customers.byUserId(session.userId);
   if (!customer) {
-    throw new Error('Customer profile not found. Please contact support at shoeglitch@gmail.com.');
+    throw new Error('Customer profile not found. Please contact support at contact@shoeglitch.com.');
   }
   const customerId = customer.id;
 
+  if (
+    (parsed.fulfillmentMethod === 'pickup' || parsed.fulfillmentMethod === 'mailin') &&
+    (!parsed.addressLine1 || !parsed.addressCity || !parsed.addressState || !parsed.addressZip)
+  ) {
+    throw new Error(
+      parsed.fulfillmentMethod === 'mailin'
+        ? 'A ship-from address is required for prepaid mail-in labels.'
+        : 'A pickup address is required before checkout.',
+    );
+  }
+
   const pickupAddress =
     parsed.fulfillmentMethod === 'pickup' && parsed.addressLine1
+      ? {
+          line1: parsed.addressLine1,
+          line2: parsed.addressLine2,
+          city: parsed.addressCity ?? '',
+          state: parsed.addressState ?? '',
+          zip: parsed.addressZip ?? '',
+        }
+      : undefined;
+  const returnAddress =
+    parsed.fulfillmentMethod === 'mailin' && parsed.addressLine1
       ? {
           line1: parsed.addressLine1,
           line2: parsed.addressLine2,
@@ -112,6 +133,7 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
     ),
     conditionIssues: parsed.conditionIssues,
     pickupAddress,
+    returnAddress,
     scheduledPickupAt: parsed.scheduledPickupAt,
     beforeImages: parsed.beforeImages ?? [],
   });

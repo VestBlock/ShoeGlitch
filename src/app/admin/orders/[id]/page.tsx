@@ -197,6 +197,34 @@ export default async function AdminOrderDetail({ params }: { params: { id: strin
               <div className="h-display text-xl">{shoeSummary}</div>
             </Card>
           )}
+          {order.fulfillmentMethod === 'mailin' && (
+            <Card>
+              <div className="font-mono text-xs text-ink/40 mb-1">Mail-in label</div>
+              {order.mailInLabelUrl ? (
+                <>
+                  <div className="text-sm text-ink/60">
+                    {order.mailInCarrier ?? 'Carrier pending'}
+                    {order.mailInServiceLevel ? ` · ${order.mailInServiceLevel}` : ''}
+                  </div>
+                  {order.mailInTrackingNumber ? (
+                    <div className="font-mono text-xs text-ink/50 mt-1">{order.mailInTrackingNumber}</div>
+                  ) : null}
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <a href={order.mailInLabelUrl} target="_blank" rel="noreferrer" className="btn-primary">
+                      Open label →
+                    </a>
+                    {order.mailInTrackingUrl ? (
+                      <a href={order.mailInTrackingUrl} target="_blank" rel="noreferrer" className="btn-outline">
+                        Track parcel
+                      </a>
+                    ) : null}
+                  </div>
+                </>
+              ) : (
+                <div className="text-sm text-ink/60">No prepaid mail-in label has been generated yet.</div>
+              )}
+            </Card>
+          )}
 
           <Card>
             <div className="font-mono text-xs text-ink/40 mb-1">Breakdown</div>

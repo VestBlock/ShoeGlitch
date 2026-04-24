@@ -221,8 +221,14 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
     2: Boolean(shoeCategory && pairCount >= 1 && resolvedShoeBrand && resolvedShoeTitle),
     3: Boolean(primaryServiceId),
     4:
-      fulfillmentMethod !== 'pickup' ||
-      (address.line1 && address.zip && pickupWindow ? true : false),
+      fulfillmentMethod === 'dropoff' ||
+      Boolean(
+        address.line1 &&
+          address.city &&
+          address.state &&
+          address.zip &&
+          (fulfillmentMethod !== 'pickup' || pickupWindow),
+      ),
     5: true,
   };
 
@@ -521,9 +527,11 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
         {/* STEP 4 — Details */}
         {step === 4 && (
           <Panel title="Details & logistics.">
-            {fulfillmentMethod === 'pickup' && (
+            {(fulfillmentMethod === 'pickup' || fulfillmentMethod === 'mailin') && (
               <>
-                <label className="label">Pickup address</label>
+                <label className="label">
+                  {fulfillmentMethod === 'mailin' ? 'Ship-from / return address' : 'Pickup address'}
+                </label>
                 <div className="grid grid-cols-1 md:grid-cols-6 gap-3 mb-6">
                   <input className="input md:col-span-6" placeholder="Street address" value={address.line1}
                     onChange={(e) => setAddress({ ...address, line1: e.target.value })} />
@@ -537,27 +545,35 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
                     onChange={(e) => setAddress({ ...address, zip: e.target.value })} maxLength={5} />
                 </div>
 
-                <label className="label">Pickup window</label>
-                <select
-                  className="input mb-3 max-w-md"
-                  value={pickupWindow}
-                  onChange={(event) => setPickupWindow(event.target.value as PickupWindow)}
-                >
-                  {PICKUP_WINDOW_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <p className="mb-6 text-sm text-ink/60">
-                  {PICKUP_WINDOW_OPTIONS.find((option) => option.value === pickupWindow)?.detail}
-                </p>
+                {fulfillmentMethod === 'pickup' ? (
+                  <>
+                    <label className="label">Pickup window</label>
+                    <select
+                      className="input mb-3 max-w-md"
+                      value={pickupWindow}
+                      onChange={(event) => setPickupWindow(event.target.value as PickupWindow)}
+                    >
+                      {PICKUP_WINDOW_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="mb-6 text-sm text-ink/60">
+                      {PICKUP_WINDOW_OPTIONS.find((option) => option.value === pickupWindow)?.detail}
+                    </p>
+                  </>
+                ) : (
+                  <p className="mb-6 text-sm text-ink/60">
+                    We&rsquo;ll use this address on your prepaid inbound label, then ship the finished pair back here unless support updates the return route with you.
+                  </p>
+                )}
               </>
             )}
 
             {fulfillmentMethod === 'mailin' && (
               <div className="card p-5 mb-6 bg-bone-soft">
-                <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {mailInCity?.hubAddress ?? 'Our central hub'} — packing instructions are emailed after booking.</p>
+                <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {mailInCity?.hubAddress ?? 'Our central hub'} — once payment clears, we&rsquo;ll email a prepaid label plus packing steps.</p>
               </div>
             )}
 
@@ -633,7 +649,12 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
                 <Row label="Shoes" value={`${pairCount}× ${SHOE_CATEGORIES.find(c => c.id === shoeCategory)?.label}`} />
                 <Row label="Brand" value={resolvedShoeBrand || '—'} />
                 <Row label="Shoe title" value={resolvedShoeTitle || '—'} />
-                {address.line1 && <Row label="Pickup" value={`${address.line1}, ${address.city}`} />}
+                {address.line1 && (
+                  <Row
+                    label={fulfillmentMethod === 'mailin' ? 'Ship-from address' : 'Pickup'}
+                    value={`${address.line1}, ${address.city}`}
+                  />
+                )}
                 {fulfillmentMethod === 'pickup' && pickupWindow && (
                   <Row label="Pickup window" value={pickupWindowLabel(pickupWindow) ?? '—'} />
                 )}

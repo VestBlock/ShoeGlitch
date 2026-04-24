@@ -23,7 +23,10 @@ export default async function ConfirmationPage({ params }: { params: { orderId: 
       </h1>
       <p className="text-ink/70 text-lg mb-10">
         Order <span className="font-mono font-semibold">{order.code}</span> is now in the queue.
-        {order.fulfillmentMethod === 'mailin' && ' Shipping instructions are on their way to your email.'}
+        {order.fulfillmentMethod === 'mailin' &&
+          (order.mailInLabelUrl
+            ? ' Your prepaid label is ready below and has been emailed to you.'
+            : ' We’re generating your prepaid label and will email it shortly.')}
       </p>
 
       <Card className="p-8 mb-6">
@@ -65,6 +68,30 @@ export default async function ConfirmationPage({ params }: { params: { orderId: 
           ))}
         </div>
       </Card>
+
+      {order.fulfillmentMethod === 'mailin' && (
+        <Card className="p-8 mb-6">
+          <h3 className="h-display text-2xl mb-4">Mail-in shipping</h3>
+          <div className="space-y-2 text-sm text-ink/70">
+            <p><strong>Hub:</strong> {city.hubAddress ?? 'Our national mail-in hub'}</p>
+            {order.mailInTrackingNumber ? <p><strong>Tracking:</strong> <span className="font-mono">{order.mailInTrackingNumber}</span></p> : null}
+          </div>
+          <div className="mt-5 flex flex-wrap gap-3">
+            {order.mailInLabelUrl ? (
+              <a href={order.mailInLabelUrl} target="_blank" rel="noreferrer" className="btn-glitch">
+                Download prepaid label →
+              </a>
+            ) : (
+              <div className="text-sm text-ink/60">Label is still being generated. Refresh in a moment or check your inbox.</div>
+            )}
+            {order.mailInTrackingUrl ? (
+              <a href={order.mailInTrackingUrl} target="_blank" rel="noreferrer" className="btn-outline">
+                Track package
+              </a>
+            ) : null}
+          </div>
+        </Card>
+      )}
 
       {events.length > 0 && (
         <Card className="p-8 mb-6">
