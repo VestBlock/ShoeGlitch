@@ -2,9 +2,11 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { Badge, Card } from '@/components/ui';
 import { MAIL_IN_BOX_KIT_DELAY, MAIL_IN_BOX_KIT_NAME, MAIL_IN_BOX_KIT_PRICE } from '@/lib/mail-in-config';
+import { getNationalMailInHubAddressLabel } from '@/lib/mail-in-hub';
 
 export default async function MailInPage() {
   const cities = await db.cities.active();
+  const nationalHubAddress = getNationalMailInHubAddressLabel();
 
   return (
     <>
@@ -43,18 +45,32 @@ export default async function MailInPage() {
       </section>
 
       <section className="container-x pb-16">
-        <h2 className="h-display text-3xl mb-6">Current hub addresses</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {cities.map((c) => (
-            <Card key={c.id}>
-              <div className="font-mono text-xs text-ink/40">{c.state} HUB</div>
-              <div className="h-display text-3xl mb-2">{c.name}</div>
-              <div className="text-sm text-ink/70">{c.hubAddress ?? 'Address shared after booking'}</div>
-              <div className="mt-4 pt-4 border-t border-ink/10 text-xs text-ink/50">
-                Return shipping: <span className="font-mono text-ink">${c.defaultMailInReturnFee}</span>
-              </div>
-            </Card>
-          ))}
+        <h2 className="h-display text-3xl mb-6">National mail-in hub</h2>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+          <Card className="p-8">
+            <div className="font-mono text-xs text-ink/40">SHIP TO</div>
+            <div className="h-display mt-2 text-4xl">Brookfield, WI</div>
+            <div className="mt-3 text-base text-ink/72">{nationalHubAddress}</div>
+            <div className="mt-5 rounded-[1.2rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm leading-6 text-ink/62">
+              Every nationwide mail-in order routes here first, then we send the pair into the right Basic, Pro, or Elite workflow.
+            </div>
+          </Card>
+          <Card className="p-8">
+            <div className="font-mono text-xs text-ink/40">LOCAL CITIES</div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {cities.map((c) => (
+                <div key={c.id} className="rounded-[1.15rem] border border-ink/10 bg-white px-4 py-4">
+                  <div className="text-sm font-semibold text-ink">{c.name}, {c.state}</div>
+                  <div className="mt-2 text-xs leading-5 text-ink/55">
+                    Pickup/drop-off market
+                  </div>
+                  <div className="mt-3 text-xs text-ink/48">
+                    Return shipping baseline: <span className="font-mono text-ink">${c.defaultMailInReturnFee}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
         </div>
       </section>
 

@@ -9,12 +9,14 @@ import { createOrder } from '@/services/orders';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import { resolveNationalMailInCityId } from '@/lib/mail-in';
+import { createAdminSupabaseClient } from '@/lib/supabase/admin';
 import {
   PICKUP_WINDOW_VALUES,
   attachPickupWindowToNotes,
 } from '@/lib/pickup-window';
 import { attachShoeProfileToNotes } from '@/lib/shoe-profile';
 import { recordGrowthEvent } from '@/lib/growth/persistence';
+import { shortId } from '@/lib/utils';
 import type { Order } from '@/types';
 
 const BookingSchema = z.object({
@@ -22,6 +24,9 @@ const BookingSchema = z.object({
   serviceAreaId: z.string().optional(),
   fulfillmentMethod: z.enum(['pickup', 'dropoff', 'mailin']),
   mailInBoxKit: z.coerce.boolean().optional().default(false),
+  contactName: z.string().min(1, 'Contact name is required.'),
+  contactEmail: z.string().email('A valid email is required for checkout.'),
+  contactPhone: z.string().optional(),
   shoeCategory: z.enum([
     'sneakers', 'designer_sneakers', 'womens_heels',
     'red_bottom_heels', 'boots', 'kids', 'other',
@@ -64,21 +69,16 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
       ? parsed.customShoeBrand?.trim()
       : parsed.shoeBrand?.trim();
   const resolvedShoeTitle = parsed.shoeModelName?.trim() || parsed.customShoeType?.trim();
+  const normalizedContact = {
+    name: parsed.contactName.trim(),
+    email: parsed.contactEmail.trim().toLowerCase(),
+    phone: parsed.contactPhone?.trim() || undefined,
+  };
 
-  // Resolve customerId — must be a signed-in customer.
-  // In production (no demo fallback): a customer row must exist for this user.
   const session = await getSession();
-  if (!session) {
-    redirect('/login?redirect=/book');
-  }
-  if (session.role !== 'customer') {
+  if (session && session.role !== 'customer') {
     throw new Error('Only customer accounts can book. Sign in with a customer account.');
   }
-  const customer = await db.customers.byUserId(session.userId);
-  if (!customer) {
-    throw new Error('Customer profile not found. Please contact support at contact@shoeglitch.com.');
-  }
-  const customerId = customer.id;
 
   if (
     (parsed.fulfillmentMethod === 'pickup' || parsed.fulfillmentMethod === 'mailin') &&
@@ -111,10 +111,29 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
           zip: parsed.addressZip ?? '',
         }
       : undefined;
+  const defaultAddress = returnAddress ?? pickupAddress;
+
+  const customer =
+    session?.role === 'customer'
+      ? await ensureSignedInCustomer({
+          userId: session.userId,
+          email: session.email,
+          fallbackName: normalizedContact.name || session.name,
+          phone: normalizedContact.phone,
+          defaultCityId: cityId,
+          defaultAddress,
+        })
+      : await findOrCreateGuestCustomer({
+          name: normalizedContact.name,
+          email: normalizedContact.email,
+          phone: normalizedContact.phone,
+          defaultCityId: cityId,
+          defaultAddress,
+        });
 
   // 1. Create the order in "unpaid" state
   const order: Order = await createOrder({
-    customerId,
+    customerId: customer.id,
     cityId,
     serviceAreaId: parsed.fulfillmentMethod === 'mailin' ? undefined : parsed.serviceAreaId,
     primaryServiceId: parsed.primaryServiceId,
@@ -230,7 +249,7 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
     },
     success_url: `${origin}/book/success?order=${order.id}&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/book/cancelled?order=${order.id}`,
-    customer_email: undefined, // let Stripe collect email on its page
+    customer_email: customer.email,
   });
 
   if (!stripeSession.url) {
@@ -239,4 +258,98 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
 
   // 4. Redirect to Stripe's hosted checkout page
   redirect(stripeSession.url);
+}
+
+async function ensureSignedInCustomer(params: {
+  userId: string;
+  email: string;
+  fallbackName: string;
+  phone?: string;
+  defaultCityId: string;
+  defaultAddress?: {
+    line1: string;
+    line2?: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
+}) {
+  const existing = await db.customers.byUserId(params.userId);
+  if (existing) {
+    const next = {
+      ...existing,
+      email: params.email || existing.email,
+      name: existing.name || params.fallbackName,
+      phone: existing.phone || params.phone,
+      defaultCityId: existing.defaultCityId ?? params.defaultCityId,
+      defaultAddress: existing.defaultAddress ?? params.defaultAddress,
+    };
+    await db.customers.upsert(next);
+    return next;
+  }
+
+  const created = {
+    id: shortId('cust'),
+    userId: params.userId,
+    name: params.fallbackName,
+    email: params.email,
+    phone: params.phone,
+    defaultCityId: params.defaultCityId,
+    defaultAddress: params.defaultAddress,
+    createdAt: new Date().toISOString(),
+  };
+  await db.customers.upsert(created);
+  return created;
+}
+
+async function findOrCreateGuestCustomer(params: {
+  name: string;
+  email: string;
+  phone?: string;
+  defaultCityId: string;
+  defaultAddress?: {
+    line1: string;
+    line2?: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
+}) {
+  const admin = createAdminSupabaseClient();
+  const { data: existing, error } = await admin
+    .from('customers')
+    .select('*')
+    .ilike('email', params.email)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (existing) {
+    const updated = {
+      ...existing,
+      name: params.name || existing.name,
+      email: params.email,
+      phone: params.phone || existing.phone,
+      defaultCityId: existing.defaultCityId ?? params.defaultCityId,
+      defaultAddress: existing.defaultAddress ?? params.defaultAddress,
+    };
+    await admin.from('customers').update(updated).eq('id', existing.id);
+    return updated;
+  }
+
+  const created = {
+    id: shortId('cust'),
+    userId: shortId('guest'),
+    name: params.name,
+    email: params.email,
+    phone: params.phone,
+    defaultCityId: params.defaultCityId,
+    defaultAddress: params.defaultAddress,
+    createdAt: new Date().toISOString(),
+  };
+
+  const { error: insertError } = await admin.from('customers').insert(created);
+  if (insertError) throw insertError;
+
+  return created;
 }

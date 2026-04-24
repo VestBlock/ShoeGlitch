@@ -15,6 +15,7 @@ import {
   pickupWindowLabel,
 } from '@/lib/pickup-window';
 import { hasMailInBoxKit, MAIL_IN_BOX_KIT_DELAY, MAIL_IN_BOX_KIT_NAME } from '@/lib/mail-in-config';
+import { getNationalMailInHubAddressLabel } from '@/lib/mail-in-hub';
 import { buildMailInPackingInstructions } from '@/lib/shippo';
 import { getOperatorTierDefinition } from '@/features/operators/tiers';
 import type { Order, Customer, City, Cleaner } from '@/types';
@@ -316,7 +317,7 @@ function renderMailInShippingLabelHtml(args: {
         `<li style="margin:0 0 10px 0;color:#4B5563;line-height:1.6;">${escapeHtml(bullet)}</li>`,
     )
     .join('');
-  const hubAddress = city.hubAddress ?? 'our national mail-in hub';
+  const hubAddress = getNationalMailInHubAddressLabel();
 
   return simpleShell({
     badge: 'Mail-in label ready',
@@ -357,7 +358,7 @@ function renderMailInShippingLabelText(args: {
     `Order: ${order.code}`,
     includesBoxKit ? `${MAIL_IN_BOX_KIT_NAME}: selected` : null,
     includesBoxKit ? MAIL_IN_BOX_KIT_DELAY : null,
-    `Ship to: ${city.hubAddress ?? 'our national mail-in hub'}`,
+    `Ship to: ${getNationalMailInHubAddressLabel()}`,
     order.mailInCarrier ? `Carrier: ${order.mailInCarrier}` : null,
     order.mailInTrackingNumber ? `Tracking: ${order.mailInTrackingNumber}` : null,
     '',

@@ -27,6 +27,12 @@ interface Props {
   cities: City[];
   servicesByCity: Record<string, { primary: ResolvedService[]; addOns: ResolvedService[] }>;
   mailInCityId: string;
+  mailInHubAddressLabel: string;
+  initialCustomer?: {
+    name: string;
+    email: string;
+    phone?: string;
+  } | null;
 }
 
 type SelectedPhoto = {
@@ -92,7 +98,13 @@ const BOOKING_TIER_DETAILS: Record<string, { label: string; includes: string[] }
   },
 };
 
-export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
+export function BookingFlow({
+  cities,
+  servicesByCity,
+  mailInCityId,
+  mailInHubAddressLabel,
+  initialCustomer,
+}: Props) {
   const search = useSearchParams();
   const router = useRouter();
 
@@ -128,6 +140,9 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
   const [notes, setNotes] = useState('');
   const [conditionIssues, setConditionIssues] = useState('');
   const [pickupWindow, setPickupWindow] = useState<PickupWindow>('morning');
+  const [contactName, setContactName] = useState(initialCustomer?.name ?? '');
+  const [contactEmail, setContactEmail] = useState(initialCustomer?.email ?? '');
+  const [contactPhone, setContactPhone] = useState(initialCustomer?.phone ?? '');
   const [address, setAddress] = useState({ line1: '', line2: '', city: '', state: '', zip: '' });
   const [couponCode, setCouponCode] = useState('');
   const [beforePhotos, setBeforePhotos] = useState<SelectedPhoto[]>([]);
@@ -149,6 +164,7 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
     [customShoeBrand, shoeBrand],
   );
   const resolvedShoeTitle = shoeModelName.trim();
+  const hasValidContactEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail.trim());
   const selectedPrimaryService = useMemo(
     () => catalog?.primary.find((service) => service.id === primaryServiceId) ?? null,
     [catalog, primaryServiceId],
@@ -255,14 +271,15 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
     2: Boolean(shoeCategory && pairCount >= 1 && resolvedShoeBrand && resolvedShoeTitle),
     3: Boolean(primaryServiceId),
     4:
-      fulfillmentMethod === 'dropoff' ||
+      Boolean(contactName.trim() && hasValidContactEmail) &&
+      (fulfillmentMethod === 'dropoff' ||
       Boolean(
         address.line1 &&
           address.city &&
           address.state &&
           address.zip &&
           (fulfillmentMethod !== 'pickup' || pickupWindow),
-      ),
+      )),
     5: true,
   };
 
@@ -282,6 +299,9 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
           serviceAreaId,
           fulfillmentMethod,
           mailInBoxKit,
+          contactName,
+          contactEmail,
+          contactPhone: contactPhone || undefined,
           shoeCategory,
           shoeBrand,
           customShoeBrand: shoeBrand === 'Other' ? customShoeBrand.trim() : undefined,
@@ -583,6 +603,44 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
         {/* STEP 4 — Details */}
         {step === 4 && (
           <Panel title="Details & logistics.">
+            <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <label className="label">Contact name</label>
+                <input
+                  className="input"
+                  placeholder="Who should we update about the order?"
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="label">Email</label>
+                <input
+                  className="input"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={contactEmail}
+                  onChange={(e) => setContactEmail(e.target.value)}
+                />
+                <p className="mt-2 text-xs text-ink/52">
+                  We&rsquo;ll send the receipt, label, and status updates here.
+                </p>
+              </div>
+              <div>
+                <label className="label">Phone (optional)</label>
+                <input
+                  className="input"
+                  type="tel"
+                  placeholder="(414) 555-0199"
+                  value={contactPhone}
+                  onChange={(e) => setContactPhone(e.target.value)}
+                />
+                <p className="mt-2 text-xs text-ink/52">
+                  Helpful for shipping issues or route questions.
+                </p>
+              </div>
+            </div>
+
             {(fulfillmentMethod === 'pickup' || fulfillmentMethod === 'mailin') && (
               <>
                 <label className="label">
@@ -630,7 +688,7 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
             {fulfillmentMethod === 'mailin' && (
               <>
                 <div className="card p-5 mb-6 bg-bone-soft">
-                  <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {mailInCity?.hubAddress ?? 'Our central hub'} — once payment clears, we&rsquo;ll email a prepaid label plus packing steps. If you don&rsquo;t already have a box, you can bring the shoes to the carrier store on the label and buy one there before handing it over.</p>
+                  <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {mailInHubAddressLabel} — once payment clears, we&rsquo;ll email a prepaid label plus packing steps. If you don&rsquo;t already have a box, you can bring the shoes to the carrier store on the label and buy one there before handing it over.</p>
                 </div>
                 <label className="flex gap-3 rounded-[1.35rem] border border-ink/10 bg-white p-4 cursor-pointer mb-6">
                   <input
@@ -724,6 +782,9 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
                 <Badge tone="glitch">{fulfillmentMethod.toUpperCase()}</Badge>
               </div>
               <div className="space-y-1 text-sm">
+                <Row label="Contact" value={contactName || '—'} />
+                <Row label="Email" value={contactEmail || '—'} />
+                {contactPhone ? <Row label="Phone" value={contactPhone} /> : null}
                 <Row label="Shoes" value={`${pairCount}× ${SHOE_CATEGORIES.find(c => c.id === shoeCategory)?.label}`} />
                 <Row label="Brand" value={resolvedShoeBrand || '—'} />
                 <Row label="Shoe title" value={resolvedShoeTitle || '—'} />

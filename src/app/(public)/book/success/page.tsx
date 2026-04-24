@@ -5,6 +5,7 @@ import { Badge, Card } from '@/components/ui';
 import { PhotoUploadSection } from './PhotoUploadSection';
 import type { Order } from '@/types';
 import { hasMailInBoxKit, MAIL_IN_BOX_KIT_DELAY, MAIL_IN_BOX_KIT_NAME } from '@/lib/mail-in-config';
+import { getSession } from '@/lib/session';
 
 /**
  * Stripe redirects here after a successful payment.
@@ -26,6 +27,7 @@ export default async function BookSuccessPage({
   if (!orderId) redirect('/');
 
   const admin = createAdminSupabaseClient();
+  const session = await getSession();
   const { data: order } = await admin
     .from('orders')
     .select('*')
@@ -97,15 +99,17 @@ export default async function BookSuccessPage({
         </Card>
       )}
 
-      <PhotoUploadSection orderId={order.id} />
+      {session?.role === 'customer' ? <PhotoUploadSection orderId={order.id} /> : null}
 
       <div className="flex justify-center gap-3 flex-wrap mt-8">
         <Link href={`/book/confirmation/${order.id}`} className="btn-glitch">
           View order →
         </Link>
-        <Link href="/customer" className="btn-outline">
-          My dashboard
-        </Link>
+        {session?.role === 'customer' ? (
+          <Link href="/customer" className="btn-outline">
+            My dashboard
+          </Link>
+        ) : null}
       </div>
     </section>
   );

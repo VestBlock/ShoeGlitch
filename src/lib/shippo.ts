@@ -1,4 +1,5 @@
 import type { Address, City, Customer, Order } from '@/types';
+import { getNationalMailInHubAddress } from '@/lib/mail-in-hub';
 
 const SHIPPO_API_BASE = 'https://api.goshippo.com';
 
@@ -234,51 +235,7 @@ function scoreRate(rate: ShippoRate) {
 }
 
 function buildMailInHubAddress(city: City): Address {
-  const envAddress = readHubAddressFromEnv();
-  if (envAddress) return envAddress;
-
-  const raw = city.hubAddress?.trim();
-  if (!raw) {
-    throw new Error(`No hub address is configured for ${city.name}.`);
-  }
-
-  const parsed = parseSingleLineUsAddress(raw);
-  if (!parsed) {
-    throw new Error(`Hub address for ${city.name} is not in a Shippo-friendly format.`);
-  }
-
-  return parsed;
-}
-
-function readHubAddressFromEnv(): Address | null {
-  const line1 = process.env.SHIPPO_MAILIN_HUB_LINE1?.trim();
-  const city = process.env.SHIPPO_MAILIN_HUB_CITY?.trim();
-  const state = process.env.SHIPPO_MAILIN_HUB_STATE?.trim();
-  const zip = process.env.SHIPPO_MAILIN_HUB_ZIP?.trim();
-
-  if (!line1 || !city || !state || !zip) return null;
-
-  return {
-    line1,
-    line2: process.env.SHIPPO_MAILIN_HUB_LINE2?.trim() || undefined,
-    city,
-    state,
-    zip,
-  };
-}
-
-function parseSingleLineUsAddress(value: string): Address | null {
-  const match = value.match(/^(.*?)(?:,\s*(.*?))?,\s*([^,]+),\s*([A-Z]{2})\s+(\d{5}(?:-\d{4})?)$/i);
-  if (!match) return null;
-
-  const [, line1, line2Maybe, city, state, zip] = match;
-  return {
-    line1: line1.trim(),
-    line2: line2Maybe?.trim() || undefined,
-    city: city.trim(),
-    state: state.trim().toUpperCase(),
-    zip: zip.trim(),
-  };
+  return getNationalMailInHubAddress();
 }
 
 function requireCustomerAddress(address?: Address): Address {

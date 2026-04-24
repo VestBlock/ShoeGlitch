@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { resolveCatalogForCity } from '@/services/catalog';
 import { resolveNationalMailInCity } from '@/lib/mail-in';
+import { getSession } from '@/lib/session';
+import { getNationalMailInHubAddressLabel } from '@/lib/mail-in-hub';
 import { BookingFlow } from './BookingFlow';
 import { Badge } from '@/components/ui';
 
@@ -13,11 +15,14 @@ export const metadata: Metadata = {
 };
 
 export default async function BookPage() {
+  const session = await getSession();
   const cities = await db.cities.all();
   const mailInCity = resolveNationalMailInCity(cities);
   const entries = await Promise.all(
     cities.map(async (c) => [c.id, await resolveCatalogForCity(c.id)] as const),
   );
+  const customer =
+    session?.role === 'customer' ? await db.customers.byUserId(session.userId) : undefined;
   const servicesByCity: Record<string, Awaited<ReturnType<typeof resolveCatalogForCity>>> = {};
   for (const [id, catalog] of entries) servicesByCity[id] = catalog;
 
@@ -32,6 +37,9 @@ export default async function BookPage() {
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ink/66">
               Local cities are for pickup and drop-off. Mail-in stays open nationwide. Every order still runs through the same Basic, Pro, or Elite care system once the pair is in.
+            </p>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-ink/54">
+              Checkout works with or without an account. We only need your contact details so we can send the receipt, label, and order updates.
             </p>
           </div>
 
@@ -52,7 +60,26 @@ export default async function BookPage() {
       </div>
 
       <Suspense fallback={<div className="text-ink/50">Loading…</div>}>
-        <BookingFlow cities={cities} servicesByCity={servicesByCity} mailInCityId={mailInCity?.id ?? ''} />
+        <BookingFlow
+          cities={cities}
+          servicesByCity={servicesByCity}
+          mailInCityId={mailInCity?.id ?? ''}
+          mailInHubAddressLabel={getNationalMailInHubAddressLabel()}
+          initialCustomer={
+            customer
+              ? {
+                  name: customer.name,
+                  email: customer.email,
+                  phone: customer.phone,
+                }
+              : session
+                ? {
+                    name: session.name,
+                    email: session.email,
+                  }
+                : null
+          }
+        />
       </Suspense>
     </section>
   );

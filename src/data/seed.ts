@@ -27,7 +27,7 @@ export const seedCities: City[] = [
     defaultPickupFee: 10,
     defaultRushFee: 25,
     defaultMailInReturnFee: 12,
-    hubAddress: '510 E Brady St, Milwaukee, WI 53202',
+    hubAddress: '4745 Spartan Lane, Brookfield, WI 53005',
   },
   {
     id: 'city_memphis',
