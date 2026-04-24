@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { Badge, Card } from '@/components/ui';
+import { MAIL_IN_BOX_KIT_DELAY, MAIL_IN_BOX_KIT_NAME, MAIL_IN_BOX_KIT_PRICE } from '@/lib/mail-in-config';
 
 export default async function MailInPage() {
   const cities = await db.cities.active();
@@ -18,6 +19,9 @@ export default async function MailInPage() {
         </p>
         <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/60">
           That includes the same deeper service process used in local markets, with steam-assisted cleaning built into every package above Fresh Start.
+        </p>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/60">
+          Need a box? Add <strong>{MAIL_IN_BOX_KIT_NAME}</strong> at checkout for <strong>${MAIL_IN_BOX_KIT_PRICE}</strong>. If you skip it, you can still use your own box or buy one at the carrier store when you drop off the shipment. {MAIL_IN_BOX_KIT_DELAY}
         </p>
       </section>
 

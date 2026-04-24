@@ -4,6 +4,7 @@ import { createAdminSupabaseClient } from '@/lib/supabase/admin';
 import { Badge, Card } from '@/components/ui';
 import { PhotoUploadSection } from './PhotoUploadSection';
 import type { Order } from '@/types';
+import { hasMailInBoxKit, MAIL_IN_BOX_KIT_DELAY, MAIL_IN_BOX_KIT_NAME } from '@/lib/mail-in-config';
 
 /**
  * Stripe redirects here after a successful payment.
@@ -32,6 +33,7 @@ export default async function BookSuccessPage({
     .maybeSingle<Order>();
 
   if (!order) redirect('/');
+  const includesBoxKit = hasMailInBoxKit(order);
 
   return (
     <section className="container-x pt-16 pb-24 max-w-2xl mx-auto text-center">
@@ -43,6 +45,11 @@ export default async function BookSuccessPage({
         Order <span className="font-mono font-semibold">{order.code}</span> is
         confirmed. We&rsquo;ll email you with the next steps.
       </p>
+      {order.fulfillmentMethod === 'mailin' && includesBoxKit ? (
+        <p className="text-sm text-ink/60 mb-8">
+          <strong>{MAIL_IN_BOX_KIT_NAME}</strong> selected. {MAIL_IN_BOX_KIT_DELAY}
+        </p>
+      ) : null}
 
       <Card className="p-8 text-left mb-8">
         <div className="flex items-center justify-between mb-4">

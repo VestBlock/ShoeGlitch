@@ -6,6 +6,11 @@ import { zipLookupAction, quoteAction } from './actions';
 import { startStripeCheckoutAction } from './stripe-actions';
 import { uploadPreOrderPhotos } from '@/lib/storage';
 import {
+  MAIL_IN_BOX_KIT_DELAY,
+  MAIL_IN_BOX_KIT_NAME,
+  MAIL_IN_BOX_KIT_PRICE,
+} from '@/lib/mail-in-config';
+import {
   PICKUP_WINDOW_OPTIONS,
   type PickupWindow,
   pickupWindowLabel,
@@ -80,6 +85,7 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
   const [fulfillmentMethod, setFulfillmentMethod] = useState<'pickup' | 'dropoff' | 'mailin'>(
     initialMode ?? 'pickup',
   );
+  const [mailInBoxKit, setMailInBoxKit] = useState(false);
 
   const [shoeCategory, setShoeCategory] =
     useState<(typeof SHOE_CATEGORIES)[number]['id']>('sneakers');
@@ -156,6 +162,7 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
         primaryServiceId,
         addOnServiceIds,
         fulfillmentMethod,
+        mailInBoxKit,
         shoeCategory,
         pairCount,
         isRush,
@@ -163,7 +170,7 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
       });
       setQuote(res);
     });
-  }, [cityId, primaryServiceId, addOnServiceIds, fulfillmentMethod, shoeCategory, pairCount, isRush, couponCode]);
+  }, [cityId, primaryServiceId, addOnServiceIds, fulfillmentMethod, mailInBoxKit, shoeCategory, pairCount, isRush, couponCode]);
 
   const checkZip = async () => {
     const r = await zipLookupAction(zip);
@@ -247,6 +254,7 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
           cityId,
           serviceAreaId,
           fulfillmentMethod,
+          mailInBoxKit,
           shoeCategory,
           shoeBrand,
           customShoeBrand: shoeBrand === 'Other' ? customShoeBrand.trim() : undefined,
@@ -572,9 +580,31 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
             )}
 
             {fulfillmentMethod === 'mailin' && (
-              <div className="card p-5 mb-6 bg-bone-soft">
-                <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {mailInCity?.hubAddress ?? 'Our central hub'} — once payment clears, we&rsquo;ll email a prepaid label plus packing steps. If you don&rsquo;t already have a box, you can bring the shoes to the carrier store on the label and buy one there before handing it over.</p>
-              </div>
+              <>
+                <div className="card p-5 mb-6 bg-bone-soft">
+                  <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {mailInCity?.hubAddress ?? 'Our central hub'} — once payment clears, we&rsquo;ll email a prepaid label plus packing steps. If you don&rsquo;t already have a box, you can bring the shoes to the carrier store on the label and buy one there before handing it over.</p>
+                </div>
+                <label className="flex gap-3 rounded-[1.35rem] border border-ink/10 bg-white p-4 cursor-pointer mb-6">
+                  <input
+                    type="checkbox"
+                    checked={mailInBoxKit}
+                    onChange={(event) => setMailInBoxKit(event.target.checked)}
+                    className="mt-1 h-5 w-5 shrink-0 accent-glitch"
+                  />
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-semibold">{MAIL_IN_BOX_KIT_NAME}</span>
+                      <Badge tone="acid">+${MAIL_IN_BOX_KIT_PRICE}</Badge>
+                    </div>
+                    <p className="mt-2 text-sm text-ink/60">
+                      We&rsquo;ll ship you a packing kit first so you don&rsquo;t have to buy a box at the counter. {MAIL_IN_BOX_KIT_DELAY}
+                    </p>
+                    <p className="mt-2 text-xs uppercase tracking-[0.18em] text-ink/45">
+                      Skip this if you already have a sturdy box or plan to buy one at the carrier store.
+                    </p>
+                  </div>
+                </label>
+              </>
             )}
 
             <label className="label">Condition issues (optional)</label>
@@ -654,6 +684,9 @@ export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
                     label={fulfillmentMethod === 'mailin' ? 'Ship-from address' : 'Pickup'}
                     value={`${address.line1}, ${address.city}`}
                   />
+                )}
+                {fulfillmentMethod === 'mailin' && mailInBoxKit && (
+                  <Row label="Mail-in box kit" value={`Yes · +$${MAIL_IN_BOX_KIT_PRICE} · ${MAIL_IN_BOX_KIT_DELAY}`} />
                 )}
                 {fulfillmentMethod === 'pickup' && pickupWindow && (
                   <Row label="Pickup window" value={pickupWindowLabel(pickupWindow) ?? '—'} />

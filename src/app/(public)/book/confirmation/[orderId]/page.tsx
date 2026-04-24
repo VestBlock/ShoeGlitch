@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { STATUS_LABELS, progressPercent } from '@/lib/status';
 import { Badge, Card, ProgressBar } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
+import { hasMailInBoxKit, MAIL_IN_BOX_KIT_DELAY, MAIL_IN_BOX_KIT_NAME } from '@/lib/mail-in-config';
 
 export default async function ConfirmationPage({ params }: { params: { orderId: string } }) {
   const order = await db.orders.byId(params.orderId);
@@ -14,6 +15,7 @@ export default async function ConfirmationPage({ params }: { params: { orderId: 
 
   const events = await db.orderEvents.forOrder(order.id);
   const pct = progressPercent(order.fulfillmentMethod, order.status);
+  const includesBoxKit = hasMailInBoxKit(order);
 
   return (
     <section className="container-x pt-16 pb-24 max-w-3xl mx-auto">
@@ -28,6 +30,11 @@ export default async function ConfirmationPage({ params }: { params: { orderId: 
             ? ' Your prepaid label is ready below and has been emailed to you.'
             : ' We’re generating your prepaid label and will email it shortly.')}
       </p>
+      {order.fulfillmentMethod === 'mailin' && includesBoxKit ? (
+        <p className="text-sm text-ink/60 mb-8">
+          <strong>{MAIL_IN_BOX_KIT_NAME}</strong> selected. {MAIL_IN_BOX_KIT_DELAY}
+        </p>
+      ) : null}
 
       <Card className="p-8 mb-6">
         <div className="flex items-start justify-between mb-6">

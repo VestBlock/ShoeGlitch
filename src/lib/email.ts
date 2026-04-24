@@ -14,6 +14,7 @@ import {
   extractPickupWindowFromNotes,
   pickupWindowLabel,
 } from '@/lib/pickup-window';
+import { hasMailInBoxKit, MAIL_IN_BOX_KIT_DELAY, MAIL_IN_BOX_KIT_NAME } from '@/lib/mail-in-config';
 import { buildMailInPackingInstructions } from '@/lib/shippo';
 import { getOperatorTierDefinition } from '@/features/operators/tiers';
 import type { Order, Customer, City, Cleaner } from '@/types';
@@ -175,6 +176,7 @@ function renderOrderConfirmationHtml(args: {
 }): string {
   const { order, customer, city, primary, addOns } = args;
   const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
+  const includesBoxKit = hasMailInBoxKit(order);
   const addOnRows = addOns
     .map(
       (a) => `
@@ -202,6 +204,7 @@ function renderOrderConfirmationHtml(args: {
         <div style="display:inline-block;padding:4px 10px;background:#1E90FF;color:#FFFFFF;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;border-radius:999px;margin-bottom:20px;">Payment received</div>
         <h1 style="font-size:28px;line-height:1.2;margin:0 0 8px 0;">Thanks, ${escapeHtml(customer.name.split(' ')[0])}.</h1>
         <p style="font-size:16px;color:#4B5563;margin:0 0 24px 0;">Your order is confirmed. We'll send status updates as it moves through our process.</p>
+        ${order.fulfillmentMethod === 'mailin' && includesBoxKit ? `<p style="font-size:14px;color:#6B7280;margin:0 0 20px 0;"><strong>${MAIL_IN_BOX_KIT_NAME}</strong> selected. ${MAIL_IN_BOX_KIT_DELAY}</p>` : ''}
 
         <table style="width:100%;border-collapse:collapse;margin:0 0 24px 0;">
           <tr>
@@ -271,6 +274,7 @@ function renderOrderConfirmationText(args: {
 }): string {
   const { order, customer, city, primary, addOns } = args;
   const pickupWindow = pickupWindowLabel(extractPickupWindowFromNotes(order.notes));
+  const includesBoxKit = hasMailInBoxKit(order);
   const lines: string[] = [];
   lines.push(`Thanks, ${customer.name.split(' ')[0]} — your Shoe Glitch order is confirmed.`);
   lines.push('');
@@ -279,6 +283,10 @@ function renderOrderConfirmationText(args: {
   lines.push(`Fulfillment: ${order.fulfillmentMethod.replace(/_/g, ' ')}`);
   if (pickupWindow) lines.push(`Pickup window: ${pickupWindow}`);
   if (city) lines.push(`City: ${city.name}`);
+  if (order.fulfillmentMethod === 'mailin' && includesBoxKit) {
+    lines.push(`${MAIL_IN_BOX_KIT_NAME}: selected`);
+    lines.push(MAIL_IN_BOX_KIT_DELAY);
+  }
   lines.push('');
   lines.push('What you ordered:');
   if (primary) lines.push(`  ${primary.serviceName} — $${primary.unitPrice}`);
@@ -301,6 +309,7 @@ function renderMailInShippingLabelHtml(args: {
   const { order, customer, city } = args;
   const labelUrl = order.mailInLabelUrl ?? `${SITE_URL}/customer/orders/${order.id}`;
   const packing = buildMailInPackingInstructions(order);
+  const includesBoxKit = hasMailInBoxKit(order);
   const instructions = packing.bullets
     .map(
       (bullet) =>
@@ -316,6 +325,7 @@ function renderMailInShippingLabelHtml(args: {
       <p style="font-size:16px;color:#4B5563;margin:0 0 16px 0;">
         Your order <strong>${escapeHtml(order.code)}</strong> is paid and we generated your prepaid inbound label.
       </p>
+      ${includesBoxKit ? `<p style="font-size:14px;color:#6B7280;margin:0 0 16px 0;"><strong>${MAIL_IN_BOX_KIT_NAME}</strong> selected. ${MAIL_IN_BOX_KIT_DELAY}</p>` : ''}
       <table style="width:100%;border-collapse:collapse;margin:0 0 20px 0;">
         <tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Ship to</td><td style="padding:8px 0;text-align:right;font-weight:600;">${escapeHtml(hubAddress)}</td></tr>
         ${order.mailInCarrier ? `<tr><td style="padding:8px 0;color:#6B7280;font-size:13px;">Carrier</td><td style="padding:8px 0;text-align:right;font-weight:600;">${escapeHtml(order.mailInCarrier)}</td></tr>` : ''}
@@ -340,10 +350,13 @@ function renderMailInShippingLabelText(args: {
 }): string {
   const { order, customer, city } = args;
   const packing = buildMailInPackingInstructions(order);
+  const includesBoxKit = hasMailInBoxKit(order);
   const lines = [
     `${customer.name.split(' ')[0]}, your prepaid Shoe Glitch mail-in label is ready.`,
     '',
     `Order: ${order.code}`,
+    includesBoxKit ? `${MAIL_IN_BOX_KIT_NAME}: selected` : null,
+    includesBoxKit ? MAIL_IN_BOX_KIT_DELAY : null,
     `Ship to: ${city.hubAddress ?? 'our national mail-in hub'}`,
     order.mailInCarrier ? `Carrier: ${order.mailInCarrier}` : null,
     order.mailInTrackingNumber ? `Tracking: ${order.mailInTrackingNumber}` : null,

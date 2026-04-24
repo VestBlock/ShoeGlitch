@@ -21,6 +21,7 @@ const BookingSchema = z.object({
   cityId: z.string(),
   serviceAreaId: z.string().optional(),
   fulfillmentMethod: z.enum(['pickup', 'dropoff', 'mailin']),
+  mailInBoxKit: z.coerce.boolean().optional().default(false),
   shoeCategory: z.enum([
     'sneakers', 'designer_sneakers', 'womens_heels',
     'red_bottom_heels', 'boots', 'kids', 'other',
@@ -119,6 +120,7 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
     primaryServiceId: parsed.primaryServiceId,
     addOnServiceIds: parsed.addOnServiceIds ?? [],
     fulfillmentMethod: parsed.fulfillmentMethod,
+    mailInBoxKit: parsed.fulfillmentMethod === 'mailin' ? parsed.mailInBoxKit : false,
     shoeCategory: parsed.shoeCategory,
     customShoeType: resolvedShoeTitle,
     pairCount: parsed.pairCount,

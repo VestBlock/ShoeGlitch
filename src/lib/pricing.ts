@@ -5,6 +5,11 @@
 
 import { db } from '@/lib/db';
 import type { FulfillmentMethod, ShoeCategory } from '@/types';
+import {
+  MAIL_IN_BOX_KIT_ID,
+  MAIL_IN_BOX_KIT_NAME,
+  MAIL_IN_BOX_KIT_PRICE,
+} from '@/lib/mail-in-config';
 import { resolveNationalMailInCityId } from '@/lib/mail-in';
 
 export interface QuoteInput {
@@ -12,6 +17,7 @@ export interface QuoteInput {
   primaryServiceId: string;
   addOnServiceIds: string[];
   fulfillmentMethod: FulfillmentMethod;
+  mailInBoxKit?: boolean;
   shoeCategory: ShoeCategory;
   pairCount: number;
   isRush: boolean;
@@ -123,10 +129,11 @@ export async function quote(input: QuoteInput): Promise<Quote> {
     });
   }
 
-  const subtotal = (primary ? primaryPrice * pairs : 0) + addOnTotal;
+  let subtotal = (primary ? primaryPrice * pairs : 0) + addOnTotal;
 
   let pickupFee = 0;
   let returnShippingFee = 0;
+  let mailInBoxKitFee = 0;
   if (input.fulfillmentMethod === 'pickup' && city) {
     pickupFee = city.defaultPickupFee;
     lines.push({ label: 'Local pickup', amount: pickupFee, kind: 'fee' });
@@ -134,6 +141,17 @@ export async function quote(input: QuoteInput): Promise<Quote> {
   if (input.fulfillmentMethod === 'mailin' && city) {
     returnShippingFee = city.defaultMailInReturnFee;
     lines.push({ label: 'Return shipping', amount: returnShippingFee, kind: 'fee' });
+    if (input.mailInBoxKit) {
+      mailInBoxKitFee = MAIL_IN_BOX_KIT_PRICE;
+      lines.push({ label: MAIL_IN_BOX_KIT_NAME, amount: mailInBoxKitFee, kind: 'addon' });
+      items.push({
+        serviceId: MAIL_IN_BOX_KIT_ID,
+        serviceName: MAIL_IN_BOX_KIT_NAME,
+        unitPrice: mailInBoxKitFee,
+        isAddOn: true,
+      });
+      subtotal += mailInBoxKitFee;
+    }
   }
 
   let rushFee = 0;
