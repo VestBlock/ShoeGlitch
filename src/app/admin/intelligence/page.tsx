@@ -7,7 +7,8 @@ import {
   searchNikePublicSneakers,
   searchSneakers,
 } from '@/features/intelligence/provider-service';
-import { runWatchlistScanAction } from '@/app/admin/intelligence/actions';
+import { getRetailMonitorSnapshot } from '@/features/intelligence/monitors/service';
+import { runRetailMonitorRefreshAction, runWatchlistScanAction } from '@/app/admin/intelligence/actions';
 
 export default async function AdminIntelligencePage({
   searchParams,
@@ -28,6 +29,7 @@ export default async function AdminIntelligencePage({
   const nikeSearchResult =
     query || sku ? await searchNikePublicSneakers({ query: query || undefined, sku: sku || undefined, limit: 5 }) : null;
   const nikeDetailResult = id ? await getNikePublicProduct(id) : null;
+  const retailSnapshot = await getRetailMonitorSnapshot();
 
   return (
     <section className="container-x py-10">
@@ -47,6 +49,66 @@ export default async function AdminIntelligencePage({
         <form action={runWatchlistScanAction} className="mt-4">
           <button className="btn-glitch">Run watchlist scan →</button>
         </form>
+      </div>
+
+      <div className="mt-6 rounded-[1.4rem] border border-ink/10 bg-white/82 p-5">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Retail source monitors</div>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-ink/66">
+              This layer tracks official retailer release pages first. adidas and Foot Locker are parsed live right now, while harder sources still report health and blocking status so we know where anti-bot friction is happening.
+            </p>
+          </div>
+          <form action={runRetailMonitorRefreshAction}>
+            <button className="btn-outline">Refresh retailer monitors</button>
+          </form>
+        </div>
+
+        <div className="mt-5 grid gap-4 lg:grid-cols-3">
+          {retailSnapshot.health.map((source) => (
+            <div key={source.key} className="rounded-[1.2rem] border border-ink/10 bg-bone-soft p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-sm font-semibold text-ink">{source.label}</div>
+                <span
+                  className={
+                    source.status === 'healthy'
+                      ? 'badge-glitch !bg-cyan !text-ink'
+                      : source.status === 'degraded'
+                        ? 'badge-dark !bg-ink !text-bone'
+                        : 'badge'
+                  }
+                >
+                  {source.status}
+                </span>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-ink/66">{source.message}</p>
+              <a href={source.sourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-semibold text-glitch">
+                Open source →
+              </a>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 rounded-[1.2rem] border border-ink/10 bg-white p-4">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Current retailer candidates</div>
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {retailSnapshot.entries.slice(0, 12).map((entry) => (
+              <a
+                key={entry.id}
+                href={entry.url}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-[1.1rem] border border-ink/10 bg-bone-soft p-4 transition hover:-translate-y-0.5 hover:border-glitch/30"
+              >
+                <div className="text-[11px] uppercase tracking-[0.24em] text-glitch/80">{entry.sourceLabel}</div>
+                <div className="mt-2 text-lg font-semibold text-ink">{entry.name}</div>
+                <div className="mt-1 text-sm text-ink/62">
+                  {[entry.brand, entry.sku].filter(Boolean).join(' · ')}
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
 
       <form className="mt-8 grid gap-3 rounded-[1.6rem] border border-ink/10 bg-white/82 p-5 md:grid-cols-3">

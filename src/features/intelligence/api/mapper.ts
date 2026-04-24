@@ -1,9 +1,11 @@
 import type { ProviderHealth } from '@/features/intelligence/providers/types';
+import type { RetailMonitorSnapshot } from '@/features/intelligence/monitors/types';
 import type { SneakerFeedItem, SneakerFeedResult } from '@/features/intelligence/types';
 import type {
   IntelligenceFeedRecord,
   IntelligenceFeedResponse,
   IntelligenceProductResponse,
+  IntelligenceRetailMonitorSnapshot,
   IntelligenceSearchResponse,
   IntelligenceSourceHealthRecord,
 } from '@/features/intelligence/api/types';
@@ -80,3 +82,17 @@ export function mapProductResponse(generatedAt: string, item: SneakerFeedItem | 
   };
 }
 
+export function mapRetailMonitorSnapshot(snapshot: RetailMonitorSnapshot): IntelligenceRetailMonitorSnapshot {
+  return {
+    generatedAt: snapshot.generatedAt,
+    entries: snapshot.entries.map((entry) => ({ ...entry })),
+    health: snapshot.health.map((entry) => ({
+      key: entry.key,
+      label: entry.label,
+      status: entry.status,
+      message: entry.message,
+      lastAttemptAt: entry.checkedAt,
+      lastSuccessAt: entry.lastSuccessAt,
+    })),
+  };
+}

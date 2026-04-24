@@ -86,3 +86,24 @@ export interface IntelligenceProductResponse {
   product: IntelligenceFeedRecord | null;
 }
 
+export interface IntelligenceRetailMonitorRecord {
+  id: string;
+  source: string;
+  sourceLabel: string;
+  brand: string;
+  model: string;
+  name: string;
+  colorway?: string | null;
+  sku?: string | null;
+  url: string;
+  imageUrl?: string | null;
+  releaseDate?: string | null;
+  detectedAt: string;
+  metadata: Record<string, unknown>;
+}
+
+export interface IntelligenceRetailMonitorSnapshot {
+  generatedAt: string;
+  entries: IntelligenceRetailMonitorRecord[];
+  health: IntelligenceSourceHealthRecord[];
+}

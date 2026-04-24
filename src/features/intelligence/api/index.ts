@@ -3,6 +3,7 @@ export type * from '@/features/intelligence/api/contracts';
 export {
   getIntelligenceFeed,
   getIntelligenceProduct,
+  getIntelligenceRetailMonitors,
   getIntelligenceSourceHealth,
   intelligenceApiEngine,
   searchIntelligenceCatalog,

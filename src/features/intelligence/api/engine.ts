@@ -2,6 +2,7 @@ import type { IntelligenceApiContract } from '@/features/intelligence/api/contra
 import {
   mapFeedResponse,
   mapProductResponse,
+  mapRetailMonitorSnapshot,
   mapSearchResponse,
   mapSourceHealthRecord,
 } from '@/features/intelligence/api/mapper';
@@ -9,10 +10,12 @@ import type {
   IntelligenceFeedQuery,
   IntelligenceFeedResponse,
   IntelligenceProductResponse,
+  IntelligenceRetailMonitorSnapshot,
   IntelligenceSearchQuery,
   IntelligenceSearchResponse,
   IntelligenceSourceHealthRecord,
 } from '@/features/intelligence/api/types';
+import { getRetailMonitorSnapshot } from '@/features/intelligence/monitors/service';
 import { getSneakerProduct, searchSneakers } from '@/features/intelligence/provider-service';
 import { getSneakerBySlug, getSneakerFeed } from '@/features/intelligence/service';
 import type { SneakerFeedItem } from '@/features/intelligence/types';
@@ -97,10 +100,15 @@ export async function getIntelligenceSourceHealth(
   return feed.sourceHealth.map(mapSourceHealthRecord);
 }
 
+export async function getIntelligenceRetailMonitors(): Promise<IntelligenceRetailMonitorSnapshot> {
+  const snapshot = await getRetailMonitorSnapshot();
+  return mapRetailMonitorSnapshot(snapshot);
+}
+
 export const intelligenceApiEngine: IntelligenceApiContract = {
   getFeed: getIntelligenceFeed,
   getProduct: getIntelligenceProduct,
   search: searchIntelligenceCatalog,
   getSourceHealth: getIntelligenceSourceHealth,
+  getRetailMonitors: getIntelligenceRetailMonitors,
 };
-

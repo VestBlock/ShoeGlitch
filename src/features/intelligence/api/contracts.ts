@@ -2,6 +2,7 @@ import type {
   IntelligenceFeedQuery,
   IntelligenceFeedResponse,
   IntelligenceProductResponse,
+  IntelligenceRetailMonitorSnapshot,
   IntelligenceSearchQuery,
   IntelligenceSearchResponse,
   IntelligenceSourceHealthRecord,
@@ -12,5 +13,5 @@ export interface IntelligenceApiContract {
   getProduct(slugOrId: string, options?: { includeNikePublic?: boolean }): Promise<IntelligenceProductResponse>;
   search(query: IntelligenceSearchQuery): Promise<IntelligenceSearchResponse>;
   getSourceHealth(options?: { includeNikePublic?: boolean }): Promise<IntelligenceSourceHealthRecord[]>;
+  getRetailMonitors(): Promise<IntelligenceRetailMonitorSnapshot>;
 }
-

@@ -1,4 +1,5 @@
 import { buildFeaturedSneakerSet } from '@/features/intelligence/provider-service';
+import { getRetailMonitorEvents } from '@/features/intelligence/monitors/service';
 import type { NormalizedSneaker } from '@/features/intelligence/providers/types';
 import type { SneakerEventRecord, SneakerEventType } from '@/features/intelligence/watchlist/types';
 
@@ -68,7 +69,9 @@ function uniqueEvents(events: SneakerEventRecord[]) {
 
 export async function loadCurrentSneakerEvents(limit = 24) {
   const featured = await buildFeaturedSneakerSet();
-  return uniqueEvents(featured.items.slice(0, limit).flatMap(toSneakerEvents));
+  const providerEvents = featured.items.slice(0, limit).flatMap(toSneakerEvents);
+  const monitorEvents = await getRetailMonitorEvents(Math.max(12, Math.ceil(limit / 2)));
+  return uniqueEvents([...providerEvents, ...monitorEvents].slice(0, limit + monitorEvents.length));
 }
 
 export function buildMockSneakerEvents(now = new Date()): SneakerEventRecord[] {
