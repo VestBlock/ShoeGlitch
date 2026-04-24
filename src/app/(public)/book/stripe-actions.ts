@@ -8,6 +8,7 @@ import { quote } from '@/lib/pricing';
 import { createOrder } from '@/services/orders';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
+import { resolveNationalMailInCityId } from '@/lib/mail-in';
 import {
   PICKUP_WINDOW_VALUES,
   attachPickupWindowToNotes,
@@ -53,6 +54,10 @@ const BookingSchema = z.object({
  */
 export async function startStripeCheckoutAction(data: z.input<typeof BookingSchema>) {
   const parsed = BookingSchema.parse(data);
+  const cityId =
+    parsed.fulfillmentMethod === 'mailin'
+      ? await resolveNationalMailInCityId(parsed.cityId)
+      : parsed.cityId;
   const resolvedBrand =
     parsed.shoeBrand?.toLowerCase() === 'other'
       ? parsed.customShoeBrand?.trim()
@@ -88,8 +93,8 @@ export async function startStripeCheckoutAction(data: z.input<typeof BookingSche
   // 1. Create the order in "unpaid" state
   const order: Order = await createOrder({
     customerId,
-    cityId: parsed.cityId,
-    serviceAreaId: parsed.serviceAreaId,
+    cityId,
+    serviceAreaId: parsed.fulfillmentMethod === 'mailin' ? undefined : parsed.serviceAreaId,
     primaryServiceId: parsed.primaryServiceId,
     addOnServiceIds: parsed.addOnServiceIds ?? [],
     fulfillmentMethod: parsed.fulfillmentMethod,

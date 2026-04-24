@@ -14,7 +14,7 @@ export default async function MailInPage() {
           <em className="h-italic text-glitch">Tracked end to end.</em>
         </h1>
         <p className="text-ink/70 max-w-2xl text-lg">
-          If local pickup isn&rsquo;t live in your city yet, ship them in. We&rsquo;ll clean, restore, and ship them back.
+          Mail-in is open nationwide. Local city coverage only controls pickup and drop-off routes.
         </p>
         <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/60">
           That includes the same deeper service process used in local markets, with steam-assisted cleaning built into every package above Fresh Start.

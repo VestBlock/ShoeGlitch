@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { resolveCatalogForCity } from '@/services/catalog';
+import { resolveNationalMailInCity } from '@/lib/mail-in';
 import { BookingFlow } from './BookingFlow';
 import { Badge } from '@/components/ui';
 
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 
 export default async function BookPage() {
   const cities = await db.cities.all();
+  const mailInCity = resolveNationalMailInCity(cities);
   const entries = await Promise.all(
     cities.map(async (c) => [c.id, await resolveCatalogForCity(c.id)] as const),
   );
@@ -28,7 +30,7 @@ export default async function BookPage() {
         </h1>
       </div>
       <Suspense fallback={<div className="text-ink/50">Loading…</div>}>
-        <BookingFlow cities={cities} servicesByCity={servicesByCity} />
+        <BookingFlow cities={cities} servicesByCity={servicesByCity} mailInCityId={mailInCity?.id ?? ''} />
       </Suspense>
     </section>
   );

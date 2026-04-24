@@ -7,6 +7,7 @@ import { checkCoverage } from '@/lib/coverage';
 import { createOrder } from '@/services/orders';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
+import { resolveNationalMailInCityId } from '@/lib/mail-in';
 import {
   PICKUP_WINDOW_VALUES,
   attachPickupWindowToNotes,
@@ -40,8 +41,12 @@ const BookingSchema = z.object({
 
 export async function quoteAction(data: z.input<typeof BookingSchema>) {
   const parsed = BookingSchema.parse(data);
+  const cityId =
+    parsed.fulfillmentMethod === 'mailin'
+      ? await resolveNationalMailInCityId(parsed.cityId)
+      : parsed.cityId;
   return quote({
-    cityId: parsed.cityId,
+    cityId,
     primaryServiceId: parsed.primaryServiceId,
     addOnServiceIds: parsed.addOnServiceIds ?? [],
     fulfillmentMethod: parsed.fulfillmentMethod,
@@ -54,6 +59,10 @@ export async function quoteAction(data: z.input<typeof BookingSchema>) {
 
 export async function submitBookingAction(data: z.input<typeof BookingSchema>) {
   const parsed = BookingSchema.parse(data);
+  const cityId =
+    parsed.fulfillmentMethod === 'mailin'
+      ? await resolveNationalMailInCityId(parsed.cityId)
+      : parsed.cityId;
   const resolvedBrand =
     parsed.shoeBrand?.toLowerCase() === 'other'
       ? parsed.customShoeBrand?.trim()
@@ -82,8 +91,8 @@ export async function submitBookingAction(data: z.input<typeof BookingSchema>) {
 
   const order = await createOrder({
     customerId,
-    cityId: parsed.cityId,
-    serviceAreaId: parsed.serviceAreaId,
+    cityId,
+    serviceAreaId: parsed.fulfillmentMethod === 'mailin' ? undefined : parsed.serviceAreaId,
     primaryServiceId: parsed.primaryServiceId,
     addOnServiceIds: parsed.addOnServiceIds ?? [],
     fulfillmentMethod: parsed.fulfillmentMethod,

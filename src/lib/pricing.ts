@@ -5,6 +5,7 @@
 
 import { db } from '@/lib/db';
 import type { FulfillmentMethod, ShoeCategory } from '@/types';
+import { resolveNationalMailInCityId } from '@/lib/mail-in';
 
 export interface QuoteInput {
   cityId: string;
@@ -58,8 +59,18 @@ export async function isRushEligible(cityId: string, serviceId: string): Promise
 
 export async function quote(input: QuoteInput): Promise<Quote> {
   const errors: string[] = [];
-  const city = await db.cities.byId(input.cityId);
-  if (!city || !city.active) errors.push('Shoe Glitch is not live in this city yet.');
+  const resolvedCityId =
+    input.fulfillmentMethod === 'mailin'
+      ? await resolveNationalMailInCityId(input.cityId)
+      : input.cityId;
+  const city = await db.cities.byId(resolvedCityId);
+  if (!city || !city.active) {
+    errors.push(
+      input.fulfillmentMethod === 'mailin'
+        ? 'Mail-in routing is temporarily unavailable.'
+        : 'Shoe Glitch is not live in this city yet.',
+    );
+  }
 
   const pairs = Math.max(1, input.pairCount || 1);
   const lines: QuoteLine[] = [];
@@ -68,7 +79,7 @@ export async function quote(input: QuoteInput): Promise<Quote> {
   const primary = await db.services.byId(input.primaryServiceId);
   if (!primary) errors.push('Service not found.');
 
-  const primaryPrice = primary ? await resolveServicePrice(input.cityId, primary.id) : 0;
+  const primaryPrice = primary ? await resolveServicePrice(resolvedCityId, primary.id) : 0;
   if (primary) {
     const sub = primaryPrice * pairs;
     lines.push({
@@ -89,7 +100,7 @@ export async function quote(input: QuoteInput): Promise<Quote> {
     input.addOnServiceIds.map(async (id) => {
       const svc = await db.services.byId(id);
       if (!svc || !svc.active) return null;
-      const price = await resolveServicePrice(input.cityId, svc.id);
+      const price = await resolveServicePrice(resolvedCityId, svc.id);
       return { svc, price };
     }),
   );
@@ -127,7 +138,7 @@ export async function quote(input: QuoteInput): Promise<Quote> {
 
   let rushFee = 0;
   if (input.isRush && city) {
-    const eligible = primary ? await isRushEligible(input.cityId, primary.id) : true;
+    const eligible = primary ? await isRushEligible(resolvedCityId, primary.id) : true;
     if (primary && !eligible) {
       errors.push(`${primary.name} is not eligible for rush service.`);
     } else {
@@ -141,7 +152,7 @@ export async function quote(input: QuoteInput): Promise<Quote> {
     const coupon = await db.coupons.byCode(input.couponCode);
     if (!coupon || !coupon.active) {
       errors.push('Invalid coupon code.');
-    } else if (coupon.cityId && coupon.cityId !== input.cityId) {
+    } else if (coupon.cityId && coupon.cityId !== resolvedCityId) {
       errors.push('This coupon is not valid in your city.');
     } else {
       if (coupon.percentOff) discount = Math.round(subtotal * (coupon.percentOff / 100));
@@ -155,7 +166,7 @@ export async function quote(input: QuoteInput): Promise<Quote> {
   const total = Math.max(0, subtotal + pickupFee + rushFee + returnShippingFee - discount);
 
   return {
-    cityId: input.cityId,
+    cityId: resolvedCityId,
     lines,
     subtotal,
     pickupFee,

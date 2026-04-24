@@ -21,6 +21,7 @@ type Step = 0 | 1 | 2 | 3 | 4 | 5;
 interface Props {
   cities: City[];
   servicesByCity: Record<string, { primary: ResolvedService[]; addOns: ResolvedService[] }>;
+  mailInCityId: string;
 }
 
 type SelectedPhoto = {
@@ -60,20 +61,22 @@ const STEPS = [
   'Review',
 ];
 
-export function BookingFlow({ cities, servicesByCity }: Props) {
+export function BookingFlow({ cities, servicesByCity, mailInCityId }: Props) {
   const search = useSearchParams();
   const router = useRouter();
 
   const [step, setStep] = useState<Step>(0);
 
   // State shape mirrors the server action schema.
-  const [cityId, setCityId] = useState<string>(search.get('city') ?? '');
+  const initialMode = search.get('mode') as 'pickup' | 'dropoff' | 'mailin' | null;
+  const [cityId, setCityId] = useState<string>(
+    search.get('city') ?? (initialMode === 'mailin' ? mailInCityId : ''),
+  );
   const [serviceAreaId, setServiceAreaId] = useState<string | undefined>(undefined);
   const [zip, setZip] = useState('');
   const [zipChecked, setZipChecked] = useState(false);
   const [zipMessage, setZipMessage] = useState<string | null>(null);
 
-  const initialMode = search.get('mode') as 'pickup' | 'dropoff' | 'mailin' | null;
   const [fulfillmentMethod, setFulfillmentMethod] = useState<'pickup' | 'dropoff' | 'mailin'>(
     initialMode ?? 'pickup',
   );
@@ -103,6 +106,11 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
   const [isPending, startTransition] = useTransition();
 
   const currentCity = useMemo(() => cities.find((c) => c.id === cityId), [cities, cityId]);
+  const mailInCity = useMemo(
+    () => cities.find((c) => c.id === mailInCityId) ?? currentCity ?? null,
+    [cities, currentCity, mailInCityId],
+  );
+  const effectiveCity = fulfillmentMethod === 'mailin' ? mailInCity : currentCity;
   const catalog = cityId ? servicesByCity[cityId] : undefined;
   const resolvedShoeBrand = useMemo(
     () => (shoeBrand === 'Other' ? customShoeBrand.trim() : shoeBrand.trim()),
@@ -116,7 +124,11 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
   const quickSummary = useMemo(
     () =>
       [
-        currentCity ? `${currentCity.name}` : null,
+        fulfillmentMethod === 'mailin'
+          ? 'Nationwide mail-in'
+          : currentCity
+            ? `${currentCity.name}`
+            : null,
         fulfillmentMethod ? fulfillmentMethod.replace('mailin', 'mail-in') : null,
         pairCount ? `${pairCount} pair${pairCount > 1 ? 's' : ''}` : null,
         selectedPrimaryService?.name ?? null,
@@ -164,6 +176,8 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
     } else {
       setZipMessage(r.reason ?? 'No coverage');
       setFulfillmentMethod('mailin');
+      setCityId(mailInCityId);
+      setServiceAreaId(undefined);
     }
   };
 
@@ -203,7 +217,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
 
   const canContinue: Record<Step, boolean> = {
     0: Boolean(cityId) || fulfillmentMethod === 'mailin',
-    1: Boolean(fulfillmentMethod && cityId),
+    1: Boolean(fulfillmentMethod && (fulfillmentMethod === 'mailin' ? mailInCityId : cityId)),
     2: Boolean(shoeCategory && pairCount >= 1 && resolvedShoeBrand && resolvedShoeTitle),
     3: Boolean(primaryServiceId),
     4:
@@ -330,24 +344,27 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
             )}
 
             <div className="mt-10">
-              <label className="label">Or pick a city</label>
+              <label className="label">Choose a local city for pickup/drop-off</label>
               <div className="flex flex-wrap gap-2">
                 {cities.filter(c => c.active).map((c) => (
                   <button
                     key={c.id}
-                    onClick={() => { setCityId(c.id); setServiceAreaId(undefined); }}
-                    className={cn('chip', cityId === c.id && 'chip-on')}
+                    onClick={() => { setCityId(c.id); setServiceAreaId(undefined); setFulfillmentMethod('pickup'); }}
+                    className={cn('chip', fulfillmentMethod !== 'mailin' && cityId === c.id && 'chip-on')}
                   >
                     {c.name}, {c.state}
                   </button>
                 ))}
                 <button
-                  onClick={() => { setFulfillmentMethod('mailin'); setCityId(cities[0]?.id ?? ''); }}
-                  className={cn('chip', fulfillmentMethod === 'mailin' && !cityId && 'chip-on')}
+                  onClick={() => { setFulfillmentMethod('mailin'); setCityId(mailInCityId); setServiceAreaId(undefined); }}
+                  className={cn('chip', fulfillmentMethod === 'mailin' && 'chip-on')}
                 >
                   📦 Mail-in from anywhere
                 </button>
               </div>
+              <p className="mt-3 text-sm text-ink/55">
+                Local cities only control pickup and drop-off coverage. Mail-in stays open nationwide.
+              </p>
             </div>
           </Panel>
         )}
@@ -357,13 +374,19 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
           <Panel title="How do you want to get them to us?">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
-                { k: 'pickup' as const, t: 'Local Pickup', d: 'We come to your door.', fee: `$${currentCity?.defaultPickupFee ?? 0}` },
+                { k: 'pickup' as const, t: 'Local Pickup', d: 'Only in live ShoeGlitch cities.', fee: `$${currentCity?.defaultPickupFee ?? 0}` },
                 { k: 'dropoff' as const, t: 'Drop-Off', d: 'Bring them to our hub.', fee: 'Free' },
-                { k: 'mailin' as const, t: 'Mail-In', d: 'Ship them in, we ship back.', fee: `$${currentCity?.defaultMailInReturnFee ?? 0} return` },
+                { k: 'mailin' as const, t: 'Mail-In', d: 'Nationwide. Ship them in, we ship back.', fee: `$${mailInCity?.defaultMailInReturnFee ?? 0} return` },
               ].map((m) => (
                 <button
                   key={m.k}
-                  onClick={() => setFulfillmentMethod(m.k)}
+                  onClick={() => {
+                    setFulfillmentMethod(m.k);
+                    if (m.k === 'mailin') {
+                      setCityId(mailInCityId);
+                      setServiceAreaId(undefined);
+                    }
+                  }}
                   className={cn(
                     'card p-6 text-left card-lift',
                     fulfillmentMethod === m.k && 'ring-2 ring-ink',
@@ -380,7 +403,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
             <div className="mt-6 flex items-center gap-3">
               <label className="flex items-center gap-3 cursor-pointer">
                 <input type="checkbox" checked={isRush} onChange={(e) => setIsRush(e.target.checked)} className="h-5 w-5 accent-glitch" />
-                <span className="text-sm">Rush service <span className="text-ink/50">(+${currentCity?.defaultRushFee ?? 0})</span></span>
+                <span className="text-sm">Rush service <span className="text-ink/50">(+${effectiveCity?.defaultRushFee ?? 0})</span></span>
               </label>
             </div>
           </Panel>
@@ -446,7 +469,10 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
 
         {/* STEP 3 — Service */}
         {step === 3 && catalog && (
-          <Panel title="Pick your service." subtitle={`Pricing reflects ${currentCity?.name}. Steam-assisted cleaning is included in every package above Fresh Start.`}>
+          <Panel
+            title="Pick your service."
+            subtitle={`Pricing reflects ${fulfillmentMethod === 'mailin' ? `${mailInCity?.name ?? 'our national'} mail-in hub` : currentCity?.name}. Steam-assisted cleaning is included in every package above Fresh Start.`}
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {catalog.primary.map((s) => (
                 <button
@@ -531,7 +557,7 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
 
             {fulfillmentMethod === 'mailin' && (
               <div className="card p-5 mb-6 bg-bone-soft">
-                <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {currentCity?.hubAddress ?? 'Our central hub'} — packing instructions are emailed after booking.</p>
+                <p className="text-sm"><strong>You&rsquo;ll ship to:</strong> {mailInCity?.hubAddress ?? 'Our central hub'} — packing instructions are emailed after booking.</p>
               </div>
             )}
 
@@ -597,10 +623,10 @@ export function BookingFlow({ cities, servicesByCity }: Props) {
           <Panel title="Review & confirm.">
             <div className="card p-6 mb-6">
               <div className="flex items-start justify-between mb-4">
-                <div>
-                  <div className="font-mono text-xs text-ink/40">SUMMARY</div>
-                  <h4 className="h-display text-3xl">{currentCity?.name}</h4>
-                </div>
+                  <div>
+                    <div className="font-mono text-xs text-ink/40">SUMMARY</div>
+                  <h4 className="h-display text-3xl">{fulfillmentMethod === 'mailin' ? 'Nationwide mail-in' : currentCity?.name}</h4>
+                  </div>
                 <Badge tone="glitch">{fulfillmentMethod.toUpperCase()}</Badge>
               </div>
               <div className="space-y-1 text-sm">
