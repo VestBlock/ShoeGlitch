@@ -20,6 +20,12 @@ function compactHashtag(value: string) {
   return tag.length >= 2 && tag.length <= 80 ? `#${tag}` : null;
 }
 
+function trimSentence(value: string, maxLength: number) {
+  const normalized = value.replace(/\s+/g, ' ').trim();
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, Math.max(0, maxLength - 1)).trimEnd()}…`;
+}
+
 function skuHashtag(value: string | null) {
   if (!value) return null;
   const tag = value.replace(/[^a-zA-Z0-9]+/g, '').toUpperCase();
@@ -74,7 +80,7 @@ function buildHook(source: SocialSourceExtract) {
   }
 }
 
-function buildHashtags(source: SocialSourceExtract) {
+function buildHashtags(source: SocialSourceExtract, socialPlatformTarget: SocialPlatformTarget) {
   const tags = new Set<string>(['#ShoeGlitch', '#SneakerCare', '#SneakerCleaning']);
   const brand = typeof source.metadata.brand === 'string' ? source.metadata.brand : null;
   const city = typeof source.metadata.city === 'string' ? source.metadata.city : null;
@@ -100,7 +106,7 @@ function buildHashtags(source: SocialSourceExtract) {
   if (source.pageType === 'how-to-clean') tags.add('#HowToCleanShoes');
   if (service === 'pickup-dropoff') tags.add('#PickupDropoff');
 
-  return Array.from(tags).slice(0, 10);
+  return Array.from(tags).slice(0, socialPlatformTarget === 'tiktok' ? 5 : 10);
 }
 
 function nextRecommendedScheduleAt(source: SocialSourceExtract) {
@@ -121,7 +127,7 @@ function nextRecommendedScheduleAt(source: SocialSourceExtract) {
   return schedule.toISOString();
 }
 
-function buildCaption(source: SocialSourceExtract, hashtags: string[]) {
+function buildInstagramCaption(source: SocialSourceExtract, hashtags: string[]) {
   const actionLine =
     source.pageType === 'release-alerts'
       ? 'Save the pair, track the drop, and move before the best window closes.'
@@ -144,17 +150,44 @@ function buildCaption(source: SocialSourceExtract, hashtags: string[]) {
   ].join('\n');
 }
 
+function buildTikTokCaption(source: SocialSourceExtract, hashtags: string[]) {
+  const brand = typeof source.metadata.brand === 'string' ? source.metadata.brand : null;
+  const model = typeof source.metadata.model === 'string' ? source.metadata.model : null;
+  const shortLabel = trimSentence(brandModelLabel(brand, model) ?? source.title, 72);
+  const shortSummary = trimSentence(source.shortSummary, 150);
+
+  const actionLine =
+    source.pageType === 'how-to-clean'
+      ? 'Care guide + booking path in ShoeGlitch Intelligence.'
+      : source.pageType === 'worth-restoring'
+        ? 'See the restoration case in ShoeGlitch Intelligence.'
+        : source.pageType === 'release-alerts'
+          ? 'Track the drop in ShoeGlitch Intelligence.'
+          : 'See it in ShoeGlitch Intelligence.';
+
+  return [
+    `${shortLabel}`,
+    shortSummary,
+    actionLine,
+    hashtags.join(' '),
+  ].join('\n\n');
+}
+
 export function buildSocialPayload(
   source: SocialSourceExtract,
   socialPlatformTarget: SocialPlatformTarget,
 ): SocialPayloadDraft {
   const contentAngle = contentAngleForPageType(source.pageType);
-  const hashtags = buildHashtags(source);
+  const hashtags = buildHashtags(source, socialPlatformTarget);
+  const caption =
+    socialPlatformTarget === 'tiktok'
+      ? buildTikTokCaption(source, hashtags)
+      : buildInstagramCaption(source, hashtags);
 
   return {
     contentAngle,
     hook: buildHook(source),
-    caption: buildCaption(source, hashtags),
+    caption,
     hashtags,
     imageUrl: source.imageUrl,
     canonicalLink: source.canonicalUrl,
