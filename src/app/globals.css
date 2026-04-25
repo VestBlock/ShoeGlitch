@@ -12,6 +12,23 @@
 }
 
 html, body { height: 100%; }
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 body {
   position: relative;
   font-feature-settings: 'ss01', 'ss02', 'cv11';
@@ -204,6 +221,14 @@ body::after {
   animation: pulseBorder 4.8s ease-in-out infinite;
 }
 
+.hero-scene-noise {
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06), transparent 45%),
+    linear-gradient(135deg, rgba(255,255,255,0.04), transparent 28%, rgba(255,255,255,0.02) 65%, transparent 80%);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
 .editorial-shell {
   background:
     linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.88)),
@@ -318,6 +343,21 @@ body::after {
   border: 1px solid rgba(10, 15, 31, 0.10);
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 18px 40px rgba(10, 15, 31, 0.08);
+}
+
+.intelligence-card {
+  position: relative;
+}
+
+.intelligence-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 84% 18%, rgba(0,229,255,0.10), transparent 26%),
+    linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.24) 45%, rgba(10,15,31,0.05));
+  opacity: 0.95;
 }
 
 .testimonial-visual-card {

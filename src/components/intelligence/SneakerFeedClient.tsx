@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import FeedFilters from '@/components/intelligence/FeedFilters';
 import { FeedEmptyState, FeedHealthBanner } from '@/components/intelligence/FeedState';
 import SneakerCard from '@/components/intelligence/SneakerCard';
@@ -56,6 +57,20 @@ export default function SneakerFeedClient({ feed }: { feed: SneakerFeedResult })
   const visibleItems = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
 
+  const feedItemVariants = {
+    hidden: { opacity: 0, y: 28, scale: 0.985 },
+    visible: (index: number) => ({
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.55,
+        ease: [0.22, 1, 0.36, 1] as const,
+        delay: Math.min(index * 0.06, 0.34),
+      },
+    }),
+  };
+
   useEffect(() => {
     setVisibleCount(6);
   }, [filters]);
@@ -79,14 +94,32 @@ export default function SneakerFeedClient({ feed }: { feed: SneakerFeedResult })
 
   return (
     <div className="space-y-6">
-      <div className="sticky top-20 z-20">
+      <motion.div
+        className="sticky top-20 z-20"
+        initial={{ opacity: 0, y: -18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      >
         <FeedFilters brands={brands} value={filters} onChange={setFilters} />
-      </div>
+      </motion.div>
 
-      <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.68fr)]">
-        <FeedHealthBanner
-          copy={`${filtered.length} sneakers ready for release watching, cleaning hooks, restoration calls, and later affiliate layers.`}
-        />
+      <motion.div
+        className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.68fr)]"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="relative overflow-hidden rounded-[1.65rem] border border-white/10 bg-[linear-gradient(180deg,rgba(7,20,44,0.92),rgba(10,15,31,0.98))] p-4 shadow-[0_24px_70px_rgba(10,15,31,0.16)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_22%,rgba(0,229,255,0.20),transparent_26%),radial-gradient(circle_at_88%_30%,rgba(255,77,109,0.15),transparent_28%)]" />
+          <div className="relative">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-cyan/80">Feed scope</div>
+            <div className="mt-3 text-3xl font-semibold tracking-tight text-bone">{filtered.length}</div>
+            <div className="mt-2 max-w-lg text-sm leading-6 text-bone/68">
+              Sneakers ready for release watching, cleaning hooks, restoration calls, and later affiliate layers.
+            </div>
+          </div>
+        </div>
+
         <FeedHealthBanner
           copy={
             feed.usedFallbackData
@@ -95,14 +128,22 @@ export default function SneakerFeedClient({ feed }: { feed: SneakerFeedResult })
           }
           tone={feed.usedFallbackData ? 'warn' : 'default'}
         />
-      </div>
+      </motion.div>
 
       {filtered.length === 0 ? (
         <FeedEmptyState />
       ) : (
         <div className="mx-auto max-w-[58rem] space-y-5">
-          {visibleItems.map((item) => (
-            <SneakerCard key={`${item.provider}-${item.id}`} item={item} />
+          {visibleItems.map((item, index) => (
+            <motion.div
+              key={`${item.provider}-${item.id}`}
+              custom={index}
+              variants={feedItemVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <SneakerCard item={item} />
+            </motion.div>
           ))}
 
           <div ref={sentinelRef} className="flex items-center justify-center py-4">

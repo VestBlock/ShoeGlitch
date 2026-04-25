@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Fraunces, Inter_Tight, JetBrains_Mono } from 'next/font/google';
+import SmoothScrollProvider from '@/components/SmoothScrollProvider';
 import './globals.css';
 
 const fraunces = Fraunces({
@@ -70,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${fraunces.variable} ${interTight.variable} ${jetBrainsMono.variable} min-h-screen bg-bone text-ink font-sans selection:bg-glitch selection:text-white`}
       >
-        {children}
+        <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>
   );

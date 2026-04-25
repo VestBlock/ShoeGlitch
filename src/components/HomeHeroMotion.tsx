@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import HeroSignalScene from '@/components/HeroSignalScene';
 import TrustProofStrip from '@/components/TrustProofStrip';
 
 const primaryMp4Url = '/ShoeTest.mp4?v=6';
@@ -183,65 +184,92 @@ export default function HomeHeroMotion({
         >
           <div className="rounded-[2.2rem] border border-ink/10 bg-white/56 p-3 shadow-[0_28px_90px_rgba(10,15,31,0.12)] backdrop-blur-xl">
             <div className="relative h-[320px] overflow-hidden rounded-[1.8rem] border border-ink/12 bg-[#07142c] shadow-[0_42px_110px_rgba(10,15,31,0.22)] sm:h-[380px] lg:h-[100%] lg:min-h-[560px]">
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${posterUrl})` }}
-              />
-
-              <video
-                ref={videoRef}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="metadata"
-                poster={posterUrl}
-                onLoadedData={() => setAutoplayBlocked(false)}
-                onTimeUpdate={() => setAutoplayBlocked(false)}
-                onPlaying={() => setAutoplayBlocked(false)}
-                onCanPlay={() => {
-                  const video = videoRef.current;
-                  if (video && video.paused) {
-                    void video.play().catch(() => {
-                      setAutoplayBlocked(true);
-                    });
-                  }
-                }}
-                className="absolute inset-0 h-full w-full object-contain opacity-[0.96]"
-                style={
-                  reduceMotion
-                    ? undefined
-                    : {
-                        transform: 'scale(0.985)',
-                      }
-                }
-              >
-                <source src={primaryMp4Url} type="video/mp4" />
-                <source src={fallbackMp4Url} type="video/mp4" />
-              </video>
+              <HeroSignalScene reduceMotion={Boolean(reduceMotion)} />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(255,255,255,0.10),transparent_26%),radial-gradient(circle_at_84%_20%,rgba(90,179,255,0.24),transparent_22%),linear-gradient(180deg,rgba(7,20,44,0.14),rgba(7,20,44,0.4)_58%,rgba(7,20,44,0.64)_100%)]" />
 
               <motion.div
-                className="pointer-events-none absolute inset-y-0 left-[-24%] w-[44%] bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.14),rgba(255,255,255,0))] mix-blend-screen"
+                className="absolute left-[5%] right-[17%] top-[14%] h-[52%] rounded-[1.9rem] border border-white/18 bg-white/6 p-3 shadow-[0_34px_90px_rgba(10,15,31,0.30)] backdrop-blur-md sm:left-[7%] sm:right-[24%] sm:top-[12%] sm:h-[56%] lg:left-[7%] lg:right-[29%] lg:top-[11%]"
                 animate={
                   reduceMotion
                     ? undefined
                     : {
-                        x: ['0%', '165%'],
+                        y: [0, -8, 0],
+                        rotateZ: [0, -0.8, 0],
                       }
                 }
                 transition={
                   reduceMotion
                     ? undefined
                     : {
-                        duration: 9,
+                        duration: 10.5,
                         repeat: Infinity,
                         ease: 'easeInOut',
                       }
                 }
-              />
+              >
+                <div className="relative h-full overflow-hidden rounded-[1.45rem] border border-white/16 bg-[#07142c] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center opacity-55"
+                    style={{ backgroundImage: `url(${posterUrl})` }}
+                  />
 
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(90,179,255,0.18),transparent_28%),linear-gradient(180deg,rgba(7,20,44,0.08),rgba(7,20,44,0.02)_34%,rgba(7,20,44,0.10)_70%,rgba(7,20,44,0.30)_100%),linear-gradient(90deg,rgba(7,20,44,0.16),rgba(7,20,44,0.02)_38%,rgba(7,20,44,0.12)_100%)]" />
-              <div className="pointer-events-none absolute inset-0 border-[1.5px] border-white/10" />
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    poster={posterUrl}
+                    onLoadedData={() => setAutoplayBlocked(false)}
+                    onTimeUpdate={() => setAutoplayBlocked(false)}
+                    onPlaying={() => setAutoplayBlocked(false)}
+                    onCanPlay={() => {
+                      const video = videoRef.current;
+                      if (video && video.paused) {
+                        void video.play().catch(() => {
+                          setAutoplayBlocked(true);
+                        });
+                      }
+                    }}
+                    className="absolute inset-0 h-full w-full object-contain opacity-[0.97]"
+                    style={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            transform: 'scale(0.985)',
+                          }
+                    }
+                  >
+                    <source src={primaryMp4Url} type="video/mp4" />
+                    <source src={fallbackMp4Url} type="video/mp4" />
+                  </video>
+
+                  <motion.div
+                    className="pointer-events-none absolute inset-y-0 left-[-24%] w-[44%] bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.14),rgba(255,255,255,0))] mix-blend-screen"
+                    animate={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            x: ['0%', '165%'],
+                          }
+                    }
+                    transition={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            duration: 9,
+                            repeat: Infinity,
+                            ease: 'easeInOut',
+                          }
+                    }
+                  />
+
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(90,179,255,0.18),transparent_28%),linear-gradient(180deg,rgba(7,20,44,0.08),rgba(7,20,44,0.02)_34%,rgba(7,20,44,0.10)_70%,rgba(7,20,44,0.30)_100%),linear-gradient(90deg,rgba(7,20,44,0.16),rgba(7,20,44,0.02)_38%,rgba(7,20,44,0.12)_100%)]" />
+                  <div className="pointer-events-none absolute inset-0 border-[1.5px] border-white/10" />
+                </div>
+              </motion.div>
+
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#07142c] via-[#07142c]/44 to-transparent" />
 
               <div className="absolute left-4 top-4 z-10 md:left-6 md:top-6">
@@ -251,12 +279,48 @@ export default function HomeHeroMotion({
                 </div>
               </div>
 
-              <div className="absolute right-4 top-4 z-10 max-w-[14rem] rounded-[1.15rem] border border-white/14 bg-white/8 px-4 py-4 text-white/78 shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-md md:right-6 md:top-6">
+              <div className="absolute right-4 top-[24%] z-10 hidden max-w-[14rem] rounded-[1.15rem] border border-white/14 bg-white/8 px-4 py-4 text-white/78 shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-md md:right-6 md:block">
                 <div className="text-[10px] uppercase tracking-[0.3em] text-cyan/90">Signal layer</div>
                 <div className="mt-2 text-sm leading-6">
                   Scroll-responsive framing, intake-backed booking, and real proof media in one system.
                 </div>
               </div>
+
+              <motion.div
+                className="absolute right-4 top-[56%] z-10 hidden min-w-[12rem] rounded-[1.25rem] border border-white/14 bg-ink/22 px-4 py-4 text-bone shadow-[0_18px_40px_rgba(10,15,31,0.22)] backdrop-blur-md md:right-6 md:block"
+                animate={
+                  reduceMotion
+                    ? undefined
+                    : {
+                        y: [0, -7, 0],
+                        rotateZ: [0, 0.6, 0],
+                      }
+                }
+                transition={
+                  reduceMotion
+                    ? undefined
+                    : {
+                        duration: 8.5,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }
+                }
+              >
+                <div className="text-[10px] uppercase tracking-[0.3em] text-white/62">Restoration signal</div>
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  {[
+                    ['3 routes', 'Local + mail-in'],
+                    ['Real proof', 'Before / after'],
+                    ['Tiered care', 'Basic / Pro / Elite'],
+                    ['Tracked flow', 'Intake to return'],
+                  ].map(([title, detail]) => (
+                    <div key={title} className="rounded-[0.95rem] border border-white/10 bg-white/6 px-3 py-3">
+                      <div className="text-xs font-semibold text-bone">{title}</div>
+                      <div className="mt-1 text-[11px] leading-5 text-bone/58">{detail}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
 
               <div className="absolute inset-x-0 bottom-0 z-10 p-4 md:p-5">
                 <div className="max-w-[22rem] rounded-[1.35rem] border border-white/18 bg-ink/12 px-4 py-4 shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-sm md:px-5">
@@ -290,7 +354,7 @@ export default function HomeHeroMotion({
                       setAutoplayBlocked(true);
                     });
                   }}
-                  className="absolute inset-x-0 top-1/2 z-20 mx-auto flex w-fit -translate-y-1/2 items-center gap-3 rounded-full border border-white/18 bg-ink/66 px-5 py-3 text-sm font-semibold text-bone shadow-[0_18px_40px_rgba(10,15,31,0.34)] backdrop-blur-xl transition hover:border-cyan/40 hover:text-cyan"
+                  className="absolute left-[10%] top-[41%] z-20 flex w-fit -translate-y-1/2 items-center gap-3 rounded-full border border-white/18 bg-ink/66 px-5 py-3 text-sm font-semibold text-bone shadow-[0_18px_40px_rgba(10,15,31,0.34)] backdrop-blur-xl transition hover:border-cyan/40 hover:text-cyan sm:left-[12%] lg:left-[9%]"
                 >
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan text-ink">▶</span>
                   Tap to play motion
