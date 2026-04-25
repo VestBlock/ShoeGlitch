@@ -102,28 +102,28 @@ export function buildScoreSignals(item: SneakerFeedItem, includeConfidence = fal
   const signals: SignalItem[] = [
     {
       key: 'cleaning',
-      eyebrow: `Cleanability ${item.scores.cleaning}`,
+      eyebrow: `Easy care later ${item.scores.cleaning}`,
       headline: labelForScore('cleaning', item.scores.cleaning),
       detail: firstReason(item.scores.reasons.cleaning),
       tone: toneForScore(item.scores.cleaning),
     },
     {
       key: 'restoration',
-      eyebrow: `Restoration ${item.scores.restoration}`,
+      eyebrow: `Restore later ${item.scores.restoration}`,
       headline: labelForScore('restoration', item.scores.restoration),
       detail: firstReason(item.scores.reasons.restoration),
       tone: toneForScore(item.scores.restoration),
     },
     {
       key: 'market',
-      eyebrow: `Market ${item.scores.marketStrength}`,
+      eyebrow: `Market heat ${item.scores.marketStrength}`,
       headline: labelForScore('market', item.scores.marketStrength),
       detail: firstReason(item.scores.reasons.marketStrength),
       tone: toneForScore(item.scores.marketStrength),
     },
     {
       key: 'serviceFit',
-      eyebrow: `Service fit ${item.scores.serviceFit}`,
+      eyebrow: `Aftercare fit ${item.scores.serviceFit}`,
       headline: labelForScore('serviceFit', item.scores.serviceFit),
       detail: firstReason(item.scores.reasons.serviceFit),
       tone: toneForScore(item.scores.serviceFit),
@@ -134,14 +134,14 @@ export function buildScoreSignals(item: SneakerFeedItem, includeConfidence = fal
     signals.push(
       {
         key: 'wear',
-        eyebrow: `Wear visibility ${item.scores.wearVisibility}`,
+        eyebrow: `Wear shows fast ${item.scores.wearVisibility}`,
         headline: labelForScore('wear', item.scores.wearVisibility),
         detail: firstReason(item.scores.reasons.wearVisibility),
         tone: toneForScore(item.scores.wearVisibility),
       },
       {
         key: 'sole',
-        eyebrow: `Sole risk ${item.scores.soleRisk}`,
+        eyebrow: `Sole risk later ${item.scores.soleRisk}`,
         headline: labelForScore('sole', item.scores.soleRisk),
         detail: firstReason(item.scores.reasons.soleRisk),
         tone: toneForScore(item.scores.soleRisk, false),
@@ -155,7 +155,7 @@ export function buildScoreSignals(item: SneakerFeedItem, includeConfidence = fal
       },
       {
         key: 'confidence',
-        eyebrow: `Confidence ${item.scores.confidence}`,
+        eyebrow: `Data confidence ${item.scores.confidence}`,
         headline: labelForScore('confidence', item.scores.confidence),
         detail: firstReason(item.scores.reasons.confidence),
         tone: toneForScore(item.scores.confidence),

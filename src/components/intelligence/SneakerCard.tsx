@@ -11,6 +11,15 @@ function flagTone(flag: SneakerFeedItem['opportunityFlags'][number]) {
   return 'default';
 }
 
+function flagLabel(flag: SneakerFeedItem['opportunityFlags'][number]) {
+  if (flag === 'cleaning') return 'Easy care later';
+  if (flag === 'restoration') return 'Restore later';
+  if (flag === 'flip') return 'Resale watch';
+  if (flag === 'watch') return 'Alert priority';
+  if (flag === 'upcoming') return 'Upcoming drop';
+  return flag;
+}
+
 export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
   const watchCta = item.primaryCta.kind === 'join-waitlist'
     ? item.primaryCta
@@ -70,14 +79,14 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
         <div className="mt-5 flex flex-wrap items-center gap-2">
           {item.opportunityFlags.map((flag) => (
             <Badge key={flag} tone={flagTone(flag)}>
-              {flag}
+              {flagLabel(flag)}
             </Badge>
           ))}
         </div>
 
         <div className="mt-5 flex items-end justify-between gap-4">
           <div className="max-w-[19rem]">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Market snapshot</div>
+            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Why save it</div>
             <div className="mt-2 text-base font-semibold text-ink">
               {item.market.estimatedResale
                 ? `$${item.market.estimatedResale}`

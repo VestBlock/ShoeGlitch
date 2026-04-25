@@ -81,9 +81,9 @@ export default function ReleaseAlertsLandingPage({ model }: { model: ReleasePage
                   </div>
                   <div className="mt-4 grid grid-cols-3 gap-3">
                     {[
-                      ['Watch fit', model.item.scores.marketWatchFit],
-                      ['Pressure', model.item.scores.releasePressure],
-                      ['Market', model.item.scores.marketStrength],
+                      ['Save fit', model.item.scores.marketWatchFit],
+                      ['Urgency', model.item.scores.releasePressure],
+                      ['Heat', model.item.scores.marketStrength],
                     ].map(([label, value]) => (
                       <div key={label} className="rounded-[1rem] border border-white/14 bg-white/8 px-3 py-3 text-center">
                         <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/58">{label}</div>
@@ -123,7 +123,7 @@ export default function ReleaseAlertsLandingPage({ model }: { model: ReleasePage
                 <section>
                   <h2>Alert strategy</h2>
                   <p>
-                    This page is part of ShoeGlitch’s retention engine, not just its content engine. The goal is to turn high-interest releases into saved products so release, restock, and pricing changes can bring the visitor back with the right CTA at the right time.
+                    The goal here is simple: save the pair early, then let release, restock, and pricing changes bring you back when something meaningful happens.
                   </p>
                   <dl className="grid gap-4 md:grid-cols-2">
                     <div className="rounded-[1.1rem] border border-ink/10 bg-bone-soft p-4">
@@ -150,7 +150,7 @@ export default function ReleaseAlertsLandingPage({ model }: { model: ReleasePage
                 </section>
 
                 <section>
-                  <h2>Editorial enrichment status</h2>
+                  <h2>Latest note</h2>
                   <p>{model.editorial.reviewNote}</p>
                 </section>
               </div>
@@ -172,7 +172,7 @@ export default function ReleaseAlertsLandingPage({ model }: { model: ReleasePage
 
           <aside className="space-y-5 xl:sticky xl:top-24">
             <Card className="p-5">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Related paths</div>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">More to open</div>
               <div className="mt-4 space-y-3">
                 {model.relatedLinks.map((link) => (
                   <Link

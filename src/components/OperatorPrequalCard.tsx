@@ -28,8 +28,7 @@ export default function OperatorPrequalCard({
         See which operator path fits before you apply.
       </h3>
       <p className="mt-3 text-sm leading-6 text-ink/66">
-        Start with the role, availability, and market you want. The live application stays the same, but this step
-        helps route people into the right version of it first.
+        Start with the role, availability, and city you want. The application stays the same, but this step helps you begin in the right place.
       </p>
 
       <div className="mt-5 grid gap-3 md:grid-cols-3">

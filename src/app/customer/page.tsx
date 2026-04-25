@@ -169,7 +169,7 @@ export default async function CustomerDashboard() {
             <Badge tone="acid">{watchCount} active watches</Badge>
           </div>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-ink/64">
-            Your watchlist and the intelligence feed work better together: save the pairs you care about, catch release or restock movement, then jump back into booking when something is worth cleaning or restoring.
+            Save the pairs you care about, catch release and restock movement, and come back when it is time to buy, clean, protect, or restore them.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link href="/customer/watchlist" className="btn-glitch">Open watchlist →</Link>
@@ -212,7 +212,7 @@ export default async function CustomerDashboard() {
                 <div className="font-mono text-xs uppercase tracking-widest text-glitch mb-2">Live intelligence feed</div>
                 <h2 className="h-display text-3xl">Save pairs without leaving your dashboard.</h2>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-ink/64">
-                  Browse current release candidates, add any pair to your watchlist with one click, and jump into booking later if something becomes worth cleaning or restoring.
+                  Browse current pairs, save any of them to your watchlist with one click, and let future alerts bring you back at the right time.
                 </p>
               </div>
               <Link href="/intelligence" className="btn-outline">Open full intelligence feed →</Link>

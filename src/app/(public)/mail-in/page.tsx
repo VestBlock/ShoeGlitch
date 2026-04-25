@@ -17,10 +17,10 @@ export default async function MailInPage() {
           <em className="h-italic text-glitch">Tracked end to end.</em>
         </h1>
         <p className="text-ink/70 max-w-2xl text-lg">
-          Mail-in is open nationwide. Local city coverage only controls pickup and drop-off routes.
+          Mail-in is open nationwide. Local city coverage only changes whether we can hand off the pair in person.
         </p>
         <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/60">
-          That includes the same Basic, Pro, and Elite service path used in local markets, with Steam Clean built into every tier.
+          You still choose between Basic, Pro, and Elite, with Steam Clean built into every tier.
         </p>
         <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/60">
           Need a box? Add <strong>{MAIL_IN_BOX_KIT_NAME}</strong> at checkout for <strong>${MAIL_IN_BOX_KIT_PRICE}</strong>. If you skip it, you can still use your own box or buy one at the carrier store when you drop off the shipment. {MAIL_IN_BOX_KIT_DELAY}
@@ -32,7 +32,7 @@ export default async function MailInPage() {
           {[
             { n: '01', t: 'Book online', d: 'Pick a service, upload photos, pay.' },
             { n: '02', t: 'Bring or buy a box', d: 'If you already have a sturdy box, use it. If not, take the shoes to the carrier store on the label and buy one there.' },
-            { n: '03', t: 'Ship it in', d: "We&rsquo;ll email the prepaid label and hub address, then route the pair into the right clean or restoration process." },
+            { n: '03', t: 'Ship it in', d: "We&rsquo;ll email the prepaid label and hub address, then move the pair into the right clean or restoration work." },
             { n: '04', t: 'Track & receive', d: 'Live status from receipt through return shipping.' },
           ].map((s) => (
             <Card key={s.n} className="p-6">
@@ -52,7 +52,7 @@ export default async function MailInPage() {
             <div className="h-display mt-2 text-4xl">Brookfield, WI</div>
             <div className="mt-3 text-base text-ink/72">{nationalHubAddress}</div>
             <div className="mt-5 rounded-[1.2rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm leading-6 text-ink/62">
-              Every nationwide mail-in order routes here first, then we send the pair into the right Basic, Pro, or Elite workflow.
+              Every nationwide mail-in order comes here first, then we move the pair into the right Basic, Pro, or Elite care process.
             </div>
           </Card>
           <Card className="p-8">

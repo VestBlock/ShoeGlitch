@@ -117,10 +117,10 @@ export default async function ServicesPage() {
             items={[
               {
                 label: 'See pricing before checkout',
-                detail: 'Quotes update live based on city, route, service mix, and rush selection.',
+                detail: 'Quotes update live based on city, handoff choice, service mix, and rush selection.',
               },
               {
-                label: 'Use the route that fits',
+                label: 'Choose the handoff that fits',
                 detail: 'Pickup, drop-off, and mail-in stay in one booking flow so the handoff stays clear.',
               },
               {
@@ -162,7 +162,7 @@ export default async function ServicesPage() {
                 <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Best for</div>
                 <h3 className="h-display mt-3 text-3xl leading-[0.96] text-ink">{item.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-ink/66">{item.bestFor}</p>
-                <div className="mt-5 text-sm font-semibold text-glitch">Go this route →</div>
+                <div className="mt-5 text-sm font-semibold text-glitch">Book this tier →</div>
               </Link>
             ))}
           </div>

@@ -39,13 +39,10 @@ export default async function CustomerWatchlistPage({
     return (
       <DashboardShell currentPath="/customer/watchlist" pageTitle="Watchlist">
         <Card>
-          <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Watchlist setup needed</div>
-          <h2 className="h-display mt-3 text-3xl">Sneaker alerts are almost ready.</h2>
+          <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Watchlist unavailable</div>
+          <h2 className="h-display mt-3 text-3xl">Your alerts page is taking a quick reset.</h2>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-ink/66">
-            The watchlist interface is installed, but the Supabase watchlist tables still need to be applied before saved shoes and alert history can load.
-          </p>
-          <p className="mt-4 text-xs text-ink/50">
-            Apply <span className="font-mono">supabase/migrations/20260422_watchlist_alerts.sql</span>.
+            Saved pairs and alert history are temporarily unavailable right now. Try refreshing in a moment. If it keeps happening, we’ll need to finish the watchlist setup behind the scenes.
           </p>
         </Card>
       </DashboardShell>

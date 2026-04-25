@@ -10,7 +10,7 @@ import { buildFeedSchemas, INTELLIGENCE_FAQS } from '@/features/intelligence/sch
 export const metadata: Metadata = {
   title: 'Sneaker Alerts, Watchlists & Release Tracking | Shoe Glitch',
   description:
-    'Track upcoming sneaker releases, save watchlists, and move into premium alerts as Shoe Glitch expands its release-tracking product.',
+    'Track upcoming sneaker releases, save pairs to your watchlist, and stay ready for faster alerts and restock updates with Shoe Glitch Intelligence.',
 };
 
 export default async function IntelligencePage() {
@@ -43,7 +43,7 @@ export default async function IntelligencePage() {
                   <em className="h-italic text-cyan">matter next.</em>
                 </h1>
                 <p className="mt-5 max-w-3xl text-lg leading-8 text-bone/70">
-                  Shoe Glitch Intelligence is about upcoming drops, watchlists, and the alert layer we can monetize over time. Scores still help rank what deserves attention, but the product is following the right release before everyone else does.
+                  Save upcoming pairs, follow release dates, and stay close to restocks without digging through noise. The feed helps you decide what deserves a watchlist spot now, and premium alerts can sit on top of that later.
                 </p>
 
                 <div className="mt-7 flex flex-wrap gap-3">
@@ -61,7 +61,7 @@ export default async function IntelligencePage() {
                       At a glance
                     </div>
                     <p className="mt-3 text-sm leading-6 text-bone/68">
-                      The feed exists to help customers decide what to watch, what to save, and what deserves an alert. Scoring is support, not the product.
+                      This feed helps you decide what to save early, what to ignore, and which pairs deserve a faster alert if they move.
                     </p>
                   </div>
                   <div className="section-outline-dark p-5">
@@ -79,7 +79,7 @@ export default async function IntelligencePage() {
                       What unlocks next
                     </div>
                     <p className="mt-3 text-sm leading-6 text-bone/68">
-                      Free feed first, then better watchlists, faster alerting, and subscriber-ready release coverage as the data layer deepens.
+                      Start with the free feed, then move into faster alerts, deeper watchlists, and a more premium tracking layer as it opens up.
                     </p>
                   </div>
                 </div>
@@ -87,19 +87,19 @@ export default async function IntelligencePage() {
 
               <aside className="section-shell-dark p-5 md:p-6">
                 <div className="relative z-10">
-                  <div className="section-kicker !border-cyan/15 !bg-white/8 !text-cyan">What we sell here</div>
+                  <div className="section-kicker !border-cyan/15 !bg-white/8 !text-cyan">How to use it</div>
                   <div className="mt-4">
                     <OrbitalScene className="min-h-[240px] border-white/10" accent="#00e5ff" glow="#ff4d6d" />
                   </div>
                   <h2 className="h-display mt-5 text-3xl leading-[0.96] text-bone md:text-4xl">
-                    Premium alerts are the product.
+                    Save first. Let alerts do the chasing.
                   </h2>
 
                   <div className="mt-5 grid gap-3">
                     {[
-                      ['Free', 'Open release feed, search, and starter watchlists'],
-                      ['Pro alerts', 'Unlimited watchlists, instant alerting, weekly digest'],
-                      ['Care conversion', 'After the drop, turn the same customer into cleaning, restoration, or mail-in revenue'],
+                      ['Save the pair', 'Add it to your watchlist the moment it stands out.'],
+                      ['Track the drop', 'Follow release timing, pricing, and restock movement.'],
+                      ['Upgrade later', 'Move into faster alerts and deeper watchlists when that layer goes live.'],
                     ].map(([title, detail]) => (
                       <div key={title} className="section-outline-dark p-4">
                         <div className="text-sm font-semibold text-bone">{title}</div>
@@ -130,11 +130,11 @@ export default async function IntelligencePage() {
               Live feed
             </div>
             <h2 className="h-display mt-3 text-[clamp(2.2rem,4vw,3.8rem)] leading-[0.95] text-ink">
-              Filter what to follow next.
+              Filter what deserves a save.
             </h2>
           </div>
           <p className="max-w-xl text-sm leading-6 text-ink/62">
-            Less blog, more alert console. Every card should help someone save a pair, follow a drop, or understand why it deserves a watchlist spot.
+            Every card should help you make one simple decision: ignore it, save it, or stay close for the next alert.
           </p>
         </div>
 

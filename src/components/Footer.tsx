@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="section-outline-dark mb-10 p-5 md:p-7">
           <div className="relative z-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div className="max-w-2xl">
-              <div className="text-[10px] uppercase tracking-[0.30em] text-cyan/80">Choose the route</div>
+              <div className="text-[10px] uppercase tracking-[0.30em] text-cyan/80">Start here</div>
               <h3 className="h-display mt-3 text-3xl leading-[0.95] text-bone md:text-4xl">
                 Local handoff, nationwide mail-in, or sneaker intelligence first.
               </h3>
@@ -31,7 +31,7 @@ export default function Footer() {
               Don&rsquo;t let your <em className="h-italic text-cyan">good ones</em> die dirty.
             </h3>
             <p className="text-bone/60 max-w-sm text-sm">
-              A premium sneaker-care system with local pickup routes, nationwide mail-in support, and an intelligence layer that keeps the next booking close.
+              Premium sneaker care with local pickup where available, nationwide mail-in when you need it, and release alerts that keep the next pair close.
             </p>
           </div>
           <Col title="Customers">

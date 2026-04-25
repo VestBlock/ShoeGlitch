@@ -41,31 +41,31 @@ export default function FeedFilters({
       </label>
 
       <label className="block">
-        <span className="label">Opportunity</span>
+        <span className="label">Why save it</span>
         <select
           className="input"
           value={value.opportunity}
           onChange={(event) => setField('opportunity', event.target.value as 'all' | SneakerOpportunityKind)}
         >
-          <option value="all">All angles</option>
+          <option value="all">All reasons</option>
           <option value="upcoming">Upcoming drops</option>
-          <option value="cleaning">Cleaning-ready</option>
-          <option value="restoration">Restore-worthy</option>
-          <option value="flip">Flip watch</option>
-          <option value="watch">Market watch</option>
+          <option value="cleaning">Easy care later</option>
+          <option value="restoration">Worth restoring later</option>
+          <option value="flip">Resale watch</option>
+          <option value="watch">Alert priority</option>
         </select>
       </label>
 
       <label className="block">
         <span className="label">Sort</span>
         <select className="input" value={value.sort} onChange={(event) => setField('sort', event.target.value as SneakerFilterState['sort'])}>
-          <option value="release">Release date</option>
-          <option value="pressure">Release pressure</option>
-          <option value="cleaning">Cleaning score</option>
-          <option value="restoration">Restoration score</option>
-          <option value="market">Market strength</option>
-          <option value="service">Service fit</option>
-          <option value="rarity">Collector value</option>
+          <option value="release">Soonest drop</option>
+          <option value="pressure">Alert urgency</option>
+          <option value="market">Market heat</option>
+          <option value="cleaning">Easy care later</option>
+          <option value="restoration">Restore later</option>
+          <option value="service">Best aftercare fit</option>
+          <option value="rarity">Collector appeal</option>
         </select>
       </label>
     </div>

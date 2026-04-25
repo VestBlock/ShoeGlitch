@@ -127,7 +127,7 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
 
               <Card className="p-5">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
-                  Service and market signals
+                  What stands out
                 </div>
                 <div className="mt-4">
                   <IntelligenceSignals item={model.item} includeConfidence />
@@ -146,9 +146,7 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                 <section>
                   <h2>Release summary</h2>
                   <p>
-                    {model.item.name} is currently tracked as a {model.item.availability} {model.item.brand} release. ShoeGlitch is using
-                    structured release data to answer the product question quickly, then layering in care and market intelligence so the
-                    page can help with the buy decision and the after-buy service decision at the same time.
+                    {model.item.name} is currently tracked as a {model.item.availability} {model.item.brand} release. This page keeps the basics easy to scan, then adds market context and aftercare context so you can decide whether the pair is worth buying, saving, or protecting.
                   </p>
                   <p>{model.recommendation.body}</p>
                 </section>
@@ -178,8 +176,7 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                 <section>
                   <h2>Where to buy and availability</h2>
                   <p>
-                    ShoeGlitch keeps the shopping block practical. If the live market page exists, it belongs here. If pricing is still thin,
-                    the better move is the watchlist or alert path so the release can come back to the user when the data gets sharper.
+                    If the live market page exists, it belongs here. If pricing is still thin, the better move is saving the pair to your watchlist and waiting for a stronger update.
                   </p>
                   <div className="mt-5 grid gap-4 md:grid-cols-3">
                     {model.buyingLinks.map((link) => (
@@ -199,9 +196,7 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                 <section>
                   <h2>Price history and market summary</h2>
                   <p>
-                    KicksDB gives ShoeGlitch the structured release and pricing layer first. When the market data is available, the page uses
-                    the retail anchor, the lowest ask, the average signal, and the size-level view to avoid pretending a release page is just
-                    hype copy.
+                    When pricing is available, this page leans on retail, lowest ask, average market, and size-level depth so you can make a cleaner decision than hype alone would give you.
                   </p>
                   <div className="mt-5 grid gap-4 md:grid-cols-3">
                     <div className="rounded-[1.15rem] border border-ink/10 bg-bone-soft p-4">
@@ -228,17 +223,17 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                       <div>
                         <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Market read</div>
                         <p className="mt-3 text-sm leading-6 text-ink/68">
-                          Market strength is <span className={scoreTone(model.item.scores.marketStrength)}>{model.item.scores.marketStrength}</span>
+                          Market heat is <span className={scoreTone(model.item.scores.marketStrength)}>{model.item.scores.marketStrength}</span>
                           , liquidity is <span className={scoreTone(model.item.scores.liquidity)}>{model.item.scores.liquidity}</span>, and the
-                          watch fit lands at <span className={scoreTone(model.item.scores.marketWatchFit)}>{model.item.scores.marketWatchFit}</span>.
+                          watchlist fit lands at <span className={scoreTone(model.item.scores.marketWatchFit)}>{model.item.scores.marketWatchFit}</span>.
                         </p>
                       </div>
                       <div>
                         <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Size depth</div>
                         <p className="mt-3 text-sm leading-6 text-ink/68">
                           {model.item.sizes.length > 0
-                            ? `${model.item.sizes.length} size or variant records are currently visible for this release, which helps the page stay grounded in actual product detail.`
-                            : 'Size-level data is still thin for this release, so the page is leaning on the top-level product record and watchlist path.'}
+                            ? `${model.item.sizes.length} size or variant records are currently visible for this release, which helps keep this page grounded in real product detail.`
+                            : 'Size-level data is still thin for this release, so the page is leaning more on the main release record and watchlist view.'}
                         </p>
                       </div>
                     </div>
@@ -246,17 +241,15 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                 </section>
 
                 <section>
-                  <h2>Cleaning and restoration read</h2>
+                  <h2>How this pair looks right now</h2>
                   <p>
-                    The release engine is not only about release news. It is about what happens after someone buys the pair. That is why
-                    ShoeGlitch scores cleanability, restoration upside, material sensitivity, sole risk, and preservation value directly on
-                    the release page.
+                    These numbers are meant to support the save-or-skip decision first. They also give a quick read on what the pair may need later once it is actually in hand.
                   </p>
                   <ul>
-                    <li>Cleaning score: {model.item.scores.cleaning} based on visible wear risk, lighter tones, and texture-driven care needs.</li>
-                    <li>Restoration score: {model.item.scores.restoration} based on rarity, age profile, premium materials, and sole risk.</li>
+                    <li>Easy care later: {model.item.scores.cleaning} based on visible wear risk, lighter tones, and texture-driven care needs.</li>
+                    <li>Restore later: {model.item.scores.restoration} based on rarity, age profile, premium materials, and sole risk.</li>
                     <li>Material sensitivity: {model.item.scores.materialSensitivity} based on suede, nubuck, mesh, canvas, patent, and tone.</li>
-                    <li>Preservation value: {model.item.scores.preservationValue} based on collector signals and whether this pair deserves long-term protection.</li>
+                    <li>Collector appeal: {model.item.scores.preservationValue} based on long-term keep value and protection upside.</li>
                   </ul>
                 </section>
 
@@ -271,15 +264,13 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                 </section>
 
                 <section>
-                  <h2>Editorial enrichment status</h2>
+                  <h2>Latest note</h2>
                   <p>
-                    Structured provider data drives the release facts on this page. Silhouette history, cultural context, designer notes, and
-                    release significance are kept in a separate editorial layer so ShoeGlitch does not pretend those notes come from KicksDB
-                    automatically.
+                    The release facts here come from structured provider data, while the extra notes below are hand-reviewed so the page stays useful instead of turning into filler.
                   </p>
                   <div className="mt-5 rounded-[1.2rem] border border-ink/10 bg-bone-soft p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
-                      Editorial status
+                      Page note
                     </div>
                     <p className="mt-3 text-sm leading-6 text-ink/68">{model.editorial.reviewNote}</p>
                     {model.editorial.lastReviewedAt ? (
@@ -332,14 +323,13 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
           <aside className="space-y-5 xl:sticky xl:top-24">
             <Card className="p-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
-                Action block
+                Next move
               </div>
               <h2 className="h-display mt-4 text-[clamp(2rem,4vw,2.9rem)] leading-[0.96] text-ink">
-                Turn release interest into retention.
+                Save it, shop it, or come back later.
               </h2>
               <p className="mt-4 text-sm leading-6 text-ink/68">
-                The point of this page is not just ranking. It is to move a release visitor into a ShoeGlitch relationship through booking,
-                watchlists, or service education.
+                Use this page to decide whether the pair deserves your watchlist, your money, or your attention later after it lands.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href={model.item.primaryCta.href} className="btn-glitch" data-growth-cta={model.item.primaryCta.label}>
@@ -353,7 +343,7 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
 
             <Card className="p-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
-                Related routes
+                More to explore
               </div>
               <div className="mt-4 space-y-3">
                 {model.relatedLinks.map((link) => (

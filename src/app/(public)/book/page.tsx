@@ -34,12 +34,12 @@ export default async function BookPage() {
           <div className="max-w-4xl">
             <Badge className="mb-4 border-white/15 bg-white/8 text-bone">Booking</Badge>
             <h1 className="h-display text-[clamp(2.8rem,6vw,4.9rem)] leading-[0.9] text-bone">
-              Pick the route.
+              Choose the handoff.
               <br />
-              <em className="h-italic text-cyan">Then the tier.</em>
+              <em className="h-italic text-cyan">Then choose care.</em>
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-bone/72">
-              Local cities are for pickup and drop-off. Mail-in stays open nationwide. Every order still runs through the same Basic, Pro, or Elite care system once the pair is in.
+              Local cities are for pickup and drop-off. Mail-in stays open nationwide. Once your pair is in, you still choose between Basic, Pro, and Elite.
             </p>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-bone/54">
               Checkout works with or without an account. We only need your contact details so we can send the receipt, label, and order updates.
@@ -54,7 +54,7 @@ export default async function BookPage() {
           <div className="grid gap-3 sm:grid-cols-3">
             {[
               ['1', 'Choose your handoff', 'Local pickup, drop-off, or nationwide mail-in'],
-              ['2', 'Choose the tier', 'Basic, Pro, or Elite based on how hard the pair needs to be pushed'],
+              ['2', 'Choose the care level', 'Basic, Pro, or Elite depending on how much work the pair needs'],
               ['3', 'Checkout once', 'Photos, pricing, shipping, and order tracking stay connected'],
             ].map(([step, title, detail]) => (
               <div key={step} className="rounded-[1.4rem] border border-white/12 bg-white/6 p-4 shadow-[0_18px_40px_rgba(10,15,31,0.14)] backdrop-blur-xl">

@@ -27,7 +27,7 @@ type CityCard = {
 };
 
 const tierDetails: Record<string, string[]> = {
-  basic: ['Steam Clean baseline', 'Sole + lace refresh', 'Fastest entry route'],
+  basic: ['Steam Clean baseline', 'Sole + lace refresh', 'Fastest way in'],
   pro: ['De-crease method', 'Detail correction', 'Light touch-up support'],
   elite: ['Ice method access', 'Luxury restoration path', 'Highest-detail finish'],
 };
@@ -40,7 +40,7 @@ const journeySteps = [
   },
   {
     eyebrow: '02',
-    title: 'Choose the route',
+    title: 'Choose the handoff',
     detail: 'Pickup, drop-off, or nationwide mail-in depending on where you are.',
   },
   {
@@ -171,7 +171,7 @@ export default function HomeBodyShowcase({
         <div ref={stickyRef} className="section-shell p-7 md:p-8 lg:h-fit">
           <div className="section-kicker">Choose your care level</div>
           <h2 className="h-display mt-5 text-[clamp(2.9rem,5vw,5.2rem)] leading-[0.88] text-ink">
-            A cleaner route
+            A cleaner way
             <br />
             from <em className="h-italic text-glitch">yes</em> to checkout.
           </h2>
