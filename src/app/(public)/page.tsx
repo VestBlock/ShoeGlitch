@@ -4,6 +4,8 @@ import { db } from '@/lib/db';
 import { Badge, Card } from '@/components/ui';
 import HomeHeroMotion from '@/components/HomeHeroMotion';
 import TrustProofStrip from '@/components/TrustProofStrip';
+import EditorialSpotlight from '@/components/EditorialSpotlight';
+import ResultsProofGrid from '@/components/ResultsProofGrid';
 
 export const metadata: Metadata = {
   title: 'ShoeGlitch | Sneaker cleaning, restoration, pickup, and mail-in care',
@@ -204,6 +206,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <EditorialSpotlight />
+
       <section className="container-x py-16 md:py-20">
         <div className="flex flex-col gap-6 mb-12 md:flex-row md:items-end md:justify-between">
           <div>
@@ -253,6 +257,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <ResultsProofGrid />
 
       <section className="bg-ink text-bone py-24 relative overflow-hidden">
         <div className="absolute inset-0 matrix-strip opacity-20" />

@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import OrbitalScene from '@/components/OrbitalScene';
 import { Badge, Card } from '@/components/ui';
 import TrustProofStrip from '@/components/TrustProofStrip';
+import ResultsProofGrid from '@/components/ResultsProofGrid';
 
 export const metadata: Metadata = {
   title: 'Basic, Pro, and Elite sneaker care | ShoeGlitch',
@@ -167,6 +168,8 @@ export default async function ServicesPage() {
           </div>
         </div>
       </section>
+
+      <ResultsProofGrid showTestimonials={false} />
 
       <section className="container-x pb-16">
         <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
