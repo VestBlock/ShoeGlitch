@@ -180,7 +180,7 @@ export default async function ServicesPage() {
                 <img
                   src="/media/editorial/redbottom-before.png"
                   alt="Red-bottom sneaker outsole before restoration"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-contain bg-white p-3"
                   loading="lazy"
                 />
               </figure>
@@ -189,7 +189,7 @@ export default async function ServicesPage() {
                 <img
                   src="/media/editorial/redbottom-after.png"
                   alt="Red-bottom sneaker outsole after restoration"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-contain bg-white p-3"
                   loading="lazy"
                 />
               </figure>
@@ -210,7 +210,7 @@ export default async function ServicesPage() {
               <img
                 src="/media/editorial/redbottom-paint.png"
                 alt="Red-bottom restoration paint used in actual ShoeGlitch work"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-contain bg-white p-3"
                 loading="lazy"
               />
             </div>

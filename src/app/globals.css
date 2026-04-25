@@ -230,11 +230,30 @@ body::after {
 .editorial-video,
 .editorial-image,
 .result-card-image,
-.testimonial-visual-image {
+.testimonial-visual-image,
+.proof-media,
+.proof-video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
   display: block;
+}
+
+.editorial-video,
+.proof-video {
+  object-fit: contain;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255,255,255,0.08), transparent 26%),
+    linear-gradient(180deg, rgba(7,20,44,0.96), rgba(10,15,31,0.98));
+}
+
+.editorial-image,
+.result-card-image,
+.testimonial-visual-image,
+.proof-media {
+  object-fit: contain;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.9), rgba(248,245,240,0.92)),
+    radial-gradient(circle at 50% 8%, rgba(0,229,255,0.06), transparent 34%);
 }
 
 .editorial-video-card::after,
@@ -305,6 +324,141 @@ body::after {
   min-height: 460px;
 }
 
+.editorial-stage {
+  perspective: 2200px;
+}
+
+.device-stage-shell {
+  position: relative;
+  padding: 1rem;
+  border-radius: 2.2rem;
+  border: 1px solid rgba(10, 15, 31, 0.10);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.32)),
+    radial-gradient(circle at 14% 16%, rgba(0,229,255,0.12), transparent 22%),
+    radial-gradient(circle at 88% 10%, rgba(255,77,109,0.12), transparent 24%);
+  box-shadow: 0 32px 80px rgba(10,15,31,0.10);
+  backdrop-filter: blur(22px);
+}
+
+.device-stage-grid {
+  display: grid;
+  gap: 1rem;
+  align-items: end;
+}
+
+.device-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2rem;
+  border: 1px solid rgba(255,255,255,0.12);
+  background:
+    linear-gradient(180deg, rgba(10,15,31,0.94), rgba(6,12,28,0.98)),
+    radial-gradient(circle at 76% 14%, rgba(0,229,255,0.14), transparent 24%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 26px 60px rgba(10,15,31,0.22);
+  transform-style: preserve-3d;
+}
+
+.device-frame-primary {
+  min-height: 680px;
+}
+
+.device-frame-secondary {
+  min-height: 320px;
+}
+
+.device-chrome {
+  display: flex;
+  gap: 0.42rem;
+  padding: 1rem 1rem 0;
+}
+
+.device-chrome span {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.24);
+}
+
+.device-media-screen {
+  position: relative;
+  margin: 0.8rem;
+  border-radius: 1.4rem;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+  min-height: 0;
+  aspect-ratio: 9 / 16;
+  background:
+    linear-gradient(180deg, rgba(7,20,44,0.96), rgba(10,15,31,0.98));
+}
+
+.device-frame-secondary .device-media-screen {
+  aspect-ratio: 4 / 5;
+}
+
+.device-copy {
+  position: relative;
+  z-index: 1;
+  padding: 0 1rem 1rem;
+}
+
+.proof-stack-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.proof-card-shell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.8rem;
+  border: 1px solid rgba(10, 15, 31, 0.10);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.84)),
+    radial-gradient(circle at 84% 16%, rgba(0,229,255,0.08), transparent 24%);
+  box-shadow: 0 24px 54px rgba(10,15,31,0.09);
+  transform-style: preserve-3d;
+}
+
+.proof-card-media {
+  padding: 1rem;
+  aspect-ratio: 4 / 5;
+}
+
+.proof-card-copy {
+  padding: 0 1rem 1rem;
+}
+
+.result-card {
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.result-card::after {
+  display: none;
+}
+
+.result-card-image {
+  aspect-ratio: 4 / 5;
+  padding: 1rem;
+}
+
+.result-card-copy {
+  position: static;
+  margin: 0 1rem 1rem;
+}
+
+.testimonial-visual-card {
+  min-height: auto;
+}
+
+.testimonial-visual-image {
+  aspect-ratio: 4 / 5;
+  padding: 1rem;
+}
+
 .track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
 
 .rail { @apply h-1.5 w-full rounded-full bg-ink/10 overflow-hidden; }
@@ -356,17 +510,18 @@ table.sg tbody tr:hover td { @apply bg-glitch/[0.03]; }
 }
 
 @media (max-width: 768px) {
-  .editorial-video-card {
-    min-height: 360px;
+  .device-frame-primary {
+    min-height: 520px;
   }
 
-  .editorial-mini-video {
-    min-height: 220px;
+  .device-frame-secondary {
+    min-height: 280px;
   }
 
-  .result-card,
-  .testimonial-visual-card {
-    min-height: 360px;
+  .proof-card-media,
+  .result-card-image,
+  .testimonial-visual-image {
+    aspect-ratio: 1 / 1.1;
   }
 }
 
