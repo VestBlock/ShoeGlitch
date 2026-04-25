@@ -70,14 +70,14 @@ export default function HomeBodyShowcase({
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           className="section-shell p-7 md:p-8 lg:sticky lg:top-28 lg:h-fit"
         >
-          <div className="section-kicker">Care architecture</div>
+          <div className="section-kicker">Service tiers</div>
           <h2 className="h-display mt-5 text-[clamp(2.9rem,5vw,5.2rem)] leading-[0.88] text-ink">
             A cleaner route
             <br />
             from <em className="h-italic text-glitch">yes</em> to checkout.
           </h2>
           <p className="mt-5 max-w-xl text-sm leading-7 text-ink/65 md:text-base">
-            The homepage should not feel like a brochure. It should quickly show the tiers, what they are for, and why the system feels premium before the customer ever touches checkout.
+            Choose the right level of care quickly, understand what each tier is for, and move into booking without digging through a long list of add-ons first.
           </p>
 
           <div className="mt-8 grid gap-3">
@@ -147,7 +147,7 @@ export default function HomeBodyShowcase({
 
                   <div className="relative mt-6 grid gap-4 md:mt-0 md:justify-items-end">
                     <div className="w-full max-w-[24rem] rounded-[1.4rem] border border-ink/10 bg-bone-soft/78 p-4 shadow-[0_14px_34px_rgba(10,15,31,0.05)]">
-                      <div className="text-[11px] uppercase tracking-[0.28em] text-ink/48">Included feel</div>
+                      <div className="text-[11px] uppercase tracking-[0.28em] text-ink/48">What it includes</div>
                       <div className="mt-4 grid gap-2">
                         {items.map((item) => (
                           <div
@@ -187,7 +187,7 @@ export default function HomeBodyShowcase({
           className="section-shell-dark overflow-hidden p-7 md:p-8"
         >
           <div className="relative z-10">
-            <div className="section-kicker border-white/12 bg-white/8 text-cyan">Coverage command</div>
+            <div className="section-kicker border-white/12 bg-white/8 text-cyan">Local and mail-in</div>
             <h2 className="h-display mt-5 text-[clamp(2.6rem,4.8vw,4.8rem)] leading-[0.9] text-bone">
               Local handoff
               <br />
@@ -209,7 +209,7 @@ export default function HomeBodyShowcase({
             </div>
 
             <div className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/6 p-4 md:p-5">
-              <div className="text-[11px] uppercase tracking-[0.3em] text-cyan/84">System loop</div>
+              <div className="text-[11px] uppercase tracking-[0.3em] text-cyan/84">How it works</div>
               <div className="mt-4 grid gap-3 sm:grid-cols-4">
                 {journeySteps.map((step) => (
                   <div key={step.title} className="rounded-[1.2rem] border border-white/10 bg-ink/36 p-4">

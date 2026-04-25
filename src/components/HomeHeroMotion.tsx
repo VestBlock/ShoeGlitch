@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import HeroSignalScene from '@/components/HeroSignalScene';
 
 const primaryMp4Url = '/ShoeTest.mp4?v=6';
 const fallbackMp4Url = '/ShoeTest-web.mp4?v=3';
@@ -81,9 +80,6 @@ export default function HomeHeroMotion({
         className="absolute left-[4%] bottom-[18%] hidden h-28 w-28 rounded-full border border-cyan/18 bg-white/28 blur-[1px] lg:block"
         style={{ y: orbitY, rotate: shellRotate }}
       />
-      <div className="pointer-events-none absolute right-0 top-0 hidden h-[120%] w-[54%] overflow-hidden rounded-[3rem] opacity-55 blur-[0.4px] lg:block">
-        <HeroSignalScene reduceMotion={Boolean(reduceMotion)} />
-      </div>
 
       <div className="relative grid gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-center">
         <motion.div
@@ -100,12 +96,14 @@ export default function HomeHeroMotion({
               Premium sneaker care
             </div>
             <h1 className="h-display mt-4 text-[clamp(3.4rem,7vw,6.1rem)] leading-[0.88] tracking-tight text-ink">
-              Real Proof.
+              Cleaned.
               <br />
-              Premium <em className="h-italic text-glitch">Care.</em>
+              Restored.
+              <br />
+              <em className="h-italic text-glitch">Tracked.</em>
             </h1>
             <p className="mt-5 max-w-lg text-lg leading-8 text-ink/66">
-              Pickup, drop-off, or nationwide mail-in. Book the right tier, track the work, and let the results do the talking.
+              Local pickup and drop-off where we operate, plus nationwide mail-in for everyone else. Choose Basic, Pro, or Elite and follow the pair from intake to return.
             </p>
           </div>
 
@@ -126,9 +124,9 @@ export default function HomeHeroMotion({
 
           <div className="mt-8 grid max-w-[38rem] gap-3 sm:grid-cols-3">
             {[
-              ['3 tiers', 'Basic, Pro, Elite'],
-              ['Nationwide mail-in', 'Prepaid label flow'],
-              ['Tracked orders', 'Intake to return'],
+              ['Basic', 'Routine refresh'],
+              ['Pro', 'Correction + touch-up'],
+              ['Elite', 'Restoration path'],
             ].map(([title, detail]) => (
               <div key={title} className="rounded-[1.25rem] border border-ink/10 bg-white/72 p-4 shadow-[0_14px_28px_rgba(10,15,31,0.04)] backdrop-blur-xl">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-ink/46">{title}</div>
@@ -212,25 +210,20 @@ export default function HomeHeroMotion({
                 }
               />
 
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(90,179,255,0.20),transparent_26%),linear-gradient(180deg,rgba(7,20,44,0.04),rgba(7,20,44,0.0)_38%,rgba(7,20,44,0.10)_72%,rgba(7,20,44,0.34)_100%)]" />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(90,179,255,0.16),transparent_24%),linear-gradient(180deg,rgba(7,20,44,0.03),rgba(7,20,44,0.0)_40%,rgba(7,20,44,0.08)_74%,rgba(7,20,44,0.30)_100%)]" />
               <div className="pointer-events-none absolute inset-0 border-[1.5px] border-white/10" />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#07142c]/85 via-[#07142c]/28 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#07142c]/78 via-[#07142c]/18 to-transparent" />
 
               <div className="absolute left-4 top-4 z-10 md:left-6 md:top-6">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-ink/30 px-4 py-2 text-xs font-medium tracking-[0.16em] text-white shadow-[0_10px_30px_rgba(10,15,31,0.18)] backdrop-blur-md md:text-sm">
                   <span className="h-2 w-2 rounded-full bg-cyan" />
-                  Actual work. Real result.
+                  Real client work
                 </div>
               </div>
 
-              <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
-                <div className="inline-flex flex-wrap items-center gap-3 rounded-[1.25rem] border border-white/16 bg-ink/16 px-4 py-4 text-white shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-md md:px-5">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-[0.28em] text-white/58">Hero focus</div>
-                    <div className="mt-2 text-base font-semibold text-bone">One proof video. Less clutter.</div>
-                  </div>
-                  <div className="hidden h-10 w-px bg-white/12 md:block" />
-                  <div className="text-sm text-white/68">Muted motion with subtle depth, not stacked overlays.</div>
+              <div className="absolute bottom-4 right-4 z-10 md:bottom-6 md:right-6">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-ink/24 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/82 shadow-[0_14px_36px_rgba(10,15,31,0.18)] backdrop-blur-md">
+                  Before → After
                 </div>
               </div>
 

@@ -70,14 +70,14 @@ export default function EditorialSpotlight() {
       <div className="section-shell editorial-shell p-6 md:p-8 lg:p-10">
         <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            <div className="section-kicker">Proof in motion</div>
+            <div className="section-kicker">See the difference</div>
             <h2 className="h-display mt-4 text-[clamp(2.8rem,5.4vw,5.4rem)] leading-[0.88] text-ink">
               Real work should feel
               <br />
               <em className="h-italic text-glitch">cinematic, not cropped.</em>
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-7 text-ink/64 md:text-base">
-              I’m moving the site toward full-frame proof, deeper contrast, and dimensional motion. The videos stay muted, the media stays visible, and the booking CTA still leads the section.
+              Full-frame proof, actual before-and-after work, and muted process video so customers can see the quality before they book.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -120,7 +120,7 @@ export default function EditorialSpotlight() {
                     />
                   </div>
                   <div className="device-copy">
-                    <div className="badge-dark border-white/15">Actual process</div>
+                    <div className="badge-dark border-white/15">Cleaning process</div>
                     <p className="mt-3 text-sm leading-6 text-white/72">
                       Full portrait framing keeps the process visible instead of cutting off the work.
                     </p>
@@ -148,7 +148,7 @@ export default function EditorialSpotlight() {
                     />
                   </div>
                   <div className="device-copy">
-                    <div className="badge-dark border-white/15">Muted loop</div>
+                    <div className="badge-dark border-white/15">Real footage</div>
                     <p className="mt-3 text-sm leading-6 text-white/72">
                       Motion adds energy when it behaves like a framed artifact, not a wallpaper crop.
                     </p>
@@ -168,17 +168,17 @@ export default function EditorialSpotlight() {
               <div className="section-outline-dark relative overflow-hidden p-5 md:p-6">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_20%,rgba(0,229,255,0.18),transparent_22%),radial-gradient(circle_at_10%_100%,rgba(255,77,109,0.18),transparent_28%)]" />
                 <div className="relative z-10">
-                  <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-cyan/80">Current design direction</div>
+                  <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-cyan/80">Why customers trust it</div>
                   <h3 className="h-display mt-4 text-3xl leading-[0.94] text-bone">
                     More depth.
                     <br />
                     Less reading.
                   </h3>
                   <div className="mt-5 space-y-3 text-sm leading-6 text-bone/68">
-                    <p>3D card staging</p>
-                    <p>Scroll-reactive motion</p>
-                    <p>Full-frame proof media</p>
-                    <p>Sharper booking routes</p>
+                    <p>Real before-and-after proof</p>
+                    <p>Luxury repaint results</p>
+                    <p>Visible process footage</p>
+                    <p>Cleaner booking flow</p>
                   </div>
                 </div>
               </div>
