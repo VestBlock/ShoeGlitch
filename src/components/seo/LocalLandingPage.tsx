@@ -31,11 +31,11 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
               </h1>
               <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">{model.intro}</p>
 
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Link href={model.cta.primaryHref} className="btn-glitch w-full sm:w-auto" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
+                <Link href={model.cta.secondaryHref} className="btn-outline w-full sm:w-auto" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>
@@ -49,7 +49,7 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
                 </div>
                 <div className="rounded-[1.35rem] border border-ink/10 bg-white p-5">
                   <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
-                    Why this page matters
+                    What to know
                   </div>
                   <ul className="mt-3 space-y-3 text-sm leading-6 text-ink/70">
                     {model.summaryBullets.map((bullet) => (
@@ -66,14 +66,14 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
                 className="mt-8"
                 items={[
                   {
-                    label: 'Built for a real next step',
-                    detail: 'These pages route straight into booking, coverage, and the right service path instead of stopping at generic information.',
+                    label: 'Easy next step',
+                    detail: 'Jump straight into booking, availability, or the right service path without digging.',
                   },
                   {
-                    label: 'Grounded in real coverage',
+                    label: 'Honest local details',
                     detail: model.serviceAreas.length > 0
-                      ? `${model.city.name} is tied to active service areas, so the local claim stays real.`
-                      : 'Mail-in stays available while local coverage expands.',
+                      ? `${model.city.name} is tied to active service areas, so the local details stay real.`
+                      : 'Mail-in stays available while local pickup and drop-off keep expanding.',
                   },
                   {
                     label: 'Clear answers up front',
@@ -86,7 +86,7 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
             <aside className="space-y-4 xl:sticky xl:top-24">
               <Card className="p-6">
                 <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                  Service areas
+                  Local areas
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {model.serviceAreas.length > 0 ? (
@@ -105,7 +105,7 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
 
               <Card className="p-6">
                 <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                  Best next moves
+                  Next steps
                 </div>
                 <div className="mt-4 space-y-3">
                   {model.links.map((link) => (
@@ -151,7 +151,7 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
           <div className="space-y-6">
             <Card className="p-6">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                Not sure which route fits?
+                Not sure where to start?
               </div>
               <h2 className="h-display mt-4 text-[clamp(1.9rem,3vw,2.8rem)] leading-[0.96] text-ink">
                 Start with the fastest next action.
@@ -178,17 +178,17 @@ export default function LocalLandingPage({ model }: { model: SeoPageModel }) {
 
             <Card className="p-6">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                Best next step
+                Ready when you are
               </div>
               <h2 className="h-display mt-4 text-[clamp(2rem,4vw,3rem)] leading-[0.95]">
                 {model.cta.headline}
               </h2>
               <p className="mt-4 text-sm leading-7 text-ink/66">{model.cta.body}</p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Link href={model.cta.primaryHref} className="btn-glitch w-full sm:w-auto" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
+                <Link href={model.cta.secondaryHref} className="btn-outline w-full sm:w-auto" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>

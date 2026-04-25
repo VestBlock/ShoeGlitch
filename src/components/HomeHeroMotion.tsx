@@ -88,7 +88,7 @@ export default function HomeHeroMotion({
         >
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-ink/10 bg-white/78 px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-ink/70 shadow-[0_10px_30px_rgba(10,15,31,0.06)] md:text-[11px]">
             <span className="h-2 w-2 rounded-full bg-cyan" />
-            Built in Milwaukee · Serving {activeCityCount} cities
+            Milwaukee built · {activeCityCount} active cities
           </div>
 
           <div className="mt-7 max-w-[31rem]">
@@ -116,21 +116,21 @@ export default function HomeHeroMotion({
             </Link>
             <Link
               href="/mail-in"
-              className="inline-flex min-h-[3.2rem] items-center justify-center px-2 text-base font-semibold text-ink transition hover:text-glitch"
+              className="inline-flex min-h-[3.2rem] items-center justify-center px-2 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition hover:text-glitch"
             >
               Mail-in nationwide
             </Link>
           </div>
 
-          <div className="mt-8 grid max-w-[38rem] gap-3 sm:grid-cols-3">
+          <div className="mt-8 flex gap-3 overflow-x-auto pb-1 sm:grid sm:max-w-[38rem] sm:grid-cols-3 sm:overflow-visible sm:pb-0">
             {[
               ['Basic', 'Routine refresh'],
               ['Pro', 'Correction + touch-up'],
               ['Elite', 'Restoration path'],
             ].map(([title, detail]) => (
-              <div key={title} className="rounded-[1.25rem] border border-ink/10 bg-white/72 p-4 shadow-[0_14px_28px_rgba(10,15,31,0.04)] backdrop-blur-xl">
+              <div key={title} className="min-w-[10rem] rounded-[1.25rem] border border-ink/10 bg-white/72 p-4 shadow-[0_14px_28px_rgba(10,15,31,0.04)] backdrop-blur-xl sm:min-w-0">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-ink/46">{title}</div>
-                <div className="mt-2 text-sm font-semibold text-ink">{detail}</div>
+                <div className="mt-2 text-xs font-semibold text-ink sm:text-sm">{detail}</div>
               </div>
             ))}
           </div>
@@ -199,7 +199,7 @@ export default function HomeHeroMotion({
               <div className="absolute inset-x-4 bottom-4 z-10 md:inset-x-6 md:bottom-6">
                 <div className="max-w-[36rem] rounded-[1.35rem] border border-white/12 bg-[linear-gradient(180deg,rgba(7,20,44,0.16),rgba(7,20,44,0.28))] px-5 py-4 shadow-[0_20px_50px_rgba(10,15,31,0.24)] backdrop-blur-sm">
                   <div
-                    className="max-w-[26rem] text-[clamp(1.7rem,3vw,2.7rem)] font-semibold uppercase leading-[0.94] tracking-[0.1em] text-white [text-wrap:balance]"
+                    className="max-w-[24rem] text-[clamp(1.45rem,3vw,2.7rem)] font-semibold uppercase leading-[0.94] tracking-[0.08em] text-white [text-wrap:balance] sm:max-w-[26rem]"
                     style={{
                       fontVariationSettings: '"wght" 700',
                       textShadow:

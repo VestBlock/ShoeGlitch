@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { buildLoginHref } from '@/lib/login-redirect';
 
 export default function Footer() {
   return (
@@ -44,7 +45,7 @@ export default function Footer() {
           <Col title="Operators">
             <Link href="/operator">Operators</Link>
             <Link href="/operator/apply">Apply</Link>
-            <Link href="/login">Sign in</Link>
+            <Link href={buildLoginHref('/operator/dashboard')}>Sign in</Link>
           </Col>
           <Col title="Live cities">
             <span className="text-cyan font-semibold">Milwaukee, WI (HQ)</span>

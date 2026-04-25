@@ -70,9 +70,9 @@ export default async function HomePage() {
                 cta: 'See mail-in →',
               },
               {
-                eyebrow: 'Research first',
-                title: 'Use Intelligence before you book',
-                detail: 'Follow releases, save pairs to your watchlist, and decide what deserves attention next.',
+                eyebrow: 'Track the next pair',
+                title: 'Build a watchlist before the drop',
+                detail: 'Follow releases, save the pairs that matter, and come back when alerts are worth it.',
                 href: '/intelligence',
                 cta: 'Open intelligence →',
               },
@@ -98,13 +98,13 @@ export default async function HomePage() {
             <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
               <div className="max-w-2xl">
                 <div className="font-mono text-[11px] uppercase tracking-[0.34em] text-glitch/80">
-                  Release alerts
+                  Watchlists and alerts
                 </div>
                 <h2 className="h-display mt-3 text-3xl leading-[0.95] text-ink md:text-5xl">
-                  Follow the pairs you care about before they disappear.
+                  Follow the pairs you care about before they move.
                 </h2>
                 <p className="mt-4 text-sm leading-6 text-ink/65 md:text-base">
-                  Open the feed for release tracking, watchlists, and alert-driven follow-up when a pair is worth saving.
+                  Open the feed for release tracking, watchlists, and faster follow-up when a pair is worth saving.
                 </p>
               </div>
               <Link

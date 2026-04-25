@@ -85,33 +85,33 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
         </div>
 
         <div className="mt-5 rounded-[1.15rem] border border-ink/10 bg-white/76 px-4 py-3">
-          <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Why it stands out</div>
+          <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Why save it</div>
           <div className="mt-2 text-sm leading-6 text-ink/62">{item.rankingNote}</div>
         </div>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
           <div className="max-w-[19rem]">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Current price read</div>
+            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Current market</div>
             <div className="mt-2 text-base font-semibold text-ink">
               {item.market.estimatedResale
                 ? `Around $${item.market.estimatedResale}`
                 : item.priceSummary.lowestAsk
                   ? `Lowest ask $${item.priceSummary.lowestAsk}`
-                  : 'Still building'}
+                  : 'Waiting on pricing'}
             </div>
           </div>
-          <div className="flex flex-wrap justify-end gap-2">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end">
             {watchCta ? <WatchlistQuickAddButton item={item} compact /> : null}
             <Link
               href={`/intelligence/${item.slug}`}
-              className="btn-outline min-h-[2.9rem] px-4 text-xs"
+              className="btn-outline min-h-[2.9rem] w-full px-4 text-xs sm:w-auto"
               data-growth-cta="Open pair detail"
             >
               Open pair
             </Link>
             <Link
               href={serviceCta.href}
-              className="btn-outline min-h-[2.9rem] px-4 text-xs"
+              className="btn-outline min-h-[2.9rem] w-full px-4 text-xs sm:w-auto"
               data-growth-cta={serviceCta.label}
             >
               {serviceCta.label}
@@ -119,7 +119,7 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
             {item.marketUrl ? (
               <Link
                 href={item.marketUrl}
-                className="btn-outline min-h-[2.9rem] px-4 text-xs"
+                className="btn-outline min-h-[2.9rem] w-full px-4 text-xs sm:w-auto"
                 target="_blank"
                 data-growth-cta="View market"
               >

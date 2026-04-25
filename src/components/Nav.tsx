@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import { ROLE_HOME } from '@/lib/rbac';
+import { buildLoginHref } from '@/lib/login-redirect';
 import { cn } from '@/lib/utils';
 import { StatusDot } from '@/components/ui';
 
@@ -32,7 +33,7 @@ export default async function Nav({ theme = 'light' }: { theme?: 'light' | 'dark
         >
           <Link href="/" className="group flex flex-col leading-none">
             <span className="h-display text-[clamp(1.6rem,2vw,2rem)] tracking-tight group-hover:text-glitch transition">Shoe Glitch</span>
-            <span className={cn('text-[10px] uppercase tracking-[0.25em]', dark ? 'text-bone/50' : 'text-ink/50')}>
+            <span className={cn('hidden text-[10px] uppercase tracking-[0.25em] sm:block', dark ? 'text-bone/50' : 'text-ink/50')}>
               luxury sneaker care
             </span>
           </Link>
@@ -62,23 +63,23 @@ export default async function Nav({ theme = 'light' }: { theme?: 'light' | 'dark
                 <span className="sm:hidden">Me</span>
               </Link>
             ) : (
-              <Link href="/login" className={cn('btn py-2.5 px-4', dark ? 'bg-bone text-ink hover:bg-glitch hover:text-white' : 'btn-primary')}>
+              <Link href={buildLoginHref('/customer')} className={cn('text-sm font-semibold transition hover:text-glitch', dark ? 'text-bone/78' : 'text-ink/72')}>
                 Sign in
               </Link>
             )}
-            <Link href="/book" className="btn-glitch py-2.5 px-4 hidden sm:inline-flex">
+            <Link href="/book" className="btn-glitch py-2.5 px-4 inline-flex">
               Book now →
             </Link>
           </div>
         </div>
 
-        <nav className="mt-4 grid grid-cols-2 gap-2 md:hidden">
-          {NAV_ITEMS.map((item, index) => (
+        <nav className="mt-4 flex gap-2 overflow-x-auto pb-1 md:hidden">
+          {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'rounded-[1.1rem] border px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] transition',
+                'shrink-0 rounded-[1.1rem] border px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] transition',
                 dark
                   ? 'border-bone/15 bg-bone/5 text-bone/80 hover:border-cyan hover:text-cyan'
                   : 'border-ink/10 bg-white text-ink/70 hover:border-glitch hover:text-glitch',

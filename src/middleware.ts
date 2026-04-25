@@ -35,6 +35,18 @@ function redirectUrl(request: NextRequest, pathname: string) {
   return new URL(`${proto}://${host}${pathname}`);
 }
 
+function sanitizeNextPath(nextPath: string | null | undefined) {
+  if (!nextPath) return null;
+  if (!nextPath.startsWith('/')) return null;
+  if (nextPath.startsWith('//')) return null;
+  return nextPath;
+}
+
+function buildLoginPath(request: NextRequest) {
+  const nextPath = sanitizeNextPath(`${request.nextUrl.pathname}${request.nextUrl.search}`);
+  return nextPath ? `/login?next=${encodeURIComponent(nextPath)}` : '/login';
+}
+
 async function lookupRole(
   supabase: ReturnType<typeof createServerClient>,
   user: { id: string; email?: string | null },
@@ -89,8 +101,12 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
+  const requestedNext = sanitizeNextPath(request.nextUrl.searchParams.get('next'));
 
   if (pathname === '/login' && user?.id) {
+    if (requestedNext) {
+      return NextResponse.redirect(redirectUrl(request, requestedNext));
+    }
     const role = await lookupRole(supabase, user);
     if (role) {
       return NextResponse.redirect(redirectUrl(request, ROLE_HOME[role]));
@@ -102,7 +118,7 @@ export async function middleware(request: NextRequest) {
   if (!required) return response;
 
   if (!user?.id) {
-    return NextResponse.redirect(redirectUrl(request, '/login'));
+    return NextResponse.redirect(redirectUrl(request, buildLoginPath(request)));
   }
 
   const role = await lookupRole(supabase, user);

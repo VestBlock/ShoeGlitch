@@ -68,7 +68,7 @@ export default async function SneakerDetailPage({
 
               <div className="mt-8 grid gap-4 md:grid-cols-2">
                 <div
-                  className="min-h-[320px] rounded-[1.8rem] border border-ink/10 bg-cover bg-center"
+                  className="min-h-[260px] rounded-[1.8rem] border border-ink/10 bg-cover bg-center md:min-h-[320px]"
                   style={{
                     backgroundImage: `linear-gradient(180deg, rgba(8,33,77,0.12), rgba(8,33,77,0.34)), url(${item.media.thumbnailUrl})`,
                   }}
@@ -92,7 +92,7 @@ export default async function SneakerDetailPage({
 
                   <div className="section-outline-dark p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
-                      Why it stands out
+                      Why save it
                     </div>
                     <div className="mt-4">
                       <IntelligenceSignals item={item} includeConfidence />
@@ -101,7 +101,7 @@ export default async function SneakerDetailPage({
 
                   <div className="section-outline-dark p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
-                      Size and market view
+                      Sizes and market
                     </div>
                     <div className="mt-3 text-sm leading-6 text-bone/68">
                       {item.sizes.length > 0 ? (
@@ -131,7 +131,7 @@ export default async function SneakerDetailPage({
               </div>
 
               <section className="mt-10 prose-sg max-w-none !text-bone/76">
-                <h2>Why this pair matters</h2>
+                <h2>Why it is worth tracking</h2>
                 <p>{item.rankingNote}</p>
                 <ul>
                   <li>Why save it now: {item.scores.reasons.releasePressure[0] ?? 'This pair is worth keeping close for the next release update.'}</li>
@@ -151,26 +151,26 @@ export default async function SneakerDetailPage({
                 <div className="mt-4">
                   <OrbitalScene className="min-h-[220px] border-white/10" />
                 </div>
-                <h2 className="h-display mt-5 text-3xl text-bone">Save it while it is still early.</h2>
+                <h2 className="h-display mt-5 text-3xl text-bone">Save it before the release picture changes.</h2>
                 <p className="mt-3 text-sm leading-6 text-bone/66">
                   {item.primaryCta.kind === 'book-restoration'
-                    ? 'Catch the release first, save the pair, and come back for care after it actually lands.'
+                    ? 'Save it now, follow the release, and come back for care after it actually lands.'
                     : item.primaryCta.kind === 'join-waitlist'
-                      ? 'This one is watchlist-first. Save it now, then let the next release or restock update bring you back in at the right moment.'
+                      ? 'This one is watchlist-first. Save it now, then let the next release or restock update bring you back at the right moment.'
                       : 'This one is still release-led. Save it now, follow the drop, and decide on care after the pair is in hand.'}
                 </p>
                 <div className="mt-5">
                   <WatchlistQuickAddButton item={item} />
                 </div>
-                <div className="mt-5 flex flex-wrap gap-3">
-                  <Link href={item.primaryCta.href} className="btn-glitch" data-growth-cta={item.primaryCta.label}>
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <Link href={item.primaryCta.href} className="btn-glitch w-full sm:w-auto" data-growth-cta={item.primaryCta.label}>
                     {item.primaryCta.label}
                   </Link>
-                  <Link href={item.secondaryCta.href} className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink" data-growth-cta={item.secondaryCta.label}>
+                  <Link href={item.secondaryCta.href} className="btn-outline w-full border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink sm:w-auto" data-growth-cta={item.secondaryCta.label}>
                     {item.secondaryCta.label}
                   </Link>
                   {item.marketUrl ? (
-                    <Link href={item.marketUrl} className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink" target="_blank" data-growth-cta="Open market">
+                    <Link href={item.marketUrl} className="btn-outline w-full border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink sm:w-auto" target="_blank" data-growth-cta="Open market">
                       Open market
                     </Link>
                   ) : null}

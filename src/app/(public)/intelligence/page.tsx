@@ -38,12 +38,12 @@ export default async function IntelligencePage() {
               <div>
                 <Badge className="mb-5 border-white/14 bg-white/8 text-bone">Release alerts and watchlists</Badge>
                 <h1 className="h-display max-w-5xl text-[clamp(3rem,6vw,5.6rem)] leading-[0.90] tracking-tight text-bone">
-                  Track the pairs that
+                  Save the pairs that
                   <br />
-                  <em className="h-italic text-cyan">matter next.</em>
+                  <em className="h-italic text-cyan">matter before they move.</em>
                 </h1>
                 <p className="mt-5 max-w-3xl text-lg leading-8 text-bone/70">
-                  Save upcoming pairs, follow release dates, and stay close to restocks without digging through noise. The feed is built to help you decide what deserves a watchlist spot now and what can wait.
+                  Build a watchlist, follow the drop, and stay ready for restocks without digging through noise. This feed is here to help you decide what to save now and what can wait.
                 </p>
 
                 <div className="mt-7 flex flex-wrap gap-3">
@@ -61,7 +61,7 @@ export default async function IntelligencePage() {
                       Best for
                     </div>
                     <p className="mt-3 text-sm leading-6 text-bone/68">
-                      This feed helps you decide what to save early, what to ignore, and which pairs deserve a closer watch.
+                      Save pairs early, skip the forgettable ones, and keep the right releases close without turning the feed into homework.
                     </p>
                   </div>
                   <div className="section-outline-dark p-5">
@@ -69,9 +69,9 @@ export default async function IntelligencePage() {
                       What you can do
                     </div>
                     <ul className="mt-3 space-y-2 text-sm leading-6 text-bone/68">
-                      <li>Upcoming drops worth saving early</li>
-                      <li>Pairs with strong restock or release urgency</li>
-                      <li>Watchlist candidates you want alerts on later</li>
+                      <li>Save a pair to your watchlist in one click</li>
+                      <li>Follow the release date and current price picture</li>
+                      <li>Come back when alerting matters more</li>
                     </ul>
                   </div>
                   <div className="section-outline-dark p-5">
@@ -79,7 +79,7 @@ export default async function IntelligencePage() {
                       Why it matters
                     </div>
                     <p className="mt-3 text-sm leading-6 text-bone/68">
-                      The feed is the front door. Watchlists, alerting, and premium tracking are where this becomes even more useful over time.
+                      Watchlists are the free habit. Faster alerts and deeper tracking are the upgrade path once you actually want more speed.
                     </p>
                   </div>
                 </div>
@@ -92,14 +92,14 @@ export default async function IntelligencePage() {
                     <OrbitalScene className="min-h-[240px] border-white/10" accent="#00e5ff" glow="#ff4d6d" />
                   </div>
                   <h2 className="h-display mt-5 text-3xl leading-[0.96] text-bone md:text-4xl">
-                    Save first. Let alerts do the chasing.
+                    Save first. Let alerts do the chasing later.
                   </h2>
 
                   <div className="mt-5 grid gap-3">
                     {[
                       ['Save the pair', 'Add it to your watchlist the moment it stands out.'],
                       ['Track the drop', 'Follow release timing, pricing, and restock movement.'],
-                      ['Stay ready', 'Come back when the release, restock, or price picture changes.'],
+                      ['Upgrade later', 'Pay for faster alerts only when speed starts to matter.'],
                     ].map(([title, detail]) => (
                       <div key={title} className="section-outline-dark p-4">
                         <div className="text-sm font-semibold text-bone">{title}</div>
@@ -147,13 +147,13 @@ export default async function IntelligencePage() {
         <div className="grid gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:items-start">
           <div className="section-shell p-6 md:p-8">
             <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
-              Tracking plans
+              Plans
             </div>
             <h2 className="h-display mt-4 text-[clamp(2.2rem,4vw,3.8rem)] leading-[0.94] text-ink">
-              Start free. Upgrade only when alerts save you time.
+              Start with watchlists. Upgrade when alerts earn it.
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/64">
-              The right subscription path for Intelligence is simple: start with the free feed and watchlists first, then move into a premium alert layer only if it helps you act faster.
+              Intelligence works best when the free layer builds the habit and the paid layer saves real time. The upgrade should be about speed and convenience, not gating the whole product.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/customer/watchlist" className="btn-glitch">
@@ -168,25 +168,25 @@ export default async function IntelligencePage() {
           <div className="grid gap-4 md:grid-cols-2">
             <div className="section-outline p-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
-                Free now
+                Free watchlists
               </div>
-              <h3 className="h-display mt-3 text-3xl leading-[0.96] text-ink">Feed + watchlists</h3>
+              <h3 className="h-display mt-3 text-3xl leading-[0.96] text-ink">Save pairs and follow the drop</h3>
               <div className="mt-4 space-y-3 text-sm leading-6 text-ink/64">
-                <p>Browse current pairs without the noise.</p>
-                <p>Save the ones worth tracking.</p>
+                <p>Browse the feed without the noise.</p>
+                <p>Save the pairs you want to follow.</p>
                 <p>Come back when the release picture sharpens.</p>
               </div>
             </div>
 
             <div className="section-outline-dark p-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
-                Pro later
+                Intelligence Pro
               </div>
-              <h3 className="h-display mt-3 text-3xl leading-[0.96] text-bone">Faster alerting</h3>
+              <h3 className="h-display mt-3 text-3xl leading-[0.96] text-bone">Faster alerts when timing matters</h3>
               <div className="mt-4 space-y-3 text-sm leading-6 text-bone/68">
-                <p>More aggressive release and restock alerts.</p>
+                <p>Release and restock alerts that hit faster.</p>
                 <p>Deeper watchlists for heavier collectors.</p>
-                <p>A cleaner paid layer built around speed, not filler.</p>
+                <p>A paid layer built around speed, not filler.</p>
               </div>
             </div>
           </div>

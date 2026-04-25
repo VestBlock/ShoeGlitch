@@ -33,11 +33,11 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
               </h1>
               <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">{model.intro}</p>
 
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Link href={model.cta.primaryHref} className="btn-glitch w-full sm:w-auto" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
+                <Link href={model.cta.secondaryHref} className="btn-outline w-full sm:w-auto" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>
@@ -51,7 +51,7 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
                 </div>
                 <div className="rounded-[1.35rem] border border-ink/10 bg-white p-5">
                   <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
-                    Why this page matters
+                    What to know
                   </div>
                   <ul className="mt-3 space-y-3 text-sm leading-6 text-ink/70">
                     {model.summaryBullets.map((bullet) => (
@@ -68,18 +68,18 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
                 className="mt-8"
                 items={[
                   {
-                    label: 'Qualified operator intent',
-                    detail: 'These pages are built to move operator-search traffic into a real application or city-interest path, not just gather views.',
+                    label: 'Clear path to apply',
+                    detail: 'These pages help serious applicants understand the role and move into a real application path quickly.',
                   },
                   {
-                    label: 'Grounded in live markets',
+                    label: 'Real city context',
                     detail: model.city
-                      ? `${model.city.name} is tied to a real ShoeGlitch market context before the page makes local claims.`
-                      : 'The hub routes into live and opening markets instead of generic recruiting copy.',
+                      ? `${model.city.name} is tied to a real ShoeGlitch market before the page makes local claims.`
+                      : 'The hub routes into active and opening markets instead of generic recruiting copy.',
                   },
                   {
                     label: 'Clear next step',
-                    detail: 'City pages, role pages, and the live application all stay connected so the opportunity feels concrete quickly.',
+                    detail: 'City pages, role pages, and the application stay connected so the opportunity feels concrete quickly.',
                   },
                 ]}
               />
@@ -94,11 +94,11 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
                   {model.cta.headline}
                 </h2>
                 <p className="mt-4 text-sm leading-7 text-ink/66">{model.cta.body}</p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <Link href={model.cta.primaryHref} className="btn-glitch w-full sm:w-auto" data-growth-cta={model.cta.primaryLabel}>
                     {model.cta.primaryLabel}
                   </Link>
-                  <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
+                  <Link href={model.cta.secondaryHref} className="btn-outline w-full sm:w-auto" data-growth-cta={model.cta.secondaryLabel}>
                     {model.cta.secondaryLabel}
                   </Link>
                 </div>
@@ -124,7 +124,7 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
                       <div className="flex items-center justify-between gap-4">
                         <div className="font-semibold text-ink">{field.label}</div>
                         <span className={`text-[11px] font-semibold uppercase tracking-[0.22em] ${field.live ? 'text-cyan' : 'text-ink/35'}`}>
-                          {field.live ? 'Included now' : 'Coming soon'}
+                          {field.live ? 'On the form' : 'Planned next'}
                         </span>
                       </div>
                       <div className="mt-1 text-sm text-ink/60">{field.helper}</div>
@@ -189,7 +189,7 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
 
             <Card className="p-6">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                Best next moves
+                Next steps
               </div>
               <div className="mt-4 space-y-3">
                 {model.links.map((link) => (
@@ -209,7 +209,7 @@ export default function OperatorSeoLandingPage({ model }: { model: OperatorSeoMo
             {model.featuredCities.length > 0 ? (
               <Card className="p-6">
                 <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                  Live and opening markets
+                  Cities hiring now
                 </div>
                 <div className="mt-4 grid gap-2">
                   {model.featuredCities.slice(0, 4).map((city) => (

@@ -7,6 +7,7 @@ import { db } from '@/lib/db';
 import { createAdminSupabaseClient } from '@/lib/supabase/admin';
 import { getOperatorApplicationDocuments } from '@/lib/operator-documents';
 import { getOperatorTierDefinition } from '@/features/operators/tiers';
+import { buildLoginHref } from '@/lib/login-redirect';
 import { formatDate } from '@/lib/utils';
 
 function StepCard({
@@ -31,7 +32,7 @@ function StepCard({
 
 export default async function OperatorDashboard() {
   const session = await getSession();
-  if (!session) redirect('/login');
+  if (!session) redirect(buildLoginHref('/operator/dashboard'));
 
   const cleaner = await db.cleaners.byUserId(session.userId);
   if (cleaner) redirect('/cleaner');
@@ -182,7 +183,7 @@ export default async function OperatorDashboard() {
             </p>
             <div className="flex flex-wrap gap-3">
               {approved ? (
-                <Link href="/login" className="btn-glitch">Open sign-in →</Link>
+                <Link href={buildLoginHref('/operator/dashboard')} className="btn-glitch">Open sign-in →</Link>
               ) : (
                 <Link href={`/operator/applied?ref=${encodeURIComponent(application.id)}`} className="btn-glitch">
                   View application status →

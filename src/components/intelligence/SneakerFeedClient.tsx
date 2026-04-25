@@ -95,7 +95,7 @@ export default function SneakerFeedClient({ feed }: { feed: SneakerFeedResult })
   return (
     <div className="space-y-6">
       <motion.div
-        className="sticky top-20 z-20"
+        className="sticky top-16 z-20 md:top-20"
         initial={{ opacity: 0, y: -18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -115,7 +115,7 @@ export default function SneakerFeedClient({ feed }: { feed: SneakerFeedResult })
             <div className="text-[10px] uppercase tracking-[0.3em] text-cyan/80">Pairs worth watching</div>
             <div className="mt-3 text-3xl font-semibold tracking-tight text-bone">{filtered.length}</div>
             <div className="mt-2 max-w-lg text-sm leading-6 text-bone/68">
-              Save a pair, follow the drop, and stay ready for restocks, price movement, or the next release update.
+              Save a pair, follow the drop, and stay ready for the next release, restock, or price change that matters.
             </div>
           </div>
         </div>
@@ -123,8 +123,8 @@ export default function SneakerFeedClient({ feed }: { feed: SneakerFeedResult })
         <FeedHealthBanner
           copy={
             feed.usedFallbackData
-              ? 'Some pricing is still partial, but the feed is still anchored to live release data and current retailer updates.'
-              : 'Live release coverage is active across the current feed.'
+              ? 'Some prices are still catching up, but the feed is still anchored to live release timing and current retailer updates.'
+              : 'Release timing and retailer updates are flowing across the current feed.'
           }
           tone={feed.usedFallbackData ? 'warn' : 'default'}
         />

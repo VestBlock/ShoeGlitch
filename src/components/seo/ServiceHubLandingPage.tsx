@@ -31,11 +31,11 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
               </h1>
               <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">{model.intro}</p>
 
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Link href={model.cta.primaryHref} className="btn-glitch w-full sm:w-auto" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
+                <Link href={model.cta.secondaryHref} className="btn-outline w-full sm:w-auto" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>
@@ -49,7 +49,7 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
                 </div>
                 <div className="rounded-[1.35rem] border border-ink/10 bg-white p-5">
                   <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
-                    Why this hub matters
+                    What to know
                   </div>
                   <ul className="mt-3 space-y-3 text-sm leading-6 text-ink/70">
                     {model.summaryBullets.map((bullet) => (
@@ -70,12 +70,12 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
                     detail: 'The page explains what the service is, who it fits, and where to go next instead of reading like a generic category page.',
                   },
                   {
-                    label: 'Linked to live markets',
-                    detail: `The hub routes straight into ${model.featuredCities.length} active city pages and their related booking paths.`,
+                    label: 'Connected to real cities',
+                    detail: `The hub routes straight into ${model.featuredCities.length} active city pages and the booking paths tied to them.`,
                   },
                   {
-                    label: 'Built for action',
-                    detail: 'Each section is designed to move visitors toward booking, coverage checking, or comparing the right service path.',
+                    label: 'Easy to act on',
+                    detail: 'Each section helps you compare the service, check local availability, or start an order.',
                   },
                 ]}
               />
@@ -84,7 +84,7 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
             <aside className="space-y-4 xl:sticky xl:top-24">
               <Card className="p-6">
                 <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                  Live markets
+                  Cities we serve
                 </div>
                 <div className="mt-4 grid gap-2">
                   {model.featuredCities.map((city) => (
@@ -103,7 +103,7 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
 
               <Card className="p-6">
                 <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                  Best next moves
+                  Next steps
                 </div>
                 <div className="mt-4 space-y-3">
                   {model.links.map((link) => (
@@ -149,39 +149,39 @@ export default function ServiceHubLandingPage({ model }: { model: SeoServiceHubM
           <div className="space-y-6">
             <Card className="p-6">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                Choose your next move
+                Need a hand deciding?
               </div>
               <div className="mt-4 space-y-3">
                 <Link
                   href="/coverage"
-                  data-growth-cta="Need local coverage first?"
+                  data-growth-cta="Check local availability"
                   className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                 >
-                  <div className="font-semibold text-ink">Need local coverage first?</div>
-                  <div className="mt-1 text-sm text-ink/60">Check whether pickup or drop-off is live before you choose the service route.</div>
+                  <div className="font-semibold text-ink">Check local availability</div>
+                  <div className="mt-1 text-sm text-ink/60">Use this if you want to know whether pickup or drop-off is open before you choose a service.</div>
                 </Link>
                 <Link
                   href="/services"
-                  data-growth-cta="Need the right service first?"
+                  data-growth-cta="Compare all services"
                   className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-3 transition hover:border-glitch/25 hover:bg-white"
                 >
-                  <div className="font-semibold text-ink">Need the right service first?</div>
-                  <div className="mt-1 text-sm text-ink/60">Compare the menu if you still need help separating clean, restoration, and route logistics.</div>
+                  <div className="font-semibold text-ink">Compare all services</div>
+                  <div className="mt-1 text-sm text-ink/60">Use this if you still need help separating cleaning, restoration, and local handoff options.</div>
                 </Link>
               </div>
             </Card>
 
             <Card className="p-6">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">
-                Best next step
+                Ready when you are
               </div>
               <h2 className="h-display mt-4 text-[clamp(2rem,4vw,3rem)] leading-[0.95]">{model.cta.headline}</h2>
               <p className="mt-4 text-sm leading-7 text-ink/66">{model.cta.body}</p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link href={model.cta.primaryHref} className="btn-glitch" data-growth-cta={model.cta.primaryLabel}>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Link href={model.cta.primaryHref} className="btn-glitch w-full sm:w-auto" data-growth-cta={model.cta.primaryLabel}>
                   {model.cta.primaryLabel}
                 </Link>
-                <Link href={model.cta.secondaryHref} className="btn-outline" data-growth-cta={model.cta.secondaryLabel}>
+                <Link href={model.cta.secondaryHref} className="btn-outline w-full sm:w-auto" data-growth-cta={model.cta.secondaryLabel}>
                   {model.cta.secondaryLabel}
                 </Link>
               </div>

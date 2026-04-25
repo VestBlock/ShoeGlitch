@@ -12,12 +12,12 @@ import { getActiveSeoCities, getSeoCityBySlug, getSeoServiceAreasByCity } from '
 
 const leadFields = [
   { label: 'Full name', helper: 'Basic contact and identity information.', live: true },
-  { label: 'Email + phone', helper: 'Current live application already collects this.', live: true },
+  { label: 'Email + phone', helper: 'The current application already collects this.', live: true },
   { label: 'City and state', helper: 'City prefill can route the lead toward the right market.', live: true },
   { label: 'Vehicle access', helper: 'Needed for pickup and drop-off heavy roles.', live: false },
   { label: 'Experience', helper: 'Useful for cleaning, restoration, or logistics screening.', live: true },
   { label: 'Interest type', helper: 'Cleaning, restoration, pickup/drop-off, or city launch interest.', live: false },
-  { label: 'Availability + notes', helper: 'Great next-step intake fields for conversion-quality leads.', live: false },
+  { label: 'Availability + notes', helper: 'Helpful next-step fields for stronger applicants.', live: false },
 ] as const;
 
 function cityLabel(city: City) {
@@ -46,7 +46,7 @@ function operatorAnswerBlock(role: OperatorRoleSlug, city?: City, areaCount?: nu
     return `A Shoe Glitch restoration operator${location} takes on higher-trust repair and finish work, with brand standards, city support, and a cleaner path to local demand.${localScale}`;
   }
 
-  return `A Shoe Glitch cleaning operator${location} turns sneaker-care demand into a real territory opportunity with tools, training, standards, and a live application path.${localScale}`;
+  return `A Shoe Glitch cleaning operator${location} turns sneaker-care demand into a real territory opportunity with tools, training, standards, and a clear way to apply.${localScale}`;
 }
 
 function buildMetadata(model: OperatorSeoModel): Metadata {
@@ -85,25 +85,25 @@ export async function buildOperatorsIndexPageModel(): Promise<OperatorSeoModel> 
     description:
       'Explore ShoeGlitch operator opportunities by city, see what operators do, and move into a real application or waitlist path.',
     h1: 'Operator opportunities built for city expansion.',
-    eyebrow: 'Operator recruitment hub',
+    eyebrow: 'Operator opportunities',
     intro:
-      'This is the index for ShoeGlitch operator acquisition pages: city launch opportunities, pickup and drop-off roles, side-hustle guides, and the main path into the live operator application.',
+      'This is the index for ShoeGlitch operator pages: city launch opportunities, pickup and drop-off roles, side-hustle guides, and the main path into the operator application.',
     quickAnswer:
-      'ShoeGlitch operators handle sneaker cleaning, restoration support, and local pickup or drop-off workflows in active or opening markets.',
+      'ShoeGlitch operators handle sneaker cleaning, restoration support, and local pickup or drop-off work in active or opening markets.',
     summaryBullets: [
       'Find city-by-city operator opportunity pages.',
       'See how roles differ between cleaning, restoration, and local logistics.',
-      'Use the live application path instead of reading a dead-end recruiting page.',
+      'Use the operator application instead of stopping at a recruiting page.',
     ],
     whoItsFor: [
       'People who want to operate in a specific city.',
       'Side-hustle seekers who can turn local demand into consistent work.',
-      'Sneaker-care specialists who want a stronger operating system behind them.',
+      'Sneaker-care specialists who want a stronger support structure behind them.',
     ],
     whatOperatorsDo: [
-      'Handle cleaning, restoration, or pickup/drop-off workflows based on capability and market needs.',
+      'Handle cleaning, restoration, or pickup/drop-off work based on capability and market needs.',
       'Follow ShoeGlitch intake, quality, and customer-experience standards.',
-      'Work inside a city-focused service footprint instead of trying to build from zero alone.',
+      'Work inside a city-focused service area instead of trying to build from zero alone.',
     ],
     whatShoeGlitchProvides: [
       'Operator kit tiers, training, and route-ready standards.',
@@ -121,8 +121,8 @@ export async function buildOperatorsIndexPageModel(): Promise<OperatorSeoModel> 
       {
         heading: 'What this operator hub is for',
         paragraphs: [
-          'The point of this page is not just to say “become an operator.” It exists to route operator-intent traffic into the correct city page, role page, or application path so ShoeGlitch can turn organic interest into expansion-ready leads.',
-          'That makes it useful for both SEO and AEO: search engines get a clear recruitment hub, and AI systems can extract a clean answer about what the opportunity is, who it fits, and where to apply.',
+          'The point of this page is not just to say “become an operator.” It exists to route serious interest into the correct city page, role page, or application path.',
+          'That makes it useful because it gives a clear answer about what the opportunity is, who it fits, and where to apply.',
         ],
       },
       {
@@ -143,7 +143,7 @@ export async function buildOperatorsIndexPageModel(): Promise<OperatorSeoModel> 
         shortAnswer:
           'A ShoeGlitch operator is a local partner who handles sneaker care or logistics inside an active or opening city.',
         answer:
-          'A ShoeGlitch operator is a local partner who handles sneaker cleaning, restoration-support work, or pickup and drop-off workflows inside an active or opening city. The exact role depends on tier, capability, and market needs.',
+          'A ShoeGlitch operator is a local partner who handles sneaker cleaning, restoration-support work, or pickup and drop-off inside an active or opening city. The exact role depends on tier, capability, and market needs.',
       },
       {
         question: 'Do I need my own city to apply?',
@@ -153,9 +153,9 @@ export async function buildOperatorsIndexPageModel(): Promise<OperatorSeoModel> 
       },
       {
         question: 'Is this page just informational?',
-        shortAnswer: 'No. It is a conversion hub designed to move operator-intent traffic into the live application flow.',
+        shortAnswer: 'No. It is built to move serious applicants into the existing application flow.',
         answer:
-          'No. This page is designed to move operator-intent traffic into the live application flow, city-specific operator pages, and role-specific opportunity pages. It is not a generic hiring blog.',
+          'No. This page is designed to move serious applicants into the existing application flow, city-specific operator pages, and role-specific opportunity pages. It is not a generic hiring blog.',
       },
     ],
     cta: {
@@ -212,7 +212,7 @@ export async function buildBecomeOperatorPageModel(): Promise<OperatorSeoModel> 
     ],
     operatorResponsibilities: [
       'Maintain quality and brand standards.',
-      'Operate inside the assigned city and service footprint.',
+      'Operate inside the assigned city and service area.',
       'Choose the right work type for your skill level instead of overextending.',
     ],
     sections: [
@@ -252,7 +252,7 @@ export async function buildBecomeOperatorPageModel(): Promise<OperatorSeoModel> 
         question: 'What is the main next step from this page?',
         shortAnswer: 'The live operator application at /operator/apply.',
         answer:
-          'The main next step is the existing operator application at /operator/apply. This page exists to qualify intent and route the right applicants into that flow with better city and role context.',
+          'The main next step is the existing operator application at /operator/apply. This page exists to help the right applicants enter that flow with better city and role context.',
       },
       {
         question: 'Can this expand city by city?',

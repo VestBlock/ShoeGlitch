@@ -169,7 +169,7 @@ export default function HomeBodyShowcase({
     <section ref={rootRef} className="container-x space-y-16 py-16 md:space-y-20 md:py-20">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
         <div ref={stickyRef} className="section-shell p-7 md:p-8 lg:h-fit">
-          <div className="section-kicker">Choose your care level</div>
+          <div className="section-kicker">Pick your tier</div>
           <h2 className="h-display mt-5 text-[clamp(2.9rem,5vw,5.2rem)] leading-[0.88] text-ink">
             A cleaner way
             <br />
@@ -195,11 +195,11 @@ export default function HomeBodyShowcase({
             ))}
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/book" className="btn-glitch">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Link href="/book" className="btn-glitch w-full sm:w-auto">
               Start booking →
             </Link>
-            <Link href="/services" className="btn-outline">
+            <Link href="/services" className="btn-outline w-full sm:w-auto">
               Compare tiers →
             </Link>
           </div>
