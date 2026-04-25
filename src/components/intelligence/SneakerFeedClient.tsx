@@ -112,10 +112,10 @@ export default function SneakerFeedClient({ feed }: { feed: SneakerFeedResult })
         <div className="relative overflow-hidden rounded-[1.65rem] border border-white/10 bg-[linear-gradient(180deg,rgba(7,20,44,0.92),rgba(10,15,31,0.98))] p-4 shadow-[0_24px_70px_rgba(10,15,31,0.16)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_22%,rgba(0,229,255,0.20),transparent_26%),radial-gradient(circle_at_88%_30%,rgba(255,77,109,0.15),transparent_28%)]" />
           <div className="relative">
-            <div className="text-[10px] uppercase tracking-[0.3em] text-cyan/80">Feed scope</div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-cyan/80">Release coverage</div>
             <div className="mt-3 text-3xl font-semibold tracking-tight text-bone">{filtered.length}</div>
             <div className="mt-2 max-w-lg text-sm leading-6 text-bone/68">
-              Sneakers ready for release watching, cleaning hooks, restoration calls, and later affiliate layers.
+              Pairs ready for watchlists, release tracking, restock monitoring, and the premium alert layer that sits on top of the free feed.
             </div>
           </div>
         </div>

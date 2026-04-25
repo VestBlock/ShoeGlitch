@@ -24,8 +24,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${item.name} intelligence | Shoe Glitch`,
-    description: `${item.name}: cleanability ${item.scores.cleaning}, restoration upside ${item.scores.restoration}, market strength ${item.scores.marketStrength}, and the next best Shoe Glitch action.`,
+    title: `${item.name} release intelligence | Shoe Glitch`,
+    description: `${item.name}: watchlist priority, release pressure, market strength, and the next best alert-first action inside Shoe Glitch Intelligence.`,
   };
 }
 
@@ -45,7 +45,7 @@ export default async function SneakerDetailPage({
 
   return (
     <>
-      <GrowthTracker routePath={`/intelligence/${item.slug}`} pageTitle={`${item.name} intelligence`} />
+      <GrowthTracker routePath={`/intelligence/${item.slug}`} pageTitle={`${item.name} release intelligence`} />
 
       {schemas.map((schema, index) => (
         <script
@@ -61,7 +61,7 @@ export default async function SneakerDetailPage({
         <div className="container-x relative py-12 md:py-16">
           <div className="grid gap-8 xl:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
             <article className="section-shell-dark overflow-hidden p-6 md:p-8">
-              <Badge className="mb-5 border-white/14 bg-white/8 text-bone">Sneaker intelligence detail</Badge>
+              <Badge className="mb-5 border-white/14 bg-white/8 text-bone">Release intelligence detail</Badge>
               <h1 className="h-display text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.94] text-bone">{item.name}</h1>
               <p className="mt-4 max-w-3xl text-base leading-7 text-bone/66">{item.description}</p>
 
@@ -91,7 +91,7 @@ export default async function SneakerDetailPage({
 
                   <div className="section-outline-dark p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
-                      Score summary
+                      Signal summary
                     </div>
                     <div className="mt-4">
                       <IntelligenceSignals item={item} includeConfidence />
@@ -133,11 +133,11 @@ export default async function SneakerDetailPage({
                 <h2>Why this pair matters</h2>
                 <p>{item.rankingNote}</p>
                 <ul>
-                  <li>Cleanability: {item.scores.cleaning} driven by color visibility, texture, and how quickly the pair will show dirt.</li>
-                  <li>Restoration upside: {item.scores.restoration} driven by rarity, premium materials, age, and sole risk.</li>
-                  <li>Market strength: {item.scores.marketStrength} driven by price spread, rank, and demand flow.</li>
-                  <li>Collector value: {item.scores.rarity} paired with preservation value {item.scores.preservationValue} to show how much this pair deserves long-term care.</li>
-                  <li>Confidence: {item.scores.confidence} based on provider quality, live market completeness, and demand signals.</li>
+                  <li>Release pressure: {item.scores.releasePressure} helps decide whether this pair deserves an alert right now.</li>
+                  <li>Market strength: {item.scores.marketStrength} shows how much demand and pricing support are behind the release.</li>
+                  <li>Collector value: {item.scores.rarity} paired with preservation value {item.scores.preservationValue} shows why this pair may deserve a long-term watchlist spot.</li>
+                  <li>Care relevance: cleaning {item.scores.cleaning} and restoration {item.scores.restoration} are supporting signals once the pair is actually in hand.</li>
+                  <li>Confidence: {item.scores.confidence} reflects provider quality, live market completeness, and release-signal reliability.</li>
                 </ul>
               </section>
             </article>
@@ -153,10 +153,10 @@ export default async function SneakerDetailPage({
                 <h2 className="h-display mt-5 text-3xl text-bone">Move while the pair is fresh.</h2>
                 <p className="mt-3 text-sm leading-6 text-bone/66">
                   {item.primaryCta.kind === 'book-restoration'
-                    ? 'This one leans restoration-first. Use the feed to capture intent before the pair ages into a harder job.'
+                    ? 'This one may turn into a restoration customer later, but the first win is catching the release, saving the pair, and keeping it inside the Shoe Glitch alert loop.'
                     : item.primaryCta.kind === 'join-waitlist'
-                      ? 'This one looks more like a watchlist hold. Save it now, then let the release or restock signal bring you back in at the right moment.'
-                      : 'This one looks cleaning-first. Turn release energy into a premium service booking before the pair gets away from the customer.'}
+                      ? 'This one is watchlist-first. Save it now, then let the release or restock alert bring the customer back in at the right moment.'
+                      : 'This one is still release-led. Follow it now, then turn that attention into cleaning, restoration, or mail-in revenue after the pair lands.'}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
                   <Link href={item.primaryCta.href} className="btn-glitch" data-growth-cta={item.primaryCta.label}>

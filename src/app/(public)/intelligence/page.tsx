@@ -8,9 +8,9 @@ import { getSneakerFeed } from '@/features/intelligence/service';
 import { buildFeedSchemas, INTELLIGENCE_FAQS } from '@/features/intelligence/schema';
 
 export const metadata: Metadata = {
-  title: 'Sneaker Intelligence Feed | Shoe Glitch',
+  title: 'Sneaker Alerts, Watchlists & Release Tracking | Shoe Glitch',
   description:
-    'Track sneaker releases with cleaning, restoration, market, and collector signals, then move into watchlists or Shoe Glitch service actions from one feed.',
+    'Track upcoming sneaker releases, save watchlists, and move into premium alerts as Shoe Glitch expands its release-tracking product.',
 };
 
 export default async function IntelligencePage() {
@@ -19,7 +19,7 @@ export default async function IntelligencePage() {
 
   return (
     <>
-      <GrowthTracker routePath="/intelligence" pageTitle="Sneaker Intelligence Feed" />
+      <GrowthTracker routePath="/intelligence" pageTitle="Sneaker alerts and watchlists" />
 
       {schemas.map((schema, index) => (
         <script
@@ -36,32 +36,32 @@ export default async function IntelligencePage() {
           <div className="section-shell-dark overflow-hidden p-6 md:p-8">
             <div className="grid gap-6 xl:grid-cols-[minmax(0,0.98fr)_minmax(320px,0.72fr)] xl:items-stretch">
               <div>
-                <Badge className="mb-5 border-white/14 bg-white/8 text-bone">Sneaker intelligence feed</Badge>
+                <Badge className="mb-5 border-white/14 bg-white/8 text-bone">Release alerts and watchlists</Badge>
                 <h1 className="h-display max-w-5xl text-[clamp(3rem,6vw,5.6rem)] leading-[0.90] tracking-tight text-bone">
-                  Release signals with a
+                  Track the pairs that
                   <br />
-                  <em className="h-italic text-cyan">service edge.</em>
+                  <em className="h-italic text-cyan">matter next.</em>
                 </h1>
                 <p className="mt-5 max-w-3xl text-lg leading-8 text-bone/70">
-                  This is Shoe Glitch&rsquo;s first intelligence layer: upcoming pairs, layered care and market scoring, watchlist hooks, and direct booking paths when the release story turns into a service moment.
+                  Shoe Glitch Intelligence is about upcoming drops, watchlists, and the alert layer we can monetize over time. Scores still help rank what deserves attention, but the product is following the right release before everyone else does.
                 </p>
 
                 <div className="mt-7 flex flex-wrap gap-3">
-                  <Link href="/book" className="btn-glitch" data-growth-cta="Book a pair">
-                    Book a pair →
+                  <Link href="/customer/watchlist" className="btn-glitch" data-growth-cta="Start a watchlist">
+                    Start a watchlist →
                   </Link>
-                  <Link href="/services" className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink" data-growth-cta="Compare services">
-                    Compare services
+                  <Link href="/book" className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink" data-growth-cta="Book care later">
+                    Book care later
                   </Link>
                 </div>
 
                 <div className="mt-8 grid gap-4 md:grid-cols-3">
                   <div className="section-outline-dark p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
-                      Quick answer
+                      At a glance
                     </div>
                     <p className="mt-3 text-sm leading-6 text-bone/68">
-                      Sneaker Intelligence Feed ranks releases by cleanability, restoration upside, market strength, collector value, and release pressure so Shoe Glitch can turn interest into bookings and watchlist retention.
+                      The feed exists to help customers decide what to watch, what to save, and what deserves an alert. Scoring is support, not the product.
                     </p>
                   </div>
                   <div className="section-outline-dark p-5">
@@ -69,17 +69,17 @@ export default async function IntelligencePage() {
                       What it surfaces
                     </div>
                     <ul className="mt-3 space-y-2 text-sm leading-6 text-bone/68">
-                      <li>Upcoming drops with service hooks</li>
-                      <li>Pairs with high cleaning or restoration demand</li>
-                      <li>Collector and market-watch candidates</li>
+                      <li>Upcoming drops worth saving early</li>
+                      <li>Pairs with strong restock or release urgency</li>
+                      <li>Watchlist candidates for premium alerts later</li>
                     </ul>
                   </div>
                   <div className="section-outline-dark p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
-                      What comes next
+                      What unlocks next
                     </div>
                     <p className="mt-3 text-sm leading-6 text-bone/68">
-                      Live release data drives the feed now, and the market layer will keep getting sharper as deeper pricing coverage comes online.
+                      Free feed first, then better watchlists, faster alerting, and subscriber-ready release coverage as the data layer deepens.
                     </p>
                   </div>
                 </div>
@@ -87,7 +87,7 @@ export default async function IntelligencePage() {
 
               <aside className="section-shell-dark p-5 md:p-6">
                 <div className="relative z-10">
-                  <div className="section-kicker !border-cyan/15 !bg-white/8 !text-cyan">Monetization lane</div>
+                  <div className="section-kicker !border-cyan/15 !bg-white/8 !text-cyan">What we sell here</div>
                   <div className="mt-4">
                     <OrbitalScene className="min-h-[240px] border-white/10" accent="#00e5ff" glow="#ff4d6d" />
                   </div>
@@ -97,9 +97,9 @@ export default async function IntelligencePage() {
 
                   <div className="mt-5 grid gap-3">
                     {[
-                      ['Free', 'Open feed + search + service hooks'],
+                      ['Free', 'Open release feed, search, and starter watchlists'],
                       ['Pro alerts', 'Unlimited watchlists, instant alerting, weekly digest'],
-                      ['Mail-in care', 'Pair credits, prepaid labels, optional box kit convenience'],
+                      ['Care conversion', 'After the drop, turn the same customer into cleaning, restoration, or mail-in revenue'],
                     ].map(([title, detail]) => (
                       <div key={title} className="section-outline-dark p-4">
                         <div className="text-sm font-semibold text-bone">{title}</div>
@@ -113,7 +113,7 @@ export default async function IntelligencePage() {
                       Start with watchlists →
                     </Link>
                     <Link href="/mail-in" className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink">
-                      See mail-in care →
+                      See care conversion →
                     </Link>
                   </div>
                 </div>
@@ -127,14 +127,14 @@ export default async function IntelligencePage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
-              Feed view
+              Live feed
             </div>
             <h2 className="h-display mt-3 text-[clamp(2.2rem,4vw,3.8rem)] leading-[0.95] text-ink">
-              Filter the next best move.
+              Filter what to follow next.
             </h2>
           </div>
           <p className="max-w-xl text-sm leading-6 text-ink/62">
-            Less blog, more decision engine. Every card should either push a booking, a watchlist save, or a stronger release read.
+            Less blog, more alert console. Every card should help someone save a pair, follow a drop, or understand why it deserves a watchlist spot.
           </p>
         </div>
 

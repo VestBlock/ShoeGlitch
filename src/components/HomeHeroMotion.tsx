@@ -160,11 +160,6 @@ export default function HomeHeroMotion({
         >
           <div className="rounded-[2.2rem] border border-ink/10 bg-white/56 p-3 shadow-[0_28px_90px_rgba(10,15,31,0.12)] backdrop-blur-xl">
             <div className="relative h-[360px] overflow-hidden rounded-[1.8rem] border border-ink/12 bg-[#07142c] shadow-[0_42px_110px_rgba(10,15,31,0.22)] sm:h-[430px] lg:h-[100%] lg:min-h-[620px]">
-              <div
-                className="absolute inset-0 bg-cover bg-center opacity-50"
-                style={{ backgroundImage: `url(${posterUrl})` }}
-              />
-
               <video
                 ref={videoRef}
                 autoPlay
@@ -190,39 +185,19 @@ export default function HomeHeroMotion({
                 <source src={fallbackMp4Url} type="video/mp4" />
               </video>
 
-              <motion.div
-                className="pointer-events-none absolute inset-y-0 left-[-24%] w-[44%] bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.18),rgba(255,255,255,0))] mix-blend-screen"
-                animate={
-                  reduceMotion
-                    ? undefined
-                    : {
-                        x: ['0%', '165%'],
-                      }
-                }
-                transition={
-                  reduceMotion
-                    ? undefined
-                    : {
-                        duration: 8.5,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                      }
-                }
-              />
-
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(90,179,255,0.16),transparent_24%),linear-gradient(180deg,rgba(7,20,44,0.03),rgba(7,20,44,0.0)_40%,rgba(7,20,44,0.08)_74%,rgba(7,20,44,0.30)_100%)]" />
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(7,20,44,0.04),rgba(7,20,44,0.0)_42%,rgba(7,20,44,0.12)_72%,rgba(7,20,44,0.26)_100%)]" />
               <div className="pointer-events-none absolute inset-0 border-[1.5px] border-white/10" />
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#07142c]/78 via-[#07142c]/18 to-transparent" />
 
               <div className="absolute left-4 top-4 z-10 md:left-6 md:top-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-ink/30 px-4 py-2 text-xs font-medium tracking-[0.16em] text-white shadow-[0_10px_30px_rgba(10,15,31,0.18)] backdrop-blur-md md:text-sm">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-ink/18 px-4 py-2 text-xs font-medium tracking-[0.16em] text-white shadow-[0_10px_30px_rgba(10,15,31,0.18)] backdrop-blur-sm md:text-sm">
                   <span className="h-2 w-2 rounded-full bg-cyan" />
                   Real client work
                 </div>
               </div>
 
               <div className="absolute bottom-4 right-4 z-10 md:bottom-6 md:right-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-ink/24 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/82 shadow-[0_14px_36px_rgba(10,15,31,0.18)] backdrop-blur-md">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-ink/16 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/78 shadow-[0_14px_36px_rgba(10,15,31,0.18)] backdrop-blur-sm">
                   Before → After
                 </div>
               </div>
