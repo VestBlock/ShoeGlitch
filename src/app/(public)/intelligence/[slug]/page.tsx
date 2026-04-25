@@ -134,11 +134,11 @@ export default async function SneakerDetailPage({
                 <h2>Why this pair matters</h2>
                 <p>{item.rankingNote}</p>
                 <ul>
-                  <li>Alert urgency: {item.scores.releasePressure} helps decide whether this pair deserves a faster watchlist response right now.</li>
-                  <li>Market heat: {item.scores.marketStrength} shows how much demand and pricing support are behind the release.</li>
-                  <li>Collector appeal: {item.scores.rarity} paired with preservation value {item.scores.preservationValue} shows why this pair may deserve a long-term save.</li>
-                  <li>Aftercare upside: easy care later {item.scores.cleaning} and restore later {item.scores.restoration} matter once the pair is actually in hand.</li>
-                  <li>Data confidence: {item.scores.confidence} reflects provider quality, live market completeness, and release-signal reliability.</li>
+                  <li>Why save it now: {item.scores.reasons.releasePressure[0] ?? 'This pair is worth keeping close for the next release update.'}</li>
+                  <li>What demand looks like: {item.scores.reasons.marketStrength[0] ?? 'Current market activity still makes this worth tracking.'}</li>
+                  <li>Why collectors may care: {item.scores.reasons.rarity[0] ?? 'There is still enough long-term interest to justify a watchlist save.'}</li>
+                  <li>What happens after you buy it: {item.scores.reasons.cleaning[0] ?? item.scores.reasons.restoration[0] ?? 'Aftercare matters more once the pair is in hand.'}</li>
+                  <li>How reliable this read is: {item.scores.reasons.confidence[0] ?? 'The current read depends on the latest available release and market data.'}</li>
                 </ul>
               </section>
             </article>

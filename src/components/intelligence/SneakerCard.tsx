@@ -84,19 +84,24 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
           ))}
         </div>
 
-        <div className="mt-5 flex items-end justify-between gap-4">
+        <div className="mt-5 rounded-[1.15rem] border border-ink/10 bg-white/76 px-4 py-3">
+          <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Why it stands out</div>
+          <div className="mt-2 text-sm leading-6 text-ink/62">{item.rankingNote}</div>
+        </div>
+
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
           <div className="max-w-[19rem]">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Why save it</div>
+            <div className="text-[10px] uppercase tracking-[0.24em] text-ink/45">Current price read</div>
             <div className="mt-2 text-base font-semibold text-ink">
               {item.market.estimatedResale
-                ? `$${item.market.estimatedResale}`
+                ? `Around $${item.market.estimatedResale}`
                 : item.priceSummary.lowestAsk
-                  ? `$${item.priceSummary.lowestAsk}`
-                  : 'Awaiting market data'}
+                  ? `Lowest ask $${item.priceSummary.lowestAsk}`
+                  : 'Still building'}
             </div>
-            <div className="mt-1 max-h-[2.6rem] overflow-hidden text-xs leading-5 text-ink/50">{item.rankingNote}</div>
           </div>
           <div className="flex flex-wrap justify-end gap-2">
+            {watchCta ? <WatchlistQuickAddButton item={item} compact /> : null}
             <Link
               href={`/intelligence/${item.slug}`}
               className="btn-outline min-h-[2.9rem] px-4 text-xs"
@@ -111,7 +116,6 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
             >
               {serviceCta.label}
             </Link>
-            {watchCta ? <WatchlistQuickAddButton item={item} compact /> : null}
             {item.marketUrl ? (
               <Link
                 href={item.marketUrl}

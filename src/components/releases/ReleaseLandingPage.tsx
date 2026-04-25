@@ -6,12 +6,6 @@ import { buildReleaseSchemas } from '@/features/releases/schema';
 import type { ReleasePageModel } from '@/features/releases/types';
 import { formatDateOnly } from '@/lib/utils';
 
-function scoreTone(value: number) {
-  if (value >= 75) return 'text-neon';
-  if (value >= 60) return 'text-cyan';
-  return 'text-ink';
-}
-
 export default function ReleaseLandingPage({ model }: { model: ReleasePageModel }) {
   const schemas = buildReleaseSchemas(model);
   const marketValue = model.item.priceSummary.lowestAsk ?? model.item.priceSummary.averagePrice;
@@ -223,9 +217,8 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                       <div>
                         <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Market read</div>
                         <p className="mt-3 text-sm leading-6 text-ink/68">
-                          Market heat is <span className={scoreTone(model.item.scores.marketStrength)}>{model.item.scores.marketStrength}</span>
-                          , liquidity is <span className={scoreTone(model.item.scores.liquidity)}>{model.item.scores.liquidity}</span>, and the
-                          watchlist fit lands at <span className={scoreTone(model.item.scores.marketWatchFit)}>{model.item.scores.marketWatchFit}</span>.
+                          {model.item.scores.reasons.marketStrength[0] ?? 'Current demand gives this pair a real reason to stay on your radar.'}{' '}
+                          {model.item.scores.reasons.marketWatchFit[0] ?? 'It is worth saving if you want a cleaner read once the release picture sharpens.'}
                         </p>
                       </div>
                       <div>
@@ -246,10 +239,10 @@ export default function ReleaseLandingPage({ model }: { model: ReleasePageModel 
                     These numbers are meant to support the save-or-skip decision first. They also give a quick read on what the pair may need later once it is actually in hand.
                   </p>
                   <ul>
-                    <li>Easy care later: {model.item.scores.cleaning} based on visible wear risk, lighter tones, and texture-driven care needs.</li>
-                    <li>Restore later: {model.item.scores.restoration} based on rarity, age profile, premium materials, and sole risk.</li>
-                    <li>Material sensitivity: {model.item.scores.materialSensitivity} based on suede, nubuck, mesh, canvas, patent, and tone.</li>
-                    <li>Collector appeal: {model.item.scores.preservationValue} based on long-term keep value and protection upside.</li>
+                    <li>{model.item.scores.reasons.cleaning[0] ?? 'This pair should stay relatively manageable once it is actually in rotation.'}</li>
+                    <li>{model.item.scores.reasons.restoration[0] ?? 'If this pair ages well, there may be a real case for restoration later.'}</li>
+                    <li>{model.item.scores.reasons.materialSensitivity[0] ?? 'Material choice matters here, especially once the pair starts seeing regular wear.'}</li>
+                    <li>{model.item.scores.reasons.preservationValue[0] ?? 'There is enough long-term upside to think beyond the first wear.'}</li>
                   </ul>
                 </section>
 

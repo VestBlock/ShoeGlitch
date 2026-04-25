@@ -44,7 +44,7 @@ export default function WorthRestoringLandingPage({ model }: { model: ReleasePag
                   <p className="mt-3 text-base leading-7 text-ink/72">{model.aiSummary}</p>
                 </div>
                 <div className="rounded-[1.5rem] border border-ink/10 bg-bone-soft p-5">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Core scores</div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Quick read</div>
                   <div className="mt-4 grid grid-cols-2 gap-3">
                     {[
                       ['Restoration', model.item.scores.restoration],
@@ -119,9 +119,7 @@ export default function WorthRestoringLandingPage({ model }: { model: ReleasePag
                 <section>
                   <h2>Release and product context</h2>
                   <p>
-                    This page uses the same structured sneaker record as the release brief, but it reinterprets the pair through the
-                    restoration lens. That means release date, MSRP, image, SKU, availability, and market signals remain structured
-                    provider data, while the recommendation is ShoeGlitch’s care intelligence layer.
+                    This page starts with the same release facts as the main release brief, then answers a more useful question: is this the kind of pair you protect, restore, or leave alone? The goal is to make the restoration decision easier, not more technical.
                   </p>
                   <dl className="grid gap-4 md:grid-cols-2">
                     <div className="rounded-[1.1rem] border border-ink/10 bg-bone-soft p-4">
@@ -136,7 +134,7 @@ export default function WorthRestoringLandingPage({ model }: { model: ReleasePag
                 </section>
 
                 <section>
-                  <h2>Editorial enrichment status</h2>
+                  <h2>Latest note</h2>
                   <p>{model.editorial.reviewNote}</p>
                 </section>
               </div>

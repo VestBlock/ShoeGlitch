@@ -81,13 +81,13 @@ export default function HowToCleanLandingPage({ model }: { model: ReleasePageMod
                   </div>
                   <div className="mt-4 grid grid-cols-3 gap-3">
                     {[
-                      ['Cleaning', model.item.scores.cleaning],
-                      ['Wear', model.item.scores.wearVisibility],
-                      ['Material', model.item.scores.materialSensitivity],
+                      ['Cleaning', model.item.scores.cleaning >= 70 ? 'Easy later' : model.item.scores.cleaning >= 50 ? 'Moderate care' : 'Careful clean'],
+                      ['Wear', model.item.scores.wearVisibility >= 70 ? 'Shows fast' : model.item.scores.wearVisibility >= 50 ? 'Moderate' : 'Slower wear'],
+                      ['Material', model.item.scores.materialSensitivity >= 70 ? 'Sensitive' : model.item.scores.materialSensitivity >= 50 ? 'Mixed' : 'Straightforward'],
                     ].map(([label, value]) => (
                       <div key={label} className="rounded-[1rem] border border-white/14 bg-white/8 px-3 py-3 text-center">
                         <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/58">{label}</div>
-                        <div className="mt-2 text-2xl font-semibold text-white">{value}</div>
+                        <div className="mt-2 text-lg font-semibold text-white">{value}</div>
                       </div>
                     ))}
                   </div>
@@ -149,7 +149,7 @@ export default function HowToCleanLandingPage({ model }: { model: ReleasePageMod
                 </section>
 
                 <section>
-                  <h2>Editorial enrichment status</h2>
+                  <h2>Latest note</h2>
                   <p>{model.editorial.reviewNote}</p>
                 </section>
               </div>

@@ -43,7 +43,7 @@ export default async function IntelligencePage() {
                   <em className="h-italic text-cyan">matter next.</em>
                 </h1>
                 <p className="mt-5 max-w-3xl text-lg leading-8 text-bone/70">
-                  Save upcoming pairs, follow release dates, and stay close to restocks without digging through noise. The feed helps you decide what deserves a watchlist spot now, and premium alerts can sit on top of that later.
+                  Save upcoming pairs, follow release dates, and stay close to restocks without digging through noise. The feed is built to help you decide what deserves a watchlist spot now and what can wait.
                 </p>
 
                 <div className="mt-7 flex flex-wrap gap-3">
@@ -58,28 +58,28 @@ export default async function IntelligencePage() {
                 <div className="mt-8 grid gap-4 md:grid-cols-3">
                   <div className="section-outline-dark p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
-                      At a glance
+                      Best for
                     </div>
                     <p className="mt-3 text-sm leading-6 text-bone/68">
-                      This feed helps you decide what to save early, what to ignore, and which pairs deserve a faster alert if they move.
+                      This feed helps you decide what to save early, what to ignore, and which pairs deserve a closer watch.
                     </p>
                   </div>
                   <div className="section-outline-dark p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
-                      What it surfaces
+                      What you can do
                     </div>
                     <ul className="mt-3 space-y-2 text-sm leading-6 text-bone/68">
                       <li>Upcoming drops worth saving early</li>
                       <li>Pairs with strong restock or release urgency</li>
-                      <li>Watchlist candidates for premium alerts later</li>
+                      <li>Watchlist candidates you want alerts on later</li>
                     </ul>
                   </div>
                   <div className="section-outline-dark p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
-                      What unlocks next
+                      Why it matters
                     </div>
                     <p className="mt-3 text-sm leading-6 text-bone/68">
-                      Start with the free feed, then move into faster alerts, deeper watchlists, and a more premium tracking layer as it opens up.
+                      The feed is the front door. Watchlists, alerting, and premium tracking are where this becomes even more useful over time.
                     </p>
                   </div>
                 </div>
@@ -99,7 +99,7 @@ export default async function IntelligencePage() {
                     {[
                       ['Save the pair', 'Add it to your watchlist the moment it stands out.'],
                       ['Track the drop', 'Follow release timing, pricing, and restock movement.'],
-                      ['Upgrade later', 'Move into faster alerts and deeper watchlists when that layer goes live.'],
+                      ['Stay ready', 'Come back when the release, restock, or price picture changes.'],
                     ].map(([title, detail]) => (
                       <div key={title} className="section-outline-dark p-4">
                         <div className="text-sm font-semibold text-bone">{title}</div>
@@ -113,7 +113,7 @@ export default async function IntelligencePage() {
                       Start with watchlists →
                     </Link>
                     <Link href="/mail-in" className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink">
-                      See care conversion →
+                      Book care later →
                     </Link>
                   </div>
                 </div>
@@ -134,7 +134,7 @@ export default async function IntelligencePage() {
             </h2>
           </div>
           <p className="max-w-xl text-sm leading-6 text-ink/62">
-            Every card should help you make one simple decision: ignore it, save it, or stay close for the next alert.
+            Every card should help you make one simple decision: skip it, save it, or stay close for the next update.
           </p>
         </div>
 

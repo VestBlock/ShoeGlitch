@@ -42,121 +42,83 @@ function toneForScore(score: number, positive = true): SignalTone {
   return 'slate';
 }
 
-function labelForScore(key: SignalItem['key'], score: number) {
-  if (key === 'cleaning') {
-    if (score >= 78) return 'Easy clean';
-    if (score >= 60) return 'Cleanable fast';
-    if (score >= 45) return 'Careful clean';
-    return 'Light upside';
-  }
-  if (key === 'restoration') {
-    if (score >= 78) return 'Restore-ready';
-    if (score >= 60) return 'Worth restoring';
-    if (score >= 45) return 'Selective restore';
-    return 'Cleaning-first';
-  }
-  if (key === 'market') {
-    if (score >= 78) return 'Strong market';
-    if (score >= 60) return 'Watch market';
-    if (score >= 45) return 'Speculative';
-    return 'Thin market';
-  }
-  if (key === 'serviceFit') {
-    if (score >= 78) return 'Service lead';
-    if (score >= 60) return 'Bookable pair';
-    if (score >= 45) return 'Conditional fit';
-    return 'Low service fit';
-  }
-  if (key === 'wear') {
-    if (score >= 76) return 'Shows wear fast';
-    if (score >= 58) return 'Visible wear';
-    if (score >= 42) return 'Moderate wear';
-    return 'Slower wear';
-  }
-  if (key === 'sole') {
-    if (score >= 76) return 'Sole risk high';
-    if (score >= 58) return 'Watch the sole';
-    if (score >= 42) return 'Moderate sole risk';
-    return 'Stable sole';
-  }
-  if (key === 'rarity') {
-    if (score >= 76) return 'Collector pair';
-    if (score >= 58) return 'Rarity signal';
-    if (score >= 42) return 'Some rarity';
-    return 'General release';
-  }
-  if (key === 'confidence') {
-    if (score >= 76) return 'Strong data';
-    if (score >= 58) return 'Usable data';
-    if (score >= 42) return 'Partial data';
-    return 'Thin data';
-  }
-  return 'Signal';
-}
-
 function firstReason(reasons: string[]) {
   return reasons[0] ?? 'Signal is still building from available data.';
 }
 
 export function buildScoreSignals(item: SneakerFeedItem, includeConfidence = false): SignalItem[] {
+  const careIsRestoration = item.scores.restoration >= item.scores.cleaning;
+  const careScore = careIsRestoration ? item.scores.restoration : item.scores.cleaning;
+  const careReason = careIsRestoration
+    ? firstReason(item.scores.reasons.restoration)
+    : firstReason(item.scores.reasons.cleaning);
+
   const signals: SignalItem[] = [
     {
-      key: 'cleaning',
-      eyebrow: `Easy care later ${item.scores.cleaning}`,
-      headline: labelForScore('cleaning', item.scores.cleaning),
-      detail: firstReason(item.scores.reasons.cleaning),
-      tone: toneForScore(item.scores.cleaning),
-    },
-    {
-      key: 'restoration',
-      eyebrow: `Restore later ${item.scores.restoration}`,
-      headline: labelForScore('restoration', item.scores.restoration),
-      detail: firstReason(item.scores.reasons.restoration),
-      tone: toneForScore(item.scores.restoration),
+      key: 'save',
+      eyebrow: 'Best move right now',
+      headline:
+        item.scores.releasePressure >= 76
+          ? 'Save it early'
+          : item.scores.releasePressure >= 56
+            ? 'Keep it close'
+            : 'Watch for updates',
+      detail: firstReason(item.scores.reasons.releasePressure),
+      tone: toneForScore(item.scores.releasePressure),
     },
     {
       key: 'market',
-      eyebrow: `Market heat ${item.scores.marketStrength}`,
-      headline: labelForScore('market', item.scores.marketStrength),
+      eyebrow: 'Release demand',
+      headline:
+        item.scores.marketStrength >= 76
+          ? 'Strong demand'
+          : item.scores.marketStrength >= 56
+            ? 'Good watchlist candidate'
+            : 'Worth checking back on',
       detail: firstReason(item.scores.reasons.marketStrength),
       tone: toneForScore(item.scores.marketStrength),
     },
     {
-      key: 'serviceFit',
-      eyebrow: `Aftercare fit ${item.scores.serviceFit}`,
-      headline: labelForScore('serviceFit', item.scores.serviceFit),
-      detail: firstReason(item.scores.reasons.serviceFit),
-      tone: toneForScore(item.scores.serviceFit),
+      key: 'care',
+      eyebrow: 'After you own it',
+      headline:
+        careScore >= 76
+          ? careIsRestoration
+            ? 'Worth restoring later'
+            : 'Easy to clean later'
+          : careScore >= 56
+            ? careIsRestoration
+              ? 'Could deserve restoration'
+              : 'Should clean up well'
+            : 'Mostly a release play',
+      detail: careReason,
+      tone: toneForScore(careScore),
     },
   ];
 
   if (includeConfidence) {
     signals.push(
       {
-        key: 'wear',
-        eyebrow: `Wear shows fast ${item.scores.wearVisibility}`,
-        headline: labelForScore('wear', item.scores.wearVisibility),
-        detail: firstReason(item.scores.reasons.wearVisibility),
-        tone: toneForScore(item.scores.wearVisibility),
-      },
-      {
-        key: 'sole',
-        eyebrow: `Sole risk later ${item.scores.soleRisk}`,
-        headline: labelForScore('sole', item.scores.soleRisk),
-        detail: firstReason(item.scores.reasons.soleRisk),
-        tone: toneForScore(item.scores.soleRisk, false),
-      },
-      {
         key: 'rarity',
-        eyebrow: `Collector value ${item.scores.rarity}`,
-        headline: labelForScore('rarity', item.scores.rarity),
+        eyebrow: 'Longer-term upside',
+        headline:
+          item.scores.rarity >= 76
+            ? 'Collector interest'
+            : item.scores.rarity >= 56
+              ? 'Some long-term value'
+              : 'Mostly everyday demand',
         detail: firstReason(item.scores.reasons.rarity),
         tone: toneForScore(item.scores.rarity),
       },
       {
         key: 'confidence',
-        eyebrow: `Data confidence ${item.scores.confidence}`,
-        headline: labelForScore('confidence', item.scores.confidence),
+        eyebrow: 'Data quality',
+        headline:
+          item.scores.confidence >= 76
+            ? 'Strong read'
+            : item.scores.confidence >= 56
+              ? 'Useful read'
+              : 'Still developing',
         detail: firstReason(item.scores.reasons.confidence),
         tone: toneForScore(item.scores.confidence),
       },
@@ -176,7 +138,7 @@ export default function IntelligenceSignals({
   const signals = buildScoreSignals(item, includeConfidence);
 
   return (
-    <div className={`grid gap-3 ${includeConfidence ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2 xl:grid-cols-4'}`}>
+    <div className={`grid gap-3 ${includeConfidence ? 'sm:grid-cols-2 xl:grid-cols-4' : 'sm:grid-cols-2 xl:grid-cols-3'}`}>
       {signals.map((signal) => (
         <div
           key={signal.key}

@@ -935,9 +935,9 @@ export function BookingFlow({
             {isPending && <StatusDot tone="live" />}
           </div>
           <div className="mb-5 rounded-[1.25rem] border border-white/10 bg-white/6 px-4 py-4">
-            <div className="text-[10px] uppercase tracking-[0.28em] text-cyan/80">Booking cockpit</div>
+            <div className="text-[10px] uppercase tracking-[0.28em] text-cyan/80">Your booking summary</div>
             <div className="mt-2 text-sm leading-6 text-bone/68">
-              Route, tier, add-ons, and shipping stay connected here while you move through the steps.
+              Your route, tier, add-ons, and shipping details stay updated here while you move through the steps.
             </div>
           </div>
           {q ? (
@@ -971,7 +971,7 @@ export function BookingFlow({
               <span className="text-bone">Nationwide</span>
             </div>
             <div className="flex items-start justify-between gap-3">
-              <span>Service system</span>
+              <span>Service tiers</span>
               <span className="text-bone">Basic / Pro / Elite</span>
             </div>
           </div>

@@ -18,13 +18,13 @@ import { formatDate } from '@/lib/utils';
 
 function nextCustomerStep(order: Awaited<ReturnType<typeof db.orders.byCustomer>>[number] | undefined) {
   if (!order) {
-    return {
-      eyebrow: 'Fresh start',
-      title: 'Book your next pair.',
-      detail: 'Start a new order, upload intake photos, and we will guide the pair through the same tracked workflow.',
-      href: '/book',
-      label: 'Book a clean →',
-    };
+      return {
+        eyebrow: 'Fresh start',
+        title: 'Book your next pair.',
+        detail: 'Start a new order, upload intake photos, and follow the pair through the same step-by-step order flow.',
+        href: '/book',
+        label: 'Book a clean →',
+      };
   }
 
   switch (order.status) {

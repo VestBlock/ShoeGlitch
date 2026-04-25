@@ -227,7 +227,7 @@ export default function HomeBodyShowcase({
                   <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_80%_26%,rgba(0,229,255,0.12),transparent_24%),radial-gradient(circle_at_20%_78%,rgba(255,77,109,0.10),transparent_28%)] opacity-90" />
                   <div className="relative">
                     <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-glitch/82">
-                      0{index + 1} · premium care
+                      0{index + 1} · {service.name} tier
                     </div>
                     <h3 className="h-display mt-4 text-[clamp(2.4rem,4vw,4rem)] leading-[0.9] text-ink transition group-hover:text-glitch">
                       {service.name}

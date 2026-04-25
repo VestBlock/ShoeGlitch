@@ -81,13 +81,13 @@ export default function ReleaseAlertsLandingPage({ model }: { model: ReleasePage
                   </div>
                   <div className="mt-4 grid grid-cols-3 gap-3">
                     {[
-                      ['Save fit', model.item.scores.marketWatchFit],
-                      ['Urgency', model.item.scores.releasePressure],
-                      ['Heat', model.item.scores.marketStrength],
+                      ['Best move', model.item.scores.marketWatchFit >= 70 ? 'Save now' : model.item.scores.marketWatchFit >= 50 ? 'Keep close' : 'Check back'],
+                      ['Watch timing', model.item.scores.releasePressure >= 70 ? 'Soon' : model.item.scores.releasePressure >= 50 ? 'Worth watching' : 'No rush'],
+                      ['Demand', model.item.scores.marketStrength >= 70 ? 'Strong' : model.item.scores.marketStrength >= 50 ? 'Building' : 'Early'],
                     ].map(([label, value]) => (
                       <div key={label} className="rounded-[1rem] border border-white/14 bg-white/8 px-3 py-3 text-center">
                         <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/58">{label}</div>
-                        <div className="mt-2 text-2xl font-semibold text-white">{value}</div>
+                        <div className="mt-2 text-lg font-semibold text-white">{value}</div>
                       </div>
                     ))}
                   </div>
@@ -95,7 +95,7 @@ export default function ReleaseAlertsLandingPage({ model }: { model: ReleasePage
               </div>
 
               <Card className="p-5">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Why it is alert-worthy</div>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">Why save it now</div>
                 <div className="mt-4">
                   <IntelligenceSignals item={model.item} includeConfidence />
                 </div>
