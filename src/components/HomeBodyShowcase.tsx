@@ -1,7 +1,11 @@
 'use client';
 
+import { useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import { motion, useReducedMotion } from 'framer-motion';
 
 type ServiceCard = {
   id: string;
@@ -51,6 +55,8 @@ const journeySteps = [
   },
 ] as const;
 
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
 export default function HomeBodyShowcase({
   services,
   cities,
@@ -60,16 +66,109 @@ export default function HomeBodyShowcase({
   cities: CityCard[];
   activeCityCount: number;
 }) {
+  const rootRef = useRef<HTMLElement | null>(null);
+  const stickyRef = useRef<HTMLDivElement | null>(null);
+  const reduceMotion = useReducedMotion();
+
+  useGSAP(
+    () => {
+      if (reduceMotion || !rootRef.current) return;
+
+      const mm = gsap.matchMedia();
+      const root = rootRef.current;
+
+      mm.add('(min-width: 1024px)', () => {
+        if (!stickyRef.current) return;
+
+        ScrollTrigger.create({
+          trigger: root,
+          start: 'top top+=112',
+          end: 'bottom bottom-=140',
+          pin: stickyRef.current,
+          pinSpacing: false,
+          invalidateOnRefresh: true,
+        });
+      });
+
+      ScrollTrigger.batch(gsap.utils.toArray<HTMLElement>('[data-tier-card]', root), {
+        start: 'top 84%',
+        once: true,
+        onEnter: (batch) =>
+          gsap.fromTo(
+            batch,
+            { autoAlpha: 0, y: 54, rotateX: 6 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              rotateX: 0,
+              duration: 0.9,
+              stagger: 0.12,
+              ease: 'power3.out',
+            },
+          ),
+      });
+
+      ScrollTrigger.batch(gsap.utils.toArray<HTMLElement>('[data-stage-shell]', root), {
+        start: 'top 82%',
+        once: true,
+        onEnter: (batch) =>
+          gsap.fromTo(
+            batch,
+            { autoAlpha: 0, y: 56 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.95,
+              stagger: 0.16,
+              ease: 'power3.out',
+            },
+          ),
+      });
+
+      ScrollTrigger.batch(gsap.utils.toArray<HTMLElement>('[data-city-row]', root), {
+        start: 'top 90%',
+        once: true,
+        onEnter: (batch) =>
+          gsap.fromTo(
+            batch,
+            { autoAlpha: 0, x: -22 },
+            {
+              autoAlpha: 1,
+              x: 0,
+              duration: 0.68,
+              stagger: 0.1,
+              ease: 'power2.out',
+            },
+          ),
+      });
+
+      ScrollTrigger.batch(gsap.utils.toArray<HTMLElement>('[data-endcap-card]', root), {
+        start: 'top 90%',
+        once: true,
+        onEnter: (batch) =>
+          gsap.fromTo(
+            batch,
+            { autoAlpha: 0, y: 36, scale: 0.98 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.75,
+              stagger: 0.12,
+              ease: 'power2.out',
+            },
+          ),
+      });
+
+      return () => mm.revert();
+    },
+    { scope: rootRef, dependencies: [reduceMotion, services.length, cities.length] },
+  );
+
   return (
-    <section className="container-x space-y-16 py-16 md:space-y-20 md:py-20">
+    <section ref={rootRef} className="container-x space-y-16 py-16 md:space-y-20 md:py-20">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="section-shell p-7 md:p-8 lg:sticky lg:top-28 lg:h-fit"
-        >
+        <div ref={stickyRef} className="section-shell p-7 md:p-8 lg:h-fit">
           <div className="section-kicker">Choose your care level</div>
           <h2 className="h-display mt-5 text-[clamp(2.9rem,5vw,5.2rem)] leading-[0.88] text-ink">
             A cleaner route
@@ -104,7 +203,7 @@ export default function HomeBodyShowcase({
               Compare tiers →
             </Link>
           </div>
-        </motion.div>
+        </div>
 
         <div className="grid gap-5">
           {services.map((service, index) => {
@@ -117,16 +216,9 @@ export default function HomeBodyShowcase({
             return (
               <motion.div
                 key={service.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{
-                  duration: 0.55,
-                  delay: Math.min(index * 0.08, 0.2),
-                  ease: [0.22, 1, 0.36, 1],
-                }}
                 whileHover={{ y: -8, rotateX: -1.5, rotateY: 2.5 }}
                 className="group"
+                data-tier-card
               >
                 <Link
                   href={`/book?service=${service.slug}`}
@@ -179,13 +271,7 @@ export default function HomeBodyShowcase({
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.22 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="section-shell-dark overflow-hidden p-7 md:p-8"
-        >
+        <div data-stage-shell className="section-shell-dark overflow-hidden p-7 md:p-8">
           <div className="relative z-10">
             <div className="section-kicker border-white/12 bg-white/8 text-cyan">Pickup, drop-off, and mail-in</div>
             <h2 className="h-display mt-5 text-[clamp(2.6rem,4.8vw,4.8rem)] leading-[0.9] text-bone">
@@ -221,15 +307,9 @@ export default function HomeBodyShowcase({
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.22 }}
-          transition={{ duration: 0.55, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
-          className="grid gap-4"
-        >
+        <div data-stage-shell className="grid gap-4">
           <div className="section-shell p-6 md:p-7">
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -245,6 +325,7 @@ export default function HomeBodyShowcase({
               {cities.slice(0, 4).map((city, index) => (
                 <div
                   key={city.id}
+                  data-city-row
                   className={`grid items-center gap-4 rounded-[1.3rem] border px-4 py-4 md:grid-cols-[minmax(0,1fr)_auto_auto] ${
                     city.active
                       ? 'border-glitch/18 bg-white shadow-[0_14px_34px_rgba(10,15,31,0.05)]'
@@ -285,7 +366,7 @@ export default function HomeBodyShowcase({
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="section-shell p-6">
+            <div className="section-shell p-6" data-endcap-card>
               <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">Operators</div>
               <h3 className="h-display mt-3 text-3xl leading-[0.92] text-ink">Join the team.</h3>
               <p className="mt-3 text-sm leading-6 text-ink/62">
@@ -296,7 +377,7 @@ export default function HomeBodyShowcase({
               </Link>
             </div>
 
-            <div className="section-shell p-6">
+            <div className="section-shell p-6" data-endcap-card>
               <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">Release alerts</div>
               <h3 className="h-display mt-3 text-3xl leading-[0.92] text-ink">Track pairs before they sell through.</h3>
               <p className="mt-3 text-sm leading-6 text-ink/62">
@@ -307,7 +388,7 @@ export default function HomeBodyShowcase({
               </Link>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

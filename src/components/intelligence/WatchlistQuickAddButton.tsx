@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import type { SneakerFeedItem } from '@/features/intelligence/types';
+import RiveCheckmark from '@/components/intelligence/RiveCheckmark';
 
 type State = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -62,7 +63,10 @@ export default function WatchlistQuickAddButton({ item, compact = false }: { ite
         className={compact ? 'btn-glitch min-h-[2.9rem] px-4 text-xs' : 'btn-glitch'}
         disabled={state === 'saving' || state === 'saved'}
       >
-        {state === 'saving' ? 'Saving…' : state === 'saved' ? 'Saved' : 'Save to watchlist'}
+        <span className="flex items-center gap-2">
+          {state === 'saved' ? <RiveCheckmark className="h-5 w-5 border-white/18 bg-white/12" /> : null}
+          <span>{state === 'saving' ? 'Saving…' : state === 'saved' ? 'Saved' : 'Save to watchlist'}</span>
+        </span>
       </button>
       {message ? (
         <div className={`text-right text-[11px] leading-4 ${state === 'error' ? 'text-glitch' : 'text-ink/50'}`}>
