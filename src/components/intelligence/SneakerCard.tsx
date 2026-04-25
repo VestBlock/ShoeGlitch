@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Badge, Card } from '@/components/ui';
 import IntelligenceSignals from '@/components/intelligence/IntelligenceSignals';
+import WatchlistQuickAddButton from '@/components/intelligence/WatchlistQuickAddButton';
 import { formatDateOnly } from '@/lib/utils';
 import type { SneakerFeedItem } from '@/features/intelligence/types';
 
@@ -11,6 +12,14 @@ function flagTone(flag: SneakerFeedItem['opportunityFlags'][number]) {
 }
 
 export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
+  const watchCta = item.primaryCta.kind === 'join-waitlist'
+    ? item.primaryCta
+    : item.secondaryCta.kind === 'join-waitlist'
+      ? item.secondaryCta
+      : null;
+
+  const serviceCta = item.primaryCta.kind === 'join-waitlist' ? item.secondaryCta : item.primaryCta;
+
   return (
     <Card className="group intelligence-card overflow-hidden border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,248,252,0.92))] p-0 shadow-[0_24px_70px_rgba(10,15,31,0.12)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_36px_90px_rgba(10,15,31,0.18)]">
       <div className="relative h-60 overflow-hidden bg-[linear-gradient(180deg,#07111f_0%,#0a2456_100%)]">
@@ -80,19 +89,20 @@ export default function SneakerCard({ item }: { item: SneakerFeedItem }) {
           </div>
           <div className="flex flex-wrap justify-end gap-2">
             <Link
-              href={item.secondaryCta.href}
+              href={`/intelligence/${item.slug}`}
               className="btn-outline min-h-[2.9rem] px-4 text-xs"
-              data-growth-cta={item.secondaryCta.label}
+              data-growth-cta="Open pair detail"
             >
-              {item.secondaryCta.label}
+              Open pair
             </Link>
             <Link
-              href={item.primaryCta.href}
-              className="btn-glitch min-h-[2.9rem] px-4 text-xs"
-              data-growth-cta={item.primaryCta.label}
+              href={serviceCta.href}
+              className="btn-outline min-h-[2.9rem] px-4 text-xs"
+              data-growth-cta={serviceCta.label}
             >
-              {item.primaryCta.label}
+              {serviceCta.label}
             </Link>
+            {watchCta ? <WatchlistQuickAddButton item={item} compact /> : null}
             {item.marketUrl ? (
               <Link
                 href={item.marketUrl}

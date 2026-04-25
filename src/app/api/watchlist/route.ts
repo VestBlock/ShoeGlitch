@@ -43,6 +43,21 @@ export async function POST(request: Request) {
   }
 
   try {
+    const existingItems = await watchlistStore.listByUser(session.userId);
+    const existing = existingItems.find((item) => {
+      const sameSku = item.sku && parsed.data.sku && item.sku.toLowerCase() === parsed.data.sku.toLowerCase();
+      const sameShape =
+        item.brand.toLowerCase() === parsed.data.brand.toLowerCase()
+        && item.model.toLowerCase() === parsed.data.model.toLowerCase()
+        && (item.colorway ?? '').toLowerCase() === (parsed.data.colorway ?? '').toLowerCase();
+
+      return Boolean(sameSku || sameShape);
+    });
+
+    if (existing) {
+      return NextResponse.json({ item: existing, existing: true }, { status: 200 });
+    }
+
     const item = await watchlistStore.create({
       userId: session.userId,
       brand: parsed.data.brand,

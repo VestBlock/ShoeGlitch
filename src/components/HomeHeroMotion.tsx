@@ -179,7 +179,7 @@ export default function HomeHeroMotion({
                     });
                   }
                 }}
-                className="absolute inset-0 h-full w-full object-contain opacity-[0.98]"
+                className="absolute inset-0 h-full w-full object-cover opacity-[0.98]"
               >
                 <source src={primaryMp4Url} type="video/mp4" />
                 <source src={fallbackMp4Url} type="video/mp4" />
@@ -199,6 +199,22 @@ export default function HomeHeroMotion({
               <div className="absolute bottom-4 right-4 z-10 md:bottom-6 md:right-6">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-ink/16 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/78 shadow-[0_14px_36px_rgba(10,15,31,0.18)] backdrop-blur-sm">
                   Before → After
+                </div>
+              </div>
+
+              <div className="absolute inset-x-4 bottom-4 z-10 md:inset-x-6 md:bottom-6">
+                <div className="max-w-[30rem] rounded-[1.35rem] border border-white/14 bg-ink/18 px-5 py-4 shadow-[0_20px_50px_rgba(10,15,31,0.24)] backdrop-blur-sm">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.32em] text-cyan/85">
+                    ShoeGlitch
+                  </div>
+                  <div
+                    className="mt-2 text-[clamp(1.5rem,2.8vw,2.5rem)] font-semibold uppercase leading-[0.96] tracking-[0.08em] text-white"
+                    style={{ textShadow: '0 1px 0 rgba(255,255,255,0.08), 0 2px 0 rgba(255,255,255,0.06), 0 16px 26px rgba(0,0,0,0.38)' }}
+                  >
+                    From worn out to
+                    <br />
+                    box fresh again.
+                  </div>
                 </div>
               </div>
 

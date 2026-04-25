@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import DashboardShell from '@/components/DashboardShell';
 import { OrdersTable, buildLookups } from '@/components/OrdersTable';
+import SneakerFeedClient from '@/components/intelligence/SneakerFeedClient';
 import { Badge, Card, ProgressBar } from '@/components/ui';
+import { getSneakerFeed } from '@/features/intelligence/service';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import { getWatchlistDashboard } from '@/features/intelligence/watchlist/service';
@@ -77,7 +79,11 @@ export default async function CustomerDashboard() {
   if (!customer) redirect('/login');
 
   const orders = await db.orders.byCustomer(customer.id);
-  const [cities, customers] = await Promise.all([db.cities.all(), Promise.resolve([customer])]);
+  const [cities, customers, intelligenceFeed] = await Promise.all([
+    db.cities.all(),
+    Promise.resolve([customer]),
+    getSneakerFeed().catch(() => null),
+  ]);
   const watchlist = await getWatchlistDashboard(session.userId).catch(() => null);
   const lookups = buildLookups(cities, customers);
 
@@ -197,6 +203,32 @@ export default async function CustomerDashboard() {
           </div>
         </Card>
       </section>
+
+      {intelligenceFeed ? (
+        <section className="mb-10">
+          <Card className="card-lift overflow-hidden">
+            <div className="flex flex-col gap-4 border-b border-ink/8 pb-5 md:flex-row md:items-end md:justify-between">
+              <div>
+                <div className="font-mono text-xs uppercase tracking-widest text-glitch mb-2">Live intelligence feed</div>
+                <h2 className="h-display text-3xl">Save pairs without leaving your dashboard.</h2>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-ink/64">
+                  Browse current release candidates, add any pair to your watchlist with one click, and jump into booking later if something becomes worth cleaning or restoring.
+                </p>
+              </div>
+              <Link href="/intelligence" className="btn-outline">Open full intelligence feed →</Link>
+            </div>
+
+            <div className="mt-6">
+              <SneakerFeedClient
+                feed={{
+                  ...intelligenceFeed,
+                  items: intelligenceFeed.items.slice(0, 4),
+                }}
+              />
+            </div>
+          </Card>
+        </section>
+      ) : null}
 
       {active.length > 0 && (
         <section className="mb-10">
