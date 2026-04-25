@@ -242,7 +242,7 @@ export default async function ServicesPage() {
       <section className="container-x pb-16">
         <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <div className="font-mono text-xs uppercase tracking-[0.24em] text-glitch/85">Three core tiers</div>
+            <div className="font-mono text-xs uppercase tracking-[0.24em] text-glitch/85">Compare the tiers</div>
             <h2 className="h-display text-3xl">A cleaner menu, with clearer expectations.</h2>
           </div>
           <p className="max-w-xl text-sm leading-6 text-ink/60">

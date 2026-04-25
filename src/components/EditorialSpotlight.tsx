@@ -136,22 +136,21 @@ export default function EditorialSpotlight() {
                     transformPerspective: 1800,
                   }}
                 >
-                  <div className="device-media-screen">
-                    <video
-                      className="proof-video"
-                      src="/media/editorial/actual-process-b.mp4"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="metadata"
-                    />
-                  </div>
-                  <div className="device-copy">
-                    <div className="badge-dark border-white/15">Real footage</div>
-                    <p className="mt-3 text-sm leading-6 text-white/72">
-                      Motion works best when it feels like proof, not background filler.
-                    </p>
+                  <div className="device-copy h-full flex flex-col justify-between">
+                    <div>
+                      <div className="badge-dark border-white/15">What matters most</div>
+                      <h3 className="mt-4 h-display text-3xl leading-[0.94] text-bone">
+                        One strong motion focal point.
+                      </h3>
+                      <p className="mt-3 text-sm leading-6 text-white/72">
+                        The moving process clip should carry the story. The rest of the proof should support the booking decision, not compete with it.
+                      </p>
+                    </div>
+                    <div className="mt-5 space-y-2 text-sm leading-6 text-white/68">
+                      <p>Readable before-and-after proof</p>
+                      <p>Actual process footage</p>
+                      <p>Luxury repaint results near Elite</p>
+                    </div>
                   </div>
                 </motion.div>
               </div>

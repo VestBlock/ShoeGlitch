@@ -144,6 +144,56 @@ export default async function IntelligencePage() {
       </section>
 
       <section className="container-x pb-16">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:items-start">
+          <div className="section-shell p-6 md:p-8">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
+              Tracking plans
+            </div>
+            <h2 className="h-display mt-4 text-[clamp(2.2rem,4vw,3.8rem)] leading-[0.94] text-ink">
+              Start free. Upgrade only when alerts save you time.
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/64">
+              The right subscription path for Intelligence is simple: start with the free feed and watchlists first, then move into a premium alert layer only if it helps you act faster.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/customer/watchlist" className="btn-glitch">
+                Start free with watchlists →
+              </Link>
+              <Link href="/intelligence" className="btn-outline">
+                Keep browsing the feed →
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="section-outline p-5">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
+                Free now
+              </div>
+              <h3 className="h-display mt-3 text-3xl leading-[0.96] text-ink">Feed + watchlists</h3>
+              <div className="mt-4 space-y-3 text-sm leading-6 text-ink/64">
+                <p>Browse current pairs without the noise.</p>
+                <p>Save the ones worth tracking.</p>
+                <p>Come back when the release picture sharpens.</p>
+              </div>
+            </div>
+
+            <div className="section-outline-dark p-5">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
+                Pro later
+              </div>
+              <h3 className="h-display mt-3 text-3xl leading-[0.96] text-bone">Faster alerting</h3>
+              <div className="mt-4 space-y-3 text-sm leading-6 text-bone/68">
+                <p>More aggressive release and restock alerts.</p>
+                <p>Deeper watchlists for heavier collectors.</p>
+                <p>A cleaner paid layer built around speed, not filler.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container-x pb-16">
         <div className="section-shell p-6 md:p-8">
           <div className="max-w-3xl">
             <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">

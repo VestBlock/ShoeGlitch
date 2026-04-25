@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { Badge, Card } from '@/components/ui';
+import TrustProofStrip from '@/components/TrustProofStrip';
 import { MAIL_IN_BOX_KIT_DELAY, MAIL_IN_BOX_KIT_NAME, MAIL_IN_BOX_KIT_PRICE } from '@/lib/mail-in-config';
 import { getNationalMailInHubAddressLabel } from '@/lib/mail-in-hub';
 
@@ -25,13 +26,36 @@ export default async function MailInPage() {
         <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/60">
           Need a box? Add <strong>{MAIL_IN_BOX_KIT_NAME}</strong> at checkout for <strong>${MAIL_IN_BOX_KIT_PRICE}</strong>. If you skip it, you can still use your own box or buy one at the carrier store when you drop off the shipment. {MAIL_IN_BOX_KIT_DELAY}
         </p>
+
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link href="/book?mode=mailin" className="btn-glitch">Start mail-in →</Link>
+          <Link href="/services" className="btn-outline">Compare tiers →</Link>
+        </div>
+
+        <TrustProofStrip
+          className="mt-8"
+          items={[
+            {
+              label: 'Prepaid label after checkout',
+              detail: 'As soon as the order is paid, we email the shipping label, carrier details, and packing steps.',
+            },
+            {
+              label: 'Three box options',
+              detail: 'Use your own box, buy one at the carrier store, or add the box kit at checkout if you want us to handle that upfront.',
+            },
+            {
+              label: 'One national hub',
+              detail: `Every nationwide order routes through ${nationalHubAddress} so the handoff stays consistent.`,
+            },
+          ]}
+        />
       </section>
 
       <section className="container-x pb-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           {[
             { n: '01', t: 'Book online', d: 'Pick a service, upload photos, pay.' },
-            { n: '02', t: 'Bring or buy a box', d: 'If you already have a sturdy box, use it. If not, take the shoes to the carrier store on the label and buy one there.' },
+            { n: '02', t: 'Choose your box path', d: 'Use your own sturdy box, buy one at the carrier store, or add the box kit at checkout before the label is sent.' },
             { n: '03', t: 'Ship it in', d: "We&rsquo;ll email the prepaid label and hub address, then move the pair into the right clean or restoration work." },
             { n: '04', t: 'Track & receive', d: 'Live status from receipt through return shipping.' },
           ].map((s) => (
