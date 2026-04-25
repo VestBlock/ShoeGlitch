@@ -4,30 +4,10 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import HeroSignalScene from '@/components/HeroSignalScene';
-import TrustProofStrip from '@/components/TrustProofStrip';
 
 const primaryMp4Url = '/ShoeTest.mp4?v=6';
 const fallbackMp4Url = '/ShoeTest-web.mp4?v=3';
 const posterUrl = '/ShoeTest-poster.png?v=6';
-
-const trustItems = [
-  {
-    label: 'Tracked from intake',
-    detail: 'Photos, notes, and status updates stay attached to the order from drop-off to return.',
-  },
-  {
-    label: 'Steam Clean in every tier',
-    detail: 'Basic, Pro, and Elite all start with Steam Clean, then the correction and restoration work expands from there.',
-  },
-  {
-    label: 'Pickup, drop-off, or mail-in',
-    detail: 'Use the local route if we serve your city or mail your pair in from anywhere.',
-  },
-  {
-    label: 'Built for premium pairs',
-    detail: 'Jordan retros, runners, suede, mesh, and statement pairs all flow through the same care system.',
-  },
-] as const;
 
 export default function HomeHeroMotion({
   activeCityCount,
@@ -90,71 +70,69 @@ export default function HomeHeroMotion({
 
   return (
     <div ref={stageRef} className="relative mx-auto max-w-[1180px]">
-      <div className="absolute inset-x-[10%] top-[8%] h-[46%] rounded-[3rem] bg-glitch/8 blur-[120px]" />
-      <div className="absolute left-[4%] top-[16%] h-24 w-24 rounded-full bg-cyan/10 blur-[90px]" />
-      <div className="absolute right-[12%] top-[10%] h-24 w-24 rounded-full bg-glitch/10 blur-[96px]" />
+      <div className="absolute inset-x-[10%] top-[2%] h-[56%] rounded-[3rem] bg-glitch/8 blur-[120px]" />
+      <div className="absolute left-[4%] top-[10%] h-24 w-24 rounded-full bg-cyan/10 blur-[90px]" />
+      <div className="absolute right-[12%] top-[6%] h-24 w-24 rounded-full bg-glitch/10 blur-[96px]" />
       <motion.div
-        className="float-orbit absolute right-[18%] top-[18%] hidden h-20 w-20 rounded-full border border-glitch/15 bg-white/45 lg:block"
+        className="float-orbit absolute right-[10%] top-[12%] hidden h-20 w-20 rounded-full border border-glitch/15 bg-white/45 lg:block"
         style={{ y: orbitY, rotate: orbitRotate }}
       />
       <motion.div
-        className="absolute left-[8%] bottom-[10%] hidden h-28 w-28 rounded-full border border-cyan/18 bg-white/28 blur-[1px] lg:block"
+        className="absolute left-[4%] bottom-[18%] hidden h-28 w-28 rounded-full border border-cyan/18 bg-white/28 blur-[1px] lg:block"
         style={{ y: orbitY, rotate: shellRotate }}
       />
+      <div className="pointer-events-none absolute right-0 top-0 hidden h-[120%] w-[54%] overflow-hidden rounded-[3rem] opacity-55 blur-[0.4px] lg:block">
+        <HeroSignalScene reduceMotion={Boolean(reduceMotion)} />
+      </div>
 
-      <div className="relative grid gap-6 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:items-stretch">
+      <div className="relative grid gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-center">
         <motion.div
-          className="relative order-2 flex flex-col rounded-[2rem] border border-ink/10 bg-white/74 p-6 shadow-[0_26px_70px_rgba(10,15,31,0.10)] backdrop-blur-xl lg:order-1 lg:p-8"
+          className="relative order-2 flex flex-col lg:order-1"
           style={{ y: copyY }}
         >
-          <div className="accent-divider absolute inset-x-6 top-0" />
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-ink/10 bg-white/75 px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-ink/70 shadow-[0_10px_30px_rgba(10,15,31,0.06)] md:text-[11px]">
+          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-ink/10 bg-white/78 px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-ink/70 shadow-[0_10px_30px_rgba(10,15,31,0.06)] md:text-[11px]">
             <span className="h-2 w-2 rounded-full bg-cyan" />
             Built in Milwaukee · Serving {activeCityCount} cities
           </div>
 
-          <div className="mt-6 max-w-[34rem]">
+          <div className="mt-7 max-w-[31rem]">
             <div className="font-mono text-[11px] uppercase tracking-[0.34em] text-glitch/80">
               Premium sneaker care
             </div>
-            <h1 className="h-display mt-4 text-[clamp(3.2rem,7vw,5.8rem)] leading-[0.9] tracking-tight text-ink">
-              Luxury Care
+            <h1 className="h-display mt-4 text-[clamp(3.4rem,7vw,6.1rem)] leading-[0.88] tracking-tight text-ink">
+              Real Proof.
               <br />
-              for Your <em className="h-italic text-glitch">Sneakers.</em>
+              Premium <em className="h-italic text-glitch">Care.</em>
             </h1>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-ink/68">
-              Pickup, drop-off, or mail-in. Start with intake photos, track every step, and choose between Basic, Pro, or Elite depending on how much correction or restoration the pair needs.
+            <p className="mt-5 max-w-lg text-lg leading-8 text-ink/66">
+              Pickup, drop-off, or nationwide mail-in. Book the right tier, track the work, and let the results do the talking.
             </p>
           </div>
 
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <Link href="/book" className="btn-glitch">
-              Book a clean →
+              Book now →
             </Link>
-            <Link href="/locations" className="btn-outline">
-              See locations
+            <Link href="/services" className="btn-outline">
+              See tiers
             </Link>
             <Link
-              href="/services"
+              href="/mail-in"
               className="inline-flex min-h-[3.2rem] items-center justify-center px-2 text-base font-semibold text-ink transition hover:text-glitch"
             >
-              See services
+              Mail-in nationwide
             </Link>
           </div>
 
-          <div className="mt-8">
-            <TrustProofStrip items={[...trustItems]} />
-          </div>
-
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+          <div className="mt-8 grid max-w-[38rem] gap-3 sm:grid-cols-3">
             {[
-              ['Three clean paths', 'Local pickup, drop-off, or nationwide mail-in'],
-              ['One intake standard', 'Photos, notes, and pricing travel with the order'],
-              ['Luxury finish', 'Steam baseline, correction, then restoration as needed'],
+              ['3 tiers', 'Basic, Pro, Elite'],
+              ['Nationwide mail-in', 'Prepaid label flow'],
+              ['Tracked orders', 'Intake to return'],
             ].map(([title, detail]) => (
-              <div key={title} className="rounded-[1.25rem] border border-ink/10 bg-bone-soft/80 p-4 shadow-[0_14px_28px_rgba(10,15,31,0.04)]">
-                <div className="text-sm font-semibold text-ink">{title}</div>
-                <div className="mt-2 text-xs leading-5 text-ink/58">{detail}</div>
+              <div key={title} className="rounded-[1.25rem] border border-ink/10 bg-white/72 p-4 shadow-[0_14px_28px_rgba(10,15,31,0.04)] backdrop-blur-xl">
+                <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-ink/46">{title}</div>
+                <div className="mt-2 text-sm font-semibold text-ink">{detail}</div>
               </div>
             ))}
           </div>
@@ -183,117 +161,44 @@ export default function HomeHeroMotion({
           }
         >
           <div className="rounded-[2.2rem] border border-ink/10 bg-white/56 p-3 shadow-[0_28px_90px_rgba(10,15,31,0.12)] backdrop-blur-xl">
-            <div className="relative h-[320px] overflow-hidden rounded-[1.8rem] border border-ink/12 bg-[#07142c] shadow-[0_42px_110px_rgba(10,15,31,0.22)] sm:h-[380px] lg:h-[100%] lg:min-h-[560px]">
-              <HeroSignalScene reduceMotion={Boolean(reduceMotion)} />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(255,255,255,0.10),transparent_26%),radial-gradient(circle_at_84%_20%,rgba(90,179,255,0.24),transparent_22%),linear-gradient(180deg,rgba(7,20,44,0.14),rgba(7,20,44,0.4)_58%,rgba(7,20,44,0.64)_100%)]" />
+            <div className="relative h-[360px] overflow-hidden rounded-[1.8rem] border border-ink/12 bg-[#07142c] shadow-[0_42px_110px_rgba(10,15,31,0.22)] sm:h-[430px] lg:h-[100%] lg:min-h-[620px]">
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-50"
+                style={{ backgroundImage: `url(${posterUrl})` }}
+              />
 
-              <motion.div
-                className="absolute left-[5%] right-[17%] top-[14%] h-[52%] rounded-[1.9rem] border border-white/18 bg-white/6 p-3 shadow-[0_34px_90px_rgba(10,15,31,0.30)] backdrop-blur-md sm:left-[7%] sm:right-[24%] sm:top-[12%] sm:h-[56%] lg:left-[7%] lg:right-[29%] lg:top-[11%]"
-                animate={
-                  reduceMotion
-                    ? undefined
-                    : {
-                        y: [0, -8, 0],
-                        rotateZ: [0, -0.8, 0],
-                      }
-                }
-                transition={
-                  reduceMotion
-                    ? undefined
-                    : {
-                        duration: 10.5,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                      }
-                }
+              <video
+                ref={videoRef}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                poster={posterUrl}
+                onLoadedData={() => setAutoplayBlocked(false)}
+                onTimeUpdate={() => setAutoplayBlocked(false)}
+                onPlaying={() => setAutoplayBlocked(false)}
+                onCanPlay={() => {
+                  const video = videoRef.current;
+                  if (video && video.paused) {
+                    void video.play().catch(() => {
+                      setAutoplayBlocked(true);
+                    });
+                  }
+                }}
+                className="absolute inset-0 h-full w-full object-contain opacity-[0.98]"
               >
-                <div className="relative h-full overflow-hidden rounded-[1.45rem] border border-white/16 bg-[#07142c] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-                  <div
-                    className="absolute inset-0 bg-cover bg-center opacity-55"
-                    style={{ backgroundImage: `url(${posterUrl})` }}
-                  />
-
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="metadata"
-                    poster={posterUrl}
-                    onLoadedData={() => setAutoplayBlocked(false)}
-                    onTimeUpdate={() => setAutoplayBlocked(false)}
-                    onPlaying={() => setAutoplayBlocked(false)}
-                    onCanPlay={() => {
-                      const video = videoRef.current;
-                      if (video && video.paused) {
-                        void video.play().catch(() => {
-                          setAutoplayBlocked(true);
-                        });
-                      }
-                    }}
-                    className="absolute inset-0 h-full w-full object-contain opacity-[0.97]"
-                    style={
-                      reduceMotion
-                        ? undefined
-                        : {
-                            transform: 'scale(0.985)',
-                          }
-                    }
-                  >
-                    <source src={primaryMp4Url} type="video/mp4" />
-                    <source src={fallbackMp4Url} type="video/mp4" />
-                  </video>
-
-                  <motion.div
-                    className="pointer-events-none absolute inset-y-0 left-[-24%] w-[44%] bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.14),rgba(255,255,255,0))] mix-blend-screen"
-                    animate={
-                      reduceMotion
-                        ? undefined
-                        : {
-                            x: ['0%', '165%'],
-                          }
-                    }
-                    transition={
-                      reduceMotion
-                        ? undefined
-                        : {
-                            duration: 9,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                          }
-                    }
-                  />
-
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(90,179,255,0.18),transparent_28%),linear-gradient(180deg,rgba(7,20,44,0.08),rgba(7,20,44,0.02)_34%,rgba(7,20,44,0.10)_70%,rgba(7,20,44,0.30)_100%),linear-gradient(90deg,rgba(7,20,44,0.16),rgba(7,20,44,0.02)_38%,rgba(7,20,44,0.12)_100%)]" />
-                  <div className="pointer-events-none absolute inset-0 border-[1.5px] border-white/10" />
-                </div>
-              </motion.div>
-
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#07142c] via-[#07142c]/44 to-transparent" />
-
-              <div className="absolute left-4 top-4 z-10 md:left-6 md:top-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-ink/34 px-4 py-2 text-xs font-medium tracking-[0.12em] text-white shadow-[0_10px_30px_rgba(10,15,31,0.18)] backdrop-blur-md md:text-sm">
-                  <span className="h-2 w-2 rounded-full bg-cyan" />
-                  Luxury care in motion
-                </div>
-              </div>
-
-              <div className="absolute right-4 top-[24%] z-10 hidden max-w-[14rem] rounded-[1.15rem] border border-white/14 bg-white/8 px-4 py-4 text-white/78 shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-md md:right-6 md:block">
-                <div className="text-[10px] uppercase tracking-[0.3em] text-cyan/90">Signal layer</div>
-                <div className="mt-2 text-sm leading-6">
-                  Scroll-responsive framing, intake-backed booking, and real proof media in one system.
-                </div>
-              </div>
+                <source src={primaryMp4Url} type="video/mp4" />
+                <source src={fallbackMp4Url} type="video/mp4" />
+              </video>
 
               <motion.div
-                className="absolute right-4 top-[56%] z-10 hidden min-w-[12rem] rounded-[1.25rem] border border-white/14 bg-ink/22 px-4 py-4 text-bone shadow-[0_18px_40px_rgba(10,15,31,0.22)] backdrop-blur-md md:right-6 md:block"
+                className="pointer-events-none absolute inset-y-0 left-[-24%] w-[44%] bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.18),rgba(255,255,255,0))] mix-blend-screen"
                 animate={
                   reduceMotion
                     ? undefined
                     : {
-                        y: [0, -7, 0],
-                        rotateZ: [0, 0.6, 0],
+                        x: ['0%', '165%'],
                       }
                 }
                 transition={
@@ -305,40 +210,27 @@ export default function HomeHeroMotion({
                         ease: 'easeInOut',
                       }
                 }
-              >
-                <div className="text-[10px] uppercase tracking-[0.3em] text-white/62">Restoration signal</div>
-                <div className="mt-3 grid grid-cols-2 gap-3">
-                  {[
-                    ['3 routes', 'Local + mail-in'],
-                    ['Real proof', 'Before / after'],
-                    ['Tiered care', 'Basic / Pro / Elite'],
-                    ['Tracked flow', 'Intake to return'],
-                  ].map(([title, detail]) => (
-                    <div key={title} className="rounded-[0.95rem] border border-white/10 bg-white/6 px-3 py-3">
-                      <div className="text-xs font-semibold text-bone">{title}</div>
-                      <div className="mt-1 text-[11px] leading-5 text-bone/58">{detail}</div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
+              />
 
-              <div className="absolute inset-x-0 bottom-0 z-10 p-4 md:p-5">
-                <div className="max-w-[22rem] rounded-[1.35rem] border border-white/18 bg-ink/12 px-4 py-4 shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-sm md:px-5">
-                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/70">Book with confidence</div>
-                  <div className="mt-2 text-sm leading-6 text-white [text-shadow:0_2px_18px_rgba(7,20,44,0.55)]">
-                    Pick the route, upload the intake photos, and let the order move into the right tier, from a fast Steam Clean refresh to full restoration work.
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(90,179,255,0.20),transparent_26%),linear-gradient(180deg,rgba(7,20,44,0.04),rgba(7,20,44,0.0)_38%,rgba(7,20,44,0.10)_72%,rgba(7,20,44,0.34)_100%)]" />
+              <div className="pointer-events-none absolute inset-0 border-[1.5px] border-white/10" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#07142c]/85 via-[#07142c]/28 to-transparent" />
+
+              <div className="absolute left-4 top-4 z-10 md:left-6 md:top-6">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-ink/30 px-4 py-2 text-xs font-medium tracking-[0.16em] text-white shadow-[0_10px_30px_rgba(10,15,31,0.18)] backdrop-blur-md md:text-sm">
+                  <span className="h-2 w-2 rounded-full bg-cyan" />
+                  Actual work. Real result.
+                </div>
+              </div>
+
+              <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+                <div className="inline-flex flex-wrap items-center gap-3 rounded-[1.25rem] border border-white/16 bg-ink/16 px-4 py-4 text-white shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-md md:px-5">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-[0.28em] text-white/58">Hero focus</div>
+                    <div className="mt-2 text-base font-semibold text-bone">One proof video. Less clutter.</div>
                   </div>
-                  <div className="mt-4 flex flex-wrap gap-3">
-                    <Link href="/book" className="btn-glitch">
-                      Book now →
-                    </Link>
-                    <Link
-                      href="/locations"
-                      className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 text-sm font-semibold text-bone backdrop-blur-xl transition hover:border-cyan/40 hover:text-cyan"
-                    >
-                      See locations
-                    </Link>
-                  </div>
+                  <div className="hidden h-10 w-px bg-white/12 md:block" />
+                  <div className="text-sm text-white/68">Muted motion with subtle depth, not stacked overlays.</div>
                 </div>
               </div>
 
@@ -354,7 +246,7 @@ export default function HomeHeroMotion({
                       setAutoplayBlocked(true);
                     });
                   }}
-                  className="absolute left-[10%] top-[41%] z-20 flex w-fit -translate-y-1/2 items-center gap-3 rounded-full border border-white/18 bg-ink/66 px-5 py-3 text-sm font-semibold text-bone shadow-[0_18px_40px_rgba(10,15,31,0.34)] backdrop-blur-xl transition hover:border-cyan/40 hover:text-cyan sm:left-[12%] lg:left-[9%]"
+                  className="absolute inset-x-0 top-1/2 z-20 mx-auto flex w-fit -translate-y-1/2 items-center gap-3 rounded-full border border-white/18 bg-ink/66 px-5 py-3 text-sm font-semibold text-bone shadow-[0_18px_40px_rgba(10,15,31,0.34)] backdrop-blur-xl transition hover:border-cyan/40 hover:text-cyan"
                 >
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan text-ink">▶</span>
                   Tap to play motion
