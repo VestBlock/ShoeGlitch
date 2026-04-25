@@ -12,10 +12,10 @@ const RESULTS = [
     detail: 'Close-up proof helps the cleaning claims feel believable.',
   },
   {
-    src: '/media/editorial/jordan1-rotation.jpeg',
-    alt: 'Jordan 1 rotation restoration visual',
-    label: 'Signature finish',
-    detail: 'One cleaner editorial image is enough to keep the layout elevated.',
+    src: '/media/editorial/redbottom-after.png',
+    alt: 'Actual red-bottom outsole restoration result',
+    label: 'Luxury finish',
+    detail: 'Luxury repaint proof gives the premium tier something concrete to point at.',
   },
 ] as const;
 

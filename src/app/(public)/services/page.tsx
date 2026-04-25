@@ -172,6 +172,74 @@ export default async function ServicesPage() {
       <ResultsProofGrid showTestimonials={false} />
 
       <section className="container-x pb-16">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.16fr)_minmax(0,0.84fr)] lg:items-start">
+          <div className="rounded-[2rem] border-2 border-ink/10 bg-white/82 p-4 shadow-[0_22px_48px_rgba(10,15,31,0.08)] md:p-5">
+            <div className="grid gap-4 md:grid-cols-2">
+              <figure className="overflow-hidden rounded-[1.4rem] border border-ink/10 bg-bone-soft">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/media/editorial/redbottom-before.png"
+                  alt="Red-bottom sneaker outsole before restoration"
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              </figure>
+              <figure className="overflow-hidden rounded-[1.4rem] border border-ink/10 bg-bone-soft">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/media/editorial/redbottom-after.png"
+                  alt="Red-bottom sneaker outsole after restoration"
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              </figure>
+            </div>
+          </div>
+
+          <Card className="p-7 border-2 border-ink/10">
+            <div className="font-mono text-xs uppercase tracking-[0.28em] text-glitch/85">Luxury detail proof</div>
+            <h2 className="h-display mt-4 text-[clamp(2.2rem,4vw,3.5rem)] leading-[0.94]">
+              Red-bottom repaint work with the real finish in view.
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-ink/64">
+              This is actual restoration work, not mock creative. The outsole recovery lives in Elite and is a good fit when the pair needs repaint correction without promising wild custom color changes.
+            </p>
+
+            <div className="mt-6 overflow-hidden rounded-[1.45rem] border border-ink/10 bg-bone-soft">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/media/editorial/redbottom-paint.png"
+                alt="Red-bottom restoration paint used in actual ShoeGlitch work"
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+
+            <div className="mt-6 grid gap-3">
+              {[
+                'Actual before-and-after outsole restoration from ShoeGlitch work.',
+                'The finish shown here is the same red-bottom tone used in the process.',
+                'Best booked through Elite when the pair needs luxury repaint correction.',
+              ].map((line) => (
+                <div key={line} className="rounded-[1.1rem] border border-ink/10 bg-bone-soft px-4 py-3 text-sm leading-6 text-ink/62">
+                  {line}
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-5 rounded-[1.15rem] border border-glitch/15 bg-glitch/5 px-4 py-4 text-xs leading-6 text-ink/55">
+              Red-bottom repaint coverage is controlled and restoration-focused. We do not position it as an open-ended custom color service.
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/book?service=elite" className="btn-glitch">Book Elite →</Link>
+              <Link href="/mail-in" className="btn-outline">Mail in luxury pairs →</Link>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      <section className="container-x pb-16">
         <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="font-mono text-xs uppercase tracking-[0.24em] text-glitch/85">Three core tiers</div>
