@@ -110,8 +110,8 @@ export default function HomeBodyShowcase({
           {services.map((service, index) => {
             const items = tierDetails[service.slug] ?? [
               'Service-specific care',
-              'Tracked intake flow',
-              'Built into the main booking path',
+              'Photo intake included',
+              'Simple booking flow',
             ];
 
             return (
@@ -135,7 +135,7 @@ export default function HomeBodyShowcase({
                   <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_80%_26%,rgba(0,229,255,0.12),transparent_24%),radial-gradient(circle_at_20%_78%,rgba(255,77,109,0.10),transparent_28%)] opacity-90" />
                   <div className="relative">
                     <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-glitch/82">
-                      0{index + 1} · {service.category}
+                      0{index + 1} · premium care
                     </div>
                     <h3 className="h-display mt-4 text-[clamp(2.4rem,4vw,4rem)] leading-[0.9] text-ink transition group-hover:text-glitch">
                       {service.name}
@@ -196,9 +196,9 @@ export default function HomeBodyShowcase({
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {[
-                ['Active cities', String(activeCityCount), 'Local pickup + drop-off'],
-                ['Mail-in', 'Nationwide', 'Prepaid label flow'],
-                ['Home hub', 'Brookfield', 'Inbound route anchor'],
+                ['Active cities', String(activeCityCount), 'Local pickup and drop-off'],
+                ['Mail-in', 'Nationwide', 'Prepaid shipping label'],
+                ['Home hub', 'Brookfield', 'Secure mail-in intake'],
               ].map(([label, value, detail]) => (
                 <div key={label} className="rounded-[1.3rem] border border-white/10 bg-white/6 p-4">
                   <div className="text-[11px] uppercase tracking-[0.28em] text-bone/52">{label}</div>
@@ -260,7 +260,7 @@ export default function HomeBodyShowcase({
                         {city.name}, {city.state}
                       </div>
                       <div className="text-sm text-ink/56">
-                        {city.active ? 'Pickup and drop-off live' : 'Coverage building'}
+                        {city.active ? 'Pickup and drop-off available' : 'Mail-in available for now'}
                       </div>
                     </div>
                   </div>
@@ -287,9 +287,9 @@ export default function HomeBodyShowcase({
           <div className="grid gap-4 md:grid-cols-2">
             <div className="section-shell p-6">
               <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">Operators</div>
-              <h3 className="h-display mt-3 text-3xl leading-[0.92] text-ink">Build with ShoeGlitch.</h3>
+              <h3 className="h-display mt-3 text-3xl leading-[0.92] text-ink">Join the team.</h3>
               <p className="mt-3 text-sm leading-6 text-ink/62">
-                Join a cleaner, more organized operator flow instead of chasing random one-off jobs.
+                Take local orders, work inside a cleaner process, and grow with the brand in your city.
               </p>
               <Link href="/operator" className="btn-glitch mt-6">
                 Apply now →
