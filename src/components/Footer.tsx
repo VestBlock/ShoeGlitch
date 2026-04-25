@@ -50,7 +50,7 @@ export default function Footer() {
             <span className="text-cyan font-semibold">Milwaukee, WI (HQ)</span>
             <span className="text-bone/60">Memphis, TN</span>
             <span className="text-bone/60">Atlanta, GA</span>
-            <span className="text-glitch">Nashville — coming soon</span>
+            <span className="text-bone/60">Nationwide mail-in</span>
           </Col>
         </div>
         <div className="mt-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-t border-bone/10 pt-8">
@@ -60,7 +60,7 @@ export default function Footer() {
             <Link href="/privacy" className="text-bone/60 hover:text-cyan">Privacy</Link>
             <Link href="/refund-policy" className="text-bone/60 hover:text-cyan">Refund &amp; Damage</Link>
           </div>
-          <span className="font-mono text-xs text-bone/40">SG/v0.2.0 · Milwaukee → everywhere</span>
+          <span className="font-mono text-xs text-bone/40">Milwaukee → nationwide</span>
         </div>
       </div>
     </footer>
