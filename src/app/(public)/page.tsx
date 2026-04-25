@@ -23,20 +23,20 @@ export default async function HomePage() {
   const activeCityCount = cities.filter((city) => city.active).length;
   const trustItems = [
     {
-      label: 'Live in real cities',
-      detail: `${activeCityCount} active routes, with pickup, drop-off, and mail-in options depending on coverage.`,
+      label: 'Local where we serve',
+      detail: `${activeCityCount} active cities with pickup, drop-off, and nationwide mail-in when local service is not available.`,
     },
     {
-      label: 'Photo-backed intake',
-      detail: 'Upload the pair before checkout so the customer, operator, and admin team all see the same reference.',
+      label: 'Photo intake first',
+      detail: 'Upload your pair before checkout so we can see the condition before service begins.',
     },
     {
-      label: 'Tracked all the way through',
-      detail: 'The order keeps its notes, status, and service history from intake to final return.',
+      label: 'Tracked from start to finish',
+      detail: 'You can follow the order from intake to final return without guessing where your pair is.',
     },
     {
-      label: 'Steam where it matters',
-      detail: 'Steam Clean is part of Basic, Pro, and Elite, so every order starts from the same care baseline.',
+      label: 'Steam in every tier',
+      detail: 'Basic, Pro, and Elite all start with the same Steam Clean foundation.',
     },
   ];
 
@@ -72,7 +72,7 @@ export default async function HomePage() {
               {
                 eyebrow: 'Research first',
                 title: 'Use Intelligence before you book',
-                detail: 'Check releases, care scores, restoration upside, and watchlist signals before you commit.',
+                detail: 'Follow releases, save pairs to your watchlist, and decide what deserves attention next.',
                 href: '/intelligence',
                 cta: 'Open intelligence →',
               },
@@ -98,13 +98,13 @@ export default async function HomePage() {
             <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
               <div className="max-w-2xl">
                 <div className="font-mono text-[11px] uppercase tracking-[0.34em] text-glitch/80">
-                  Sneaker intelligence
+                  Release alerts
                 </div>
                 <h2 className="h-display mt-3 text-3xl leading-[0.95] text-ink md:text-5xl">
-                  See what is worth cleaning, restoring, or watching next.
+                  Follow the pairs you care about before they disappear.
                 </h2>
                 <p className="mt-4 text-sm leading-6 text-ink/65 md:text-base">
-                  Open the live feed for release signals, care scores, restoration upside, market-watch reads, and watchlist actions powered by ShoeGlitch sneaker data.
+                  Open the feed for release tracking, watchlists, and alert-driven follow-up when a pair is worth saving.
                 </p>
               </div>
               <Link

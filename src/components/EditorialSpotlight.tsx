@@ -77,7 +77,7 @@ export default function EditorialSpotlight() {
               <em className="h-italic text-glitch">cinematic, not cropped.</em>
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-7 text-ink/64 md:text-base">
-              Full-frame proof, actual before-and-after work, and muted process video so customers can see the quality before they book.
+              Real before-and-after work and process footage so customers can see the quality before they book.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -120,9 +120,9 @@ export default function EditorialSpotlight() {
                     />
                   </div>
                   <div className="device-copy">
-                    <div className="badge-dark border-white/15">Cleaning process</div>
+                    <div className="badge-dark border-white/15">Work in progress</div>
                     <p className="mt-3 text-sm leading-6 text-white/72">
-                      Full portrait framing keeps the process visible instead of cutting off the work.
+                      Full portrait framing keeps the work visible instead of cutting off the result.
                     </p>
                   </div>
                 </div>
@@ -150,7 +150,7 @@ export default function EditorialSpotlight() {
                   <div className="device-copy">
                     <div className="badge-dark border-white/15">Real footage</div>
                     <p className="mt-3 text-sm leading-6 text-white/72">
-                      Motion adds energy when it behaves like a framed artifact, not a wallpaper crop.
+                      Motion works best when it feels like proof, not background filler.
                     </p>
                   </div>
                 </motion.div>
@@ -168,7 +168,7 @@ export default function EditorialSpotlight() {
               <div className="section-outline-dark relative overflow-hidden p-5 md:p-6">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_20%,rgba(0,229,255,0.18),transparent_22%),radial-gradient(circle_at_10%_100%,rgba(255,77,109,0.18),transparent_28%)]" />
                 <div className="relative z-10">
-                  <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-cyan/80">Why customers trust it</div>
+                  <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-cyan/80">Why people trust it</div>
                   <h3 className="h-display mt-4 text-3xl leading-[0.94] text-bone">
                     More depth.
                     <br />

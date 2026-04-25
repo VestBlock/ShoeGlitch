@@ -70,7 +70,7 @@ export default function HomeBodyShowcase({
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           className="section-shell p-7 md:p-8 lg:sticky lg:top-28 lg:h-fit"
         >
-          <div className="section-kicker">Service tiers</div>
+          <div className="section-kicker">Choose your care level</div>
           <h2 className="h-display mt-5 text-[clamp(2.9rem,5vw,5.2rem)] leading-[0.88] text-ink">
             A cleaner route
             <br />
@@ -82,9 +82,9 @@ export default function HomeBodyShowcase({
 
           <div className="mt-8 grid gap-3">
             {[
-              ['Three core tiers', 'Basic, Pro, and Elite keep the booking choice fast.'],
-              ['Real proof media', 'Actual results now support the sales path instead of sitting off to the side.'],
-              ['Nationwide + local', 'Cities stay for handoff convenience, mail-in stays open everywhere.'],
+              ['Three clear options', 'Basic, Pro, and Elite make it easier to choose the right level of care.'],
+              ['Real before-and-after proof', 'Actual results sit next to the offer so the work is easy to trust.'],
+              ['Local and nationwide', 'Use pickup or drop-off where available, or ship pairs in from anywhere.'],
             ].map(([title, detail]) => (
               <div
                 key={title}
@@ -187,7 +187,7 @@ export default function HomeBodyShowcase({
           className="section-shell-dark overflow-hidden p-7 md:p-8"
         >
           <div className="relative z-10">
-            <div className="section-kicker border-white/12 bg-white/8 text-cyan">Local and mail-in</div>
+            <div className="section-kicker border-white/12 bg-white/8 text-cyan">Pickup, drop-off, and mail-in</div>
             <h2 className="h-display mt-5 text-[clamp(2.6rem,4.8vw,4.8rem)] leading-[0.9] text-bone">
               Local handoff
               <br />
@@ -233,8 +233,8 @@ export default function HomeBodyShowcase({
           <div className="section-shell p-6 md:p-7">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">Live markets</div>
-                <h3 className="h-display mt-3 text-4xl leading-[0.92] text-ink">Cities that move now.</h3>
+                <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">Where we serve</div>
+                <h3 className="h-display mt-3 text-4xl leading-[0.92] text-ink">Cities open for local handoff.</h3>
               </div>
               <Link href="/locations" className="btn-outline">
                 All locations →
@@ -287,9 +287,9 @@ export default function HomeBodyShowcase({
           <div className="grid gap-4 md:grid-cols-2">
             <div className="section-shell p-6">
               <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">Operators</div>
-              <h3 className="h-display mt-3 text-3xl leading-[0.92] text-ink">Train into the system.</h3>
+              <h3 className="h-display mt-3 text-3xl leading-[0.92] text-ink">Build with ShoeGlitch.</h3>
               <p className="mt-3 text-sm leading-6 text-ink/62">
-                Operators enter a branded flow instead of freelancing through random one-off jobs.
+                Join a cleaner, more organized operator flow instead of chasing random one-off jobs.
               </p>
               <Link href="/operator" className="btn-glitch mt-6">
                 Apply now →
@@ -297,10 +297,10 @@ export default function HomeBodyShowcase({
             </div>
 
             <div className="section-shell p-6">
-              <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">Intelligence</div>
-              <h3 className="h-display mt-3 text-3xl leading-[0.92] text-ink">Research before you book.</h3>
+              <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">Release alerts</div>
+              <h3 className="h-display mt-3 text-3xl leading-[0.92] text-ink">Track pairs before they sell through.</h3>
               <p className="mt-3 text-sm leading-6 text-ink/62">
-                Use the feed to spot care upside, restoration potential, and then move straight into booking.
+                Save upcoming pairs, follow restocks, and come back when it is time to buy, clean, or restore.
               </p>
               <Link href="/intelligence" className="btn-outline mt-6">
                 Open intelligence →
