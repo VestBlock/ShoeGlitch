@@ -55,14 +55,15 @@ export default async function SneakerDetailPage({
         />
       ))}
 
-      <section className="relative overflow-hidden bg-bone">
-        <div className="absolute inset-0 matrix-strip opacity-20 pointer-events-none" />
+      <section className="relative overflow-hidden bg-[#07111f] text-bone">
+        <div className="absolute inset-0 matrix-strip opacity-24 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_16%,rgba(0,229,255,0.14),transparent_22%),radial-gradient(circle_at_84%_12%,rgba(255,77,109,0.12),transparent_24%)] pointer-events-none" />
         <div className="container-x relative py-12 md:py-16">
           <div className="grid gap-8 xl:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
-            <article className="section-shell p-6 md:p-8">
-              <Badge className="mb-5">Sneaker intelligence detail</Badge>
-              <h1 className="h-display text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.94] text-ink">{item.name}</h1>
-              <p className="mt-4 max-w-3xl text-base leading-7 text-ink/66">{item.description}</p>
+            <article className="section-shell-dark overflow-hidden p-6 md:p-8">
+              <Badge className="mb-5 border-white/14 bg-white/8 text-bone">Sneaker intelligence detail</Badge>
+              <h1 className="h-display text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.94] text-bone">{item.name}</h1>
+              <p className="mt-4 max-w-3xl text-base leading-7 text-bone/66">{item.description}</p>
 
               <div className="mt-8 grid gap-4 md:grid-cols-2">
                 <div
@@ -72,11 +73,11 @@ export default async function SneakerDetailPage({
                   }}
                 />
                 <div className="space-y-4">
-                  <div className="section-outline p-5">
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
+                  <div className="section-outline-dark p-5">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
                       Release snapshot
                     </div>
-                    <div className="mt-3 space-y-2 text-sm leading-6 text-ink/70">
+                    <div className="mt-3 space-y-2 text-sm leading-6 text-bone/68">
                       <div><strong>Name:</strong> {item.name}</div>
                       <div><strong>Brand:</strong> {item.brand}</div>
                       <div><strong>Silhouette:</strong> {item.silhouette}</div>
@@ -88,8 +89,8 @@ export default async function SneakerDetailPage({
                     </div>
                   </div>
 
-                  <div className="section-outline p-5">
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
+                  <div className="section-outline-dark p-5">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
                       Score summary
                     </div>
                     <div className="mt-4">
@@ -97,17 +98,17 @@ export default async function SneakerDetailPage({
                     </div>
                   </div>
 
-                  <div className="section-outline p-5">
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
+                  <div className="section-outline-dark p-5">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
                       Size and market view
                     </div>
-                    <div className="mt-3 text-sm leading-6 text-ink/70">
+                    <div className="mt-3 text-sm leading-6 text-bone/68">
                       {item.sizes.length > 0 ? (
                         <div className="grid grid-cols-2 gap-2">
                           {item.sizes.slice(0, 8).map((size) => (
-                            <div key={`${size.label}-${size.market ?? 'market'}`} className="rounded-[0.9rem] border border-ink/10 bg-bone-soft px-3 py-2">
-                              <div className="font-semibold text-ink">{size.label}</div>
-                              <div className="text-xs text-ink/58">
+                            <div key={`${size.label}-${size.market ?? 'market'}`} className="rounded-[0.9rem] border border-white/10 bg-white/6 px-3 py-2">
+                              <div className="font-semibold text-bone">{size.label}</div>
+                              <div className="text-xs text-bone/58">
                                 {size.lowestAsk ? `Lowest ask $${size.lowestAsk}` : 'Price unavailable'}
                               </div>
                             </div>
@@ -128,7 +129,7 @@ export default async function SneakerDetailPage({
                 </div>
               </div>
 
-              <section className="mt-10 prose-sg max-w-none">
+              <section className="mt-10 prose-sg max-w-none !text-bone/76">
                 <h2>Why this pair matters</h2>
                 <p>{item.rankingNote}</p>
                 <ul>
@@ -143,7 +144,7 @@ export default async function SneakerDetailPage({
 
             <aside className="space-y-5 xl:sticky xl:top-24">
               <div className="section-shell-dark p-5">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
+                <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
                   Next action
                 </div>
                 <div className="mt-4">

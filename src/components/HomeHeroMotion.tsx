@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import TrustProofStrip from '@/components/TrustProofStrip';
 
 const primaryMp4Url = '/ShoeTest.mp4?v=6';
@@ -34,8 +34,18 @@ export default function HomeHeroMotion({
   activeCityCount: number;
 }) {
   const reduceMotion = useReducedMotion();
+  const stageRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const { scrollYProgress } = useScroll({
+    target: stageRef,
+    offset: ['start start', 'end start'],
+  });
+  const shellY = useTransform(scrollYProgress, reduceMotion ? [0, 1] : [0, 1], reduceMotion ? [0, 0] : [0, 80]);
+  const shellRotate = useTransform(scrollYProgress, reduceMotion ? [0, 1] : [0, 1], reduceMotion ? [0, 0] : [0, -4]);
+  const copyY = useTransform(scrollYProgress, reduceMotion ? [0, 1] : [0, 1], reduceMotion ? [0, 0] : [0, 30]);
+  const orbitY = useTransform(scrollYProgress, reduceMotion ? [0, 1] : [0, 1], reduceMotion ? [0, 0] : [0, -46]);
+  const orbitRotate = useTransform(scrollYProgress, reduceMotion ? [0, 1] : [0, 1], reduceMotion ? [0, 0] : [0, 12]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -78,14 +88,24 @@ export default function HomeHeroMotion({
   }, []);
 
   return (
-    <div className="relative mx-auto max-w-[1180px]">
+    <div ref={stageRef} className="relative mx-auto max-w-[1180px]">
       <div className="absolute inset-x-[10%] top-[8%] h-[46%] rounded-[3rem] bg-glitch/8 blur-[120px]" />
       <div className="absolute left-[4%] top-[16%] h-24 w-24 rounded-full bg-cyan/10 blur-[90px]" />
       <div className="absolute right-[12%] top-[10%] h-24 w-24 rounded-full bg-glitch/10 blur-[96px]" />
-      <div className="float-orbit absolute right-[18%] top-[18%] hidden h-20 w-20 rounded-full border border-glitch/15 bg-white/45 lg:block" />
+      <motion.div
+        className="float-orbit absolute right-[18%] top-[18%] hidden h-20 w-20 rounded-full border border-glitch/15 bg-white/45 lg:block"
+        style={{ y: orbitY, rotate: orbitRotate }}
+      />
+      <motion.div
+        className="absolute left-[8%] bottom-[10%] hidden h-28 w-28 rounded-full border border-cyan/18 bg-white/28 blur-[1px] lg:block"
+        style={{ y: orbitY, rotate: shellRotate }}
+      />
 
       <div className="relative grid gap-6 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:items-stretch">
-        <div className="relative order-2 flex flex-col rounded-[2rem] border border-ink/10 bg-white/74 p-6 shadow-[0_26px_70px_rgba(10,15,31,0.10)] backdrop-blur-xl lg:order-1 lg:p-8">
+        <motion.div
+          className="relative order-2 flex flex-col rounded-[2rem] border border-ink/10 bg-white/74 p-6 shadow-[0_26px_70px_rgba(10,15,31,0.10)] backdrop-blur-xl lg:order-1 lg:p-8"
+          style={{ y: copyY }}
+        >
           <div className="accent-divider absolute inset-x-6 top-0" />
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-ink/10 bg-white/75 px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-ink/70 shadow-[0_10px_30px_rgba(10,15,31,0.06)] md:text-[11px]">
             <span className="h-2 w-2 rounded-full bg-cyan" />
@@ -137,11 +157,11 @@ export default function HomeHeroMotion({
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         <motion.div
           className="relative order-1 will-change-transform lg:order-2"
-          style={{ transformPerspective: 2200 }}
+          style={{ transformPerspective: 2200, y: shellY, rotateZ: shellRotate }}
           animate={
             reduceMotion
               ? undefined
@@ -187,12 +207,12 @@ export default function HomeHeroMotion({
                     });
                   }
                 }}
-                className="absolute inset-0 h-full w-full object-cover opacity-[0.96]"
+                className="absolute inset-0 h-full w-full object-contain opacity-[0.96]"
                 style={
                   reduceMotion
                     ? undefined
                     : {
-                        transform: 'scale(0.98)',
+                        transform: 'scale(0.985)',
                       }
                 }
               >
@@ -222,11 +242,19 @@ export default function HomeHeroMotion({
 
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(90,179,255,0.18),transparent_28%),linear-gradient(180deg,rgba(7,20,44,0.08),rgba(7,20,44,0.02)_34%,rgba(7,20,44,0.10)_70%,rgba(7,20,44,0.30)_100%),linear-gradient(90deg,rgba(7,20,44,0.16),rgba(7,20,44,0.02)_38%,rgba(7,20,44,0.12)_100%)]" />
               <div className="pointer-events-none absolute inset-0 border-[1.5px] border-white/10" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#07142c] via-[#07142c]/44 to-transparent" />
 
               <div className="absolute left-4 top-4 z-10 md:left-6 md:top-6">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-ink/34 px-4 py-2 text-xs font-medium tracking-[0.12em] text-white shadow-[0_10px_30px_rgba(10,15,31,0.18)] backdrop-blur-md md:text-sm">
                   <span className="h-2 w-2 rounded-full bg-cyan" />
                   Luxury care in motion
+                </div>
+              </div>
+
+              <div className="absolute right-4 top-4 z-10 max-w-[14rem] rounded-[1.15rem] border border-white/14 bg-white/8 px-4 py-4 text-white/78 shadow-[0_18px_40px_rgba(10,15,31,0.18)] backdrop-blur-md md:right-6 md:top-6">
+                <div className="text-[10px] uppercase tracking-[0.3em] text-cyan/90">Signal layer</div>
+                <div className="mt-2 text-sm leading-6">
+                  Scroll-responsive framing, intake-backed booking, and real proof media in one system.
                 </div>
               </div>
 

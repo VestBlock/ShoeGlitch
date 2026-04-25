@@ -29,17 +29,20 @@ export default async function IntelligencePage() {
         />
       ))}
 
-      <section className="relative overflow-hidden bg-bone">
-        <div className="absolute inset-0 matrix-strip opacity-25 pointer-events-none" />
+      <section className="relative overflow-hidden bg-[#07111f] text-bone">
+        <div className="absolute inset-0 matrix-strip opacity-30 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(0,229,255,0.16),transparent_22%),radial-gradient(circle_at_84%_14%,rgba(255,77,109,0.14),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_42%)] pointer-events-none" />
         <div className="container-x relative py-12 md:py-16">
-          <div className="section-shell p-6 md:p-8">
+          <div className="section-shell-dark overflow-hidden p-6 md:p-8">
             <div className="grid gap-6 xl:grid-cols-[minmax(0,0.98fr)_minmax(320px,0.72fr)] xl:items-stretch">
               <div>
-                <Badge className="mb-5">Sneaker intelligence feed</Badge>
-                <h1 className="h-display max-w-5xl text-[clamp(3rem,6vw,5.6rem)] leading-[0.90] tracking-tight text-ink">
-                  Releases with a <em className="h-italic text-glitch">service angle.</em>
+                <Badge className="mb-5 border-white/14 bg-white/8 text-bone">Sneaker intelligence feed</Badge>
+                <h1 className="h-display max-w-5xl text-[clamp(3rem,6vw,5.6rem)] leading-[0.90] tracking-tight text-bone">
+                  Release signals with a
+                  <br />
+                  <em className="h-italic text-cyan">service edge.</em>
                 </h1>
-                <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/68">
+                <p className="mt-5 max-w-3xl text-lg leading-8 text-bone/70">
                   This is Shoe Glitch&rsquo;s first intelligence layer: upcoming pairs, layered care and market scoring, watchlist hooks, and direct booking paths when the release story turns into a service moment.
                 </p>
 
@@ -47,35 +50,35 @@ export default async function IntelligencePage() {
                   <Link href="/book" className="btn-glitch" data-growth-cta="Book a pair">
                     Book a pair →
                   </Link>
-                  <Link href="/services" className="btn-outline" data-growth-cta="Compare services">
+                  <Link href="/services" className="btn-outline border-white/16 bg-white/6 text-bone hover:bg-white hover:text-ink" data-growth-cta="Compare services">
                     Compare services
                   </Link>
                 </div>
 
                 <div className="mt-8 grid gap-4 md:grid-cols-3">
-                  <div className="section-outline p-5">
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
+                  <div className="section-outline-dark p-5">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
                       Quick answer
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-ink/70">
+                    <p className="mt-3 text-sm leading-6 text-bone/68">
                       Sneaker Intelligence Feed ranks releases by cleanability, restoration upside, market strength, collector value, and release pressure so Shoe Glitch can turn interest into bookings and watchlist retention.
                     </p>
                   </div>
-                  <div className="section-outline p-5">
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
+                  <div className="section-outline-dark p-5">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
                       What it surfaces
                     </div>
-                    <ul className="mt-3 space-y-2 text-sm leading-6 text-ink/70">
+                    <ul className="mt-3 space-y-2 text-sm leading-6 text-bone/68">
                       <li>Upcoming drops with service hooks</li>
                       <li>Pairs with high cleaning or restoration demand</li>
                       <li>Collector and market-watch candidates</li>
                     </ul>
                   </div>
-                  <div className="section-outline p-5">
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-glitch/85">
+                  <div className="section-outline-dark p-5">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan/85">
                       What comes next
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-ink/70">
+                    <p className="mt-3 text-sm leading-6 text-bone/68">
                       Live release data drives the feed now, and the market layer will keep getting sharper as deeper pricing coverage comes online.
                     </p>
                   </div>
@@ -135,7 +138,7 @@ export default async function IntelligencePage() {
           </p>
         </div>
 
-        <div className="section-shell mt-8 p-4 md:p-6">
+        <div className="section-shell mt-8 overflow-hidden p-4 md:p-6">
           <SneakerFeedClient feed={feed} />
         </div>
       </section>

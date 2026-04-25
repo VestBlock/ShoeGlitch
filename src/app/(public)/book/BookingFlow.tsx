@@ -72,6 +72,39 @@ const STEPS = [
   'Review',
 ];
 
+const STEP_GUIDE = [
+  {
+    eyebrow: 'Route check',
+    title: 'Find the right handoff',
+    detail: 'Start with coverage. Local cities keep pickup and drop-off clean. Everyone else can move straight into mail-in.',
+  },
+  {
+    eyebrow: 'Route decision',
+    title: 'Choose pickup, drop-off, or mail-in',
+    detail: 'This sets the logistics and keeps the quote accurate without making you think about the service menu yet.',
+  },
+  {
+    eyebrow: 'Pair intake',
+    title: 'Tell us what is coming in',
+    detail: 'Brand, model, and pair count give the cleaner the right context before pricing and notes.',
+  },
+  {
+    eyebrow: 'Tier match',
+    title: 'Match the pair to Basic, Pro, or Elite',
+    detail: 'Steam Clean stays in every tier. The correction and restoration work only scales up when the pair needs it.',
+  },
+  {
+    eyebrow: 'Logistics',
+    title: 'Lock in contact and delivery details',
+    detail: 'This is where pickup windows, ship-from addresses, and optional box-kit decisions come together.',
+  },
+  {
+    eyebrow: 'Checkout',
+    title: 'Review everything once',
+    detail: 'Confirm the route, pair, tier, and total before Stripe takes over.',
+  },
+] as const;
+
 const SERVICE_ALIASES: Record<string, string> = {
   'fresh-start': 'basic',
   'full-reset': 'pro',
@@ -334,27 +367,35 @@ export function BookingFlow({
       {/* Main column */}
       <div className="lg:col-span-2">
         {/* Stepper */}
-        <div className="mb-10">
-          <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="mb-10 rounded-[2rem] border border-ink/10 bg-white/78 p-5 shadow-[0_22px_56px_rgba(10,15,31,0.08)] backdrop-blur-xl md:p-6">
+          <div className="mb-5 grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.72fr)]">
             <div>
               <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">
                 Step {step + 1} of {STEPS.length}
               </div>
-              <div className="mt-1 text-sm text-ink/58">
-                {step < STEPS.length - 1
-                  ? 'Move one decision at a time and keep the quote live as you go.'
-                  : 'Final review before checkout.'}
+              <h2 className="h-display mt-3 text-[clamp(2rem,4vw,3.2rem)] leading-[0.92] text-ink">
+                {STEP_GUIDE[step].title}
+              </h2>
+              <div className="mt-3 max-w-2xl text-sm leading-7 text-ink/60">
+                {STEP_GUIDE[step].detail}
               </div>
             </div>
-            {quickSummary.length > 0 ? (
-              <div className="hidden max-w-[18rem] flex-wrap justify-end gap-2 md:flex">
-                {quickSummary.slice(0, 3).map((item) => (
-                  <span key={item} className="rounded-full border border-ink/10 bg-white px-3 py-2 text-xs font-medium text-ink/68">
-                    {item}
-                  </span>
-                ))}
+            <div className="rounded-[1.4rem] border border-ink/10 bg-bone-soft/84 p-4">
+              <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-ink/45">
+                {STEP_GUIDE[step].eyebrow}
               </div>
-            ) : null}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {quickSummary.length > 0 ? (
+                  quickSummary.slice(0, 4).map((item) => (
+                    <span key={item} className="rounded-full border border-ink/10 bg-white px-3 py-2 text-xs font-medium text-ink/68">
+                      {item}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-sm text-ink/48">Your route and tier summary will build here as you go.</span>
+                )}
+              </div>
+            </div>
           </div>
           <div className="flex items-center gap-1 flex-wrap">
             {STEPS.map((s, i) => (
@@ -886,10 +927,18 @@ export function BookingFlow({
 
       {/* Sidebar — live quote */}
       <aside className="lg:col-span-1">
-        <div className="card-ink p-6 sticky top-6">
+        <div className="card-ink sticky top-6 overflow-hidden p-6">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(0,229,255,0.14),transparent_24%),radial-gradient(circle_at_82%_16%,rgba(255,77,109,0.16),transparent_24%)]" />
+          <div className="relative z-10">
           <div className="flex items-center justify-between mb-4">
             <span className="badge-dark border-bone/20">Live quote</span>
             {isPending && <StatusDot tone="live" />}
+          </div>
+          <div className="mb-5 rounded-[1.25rem] border border-white/10 bg-white/6 px-4 py-4">
+            <div className="text-[10px] uppercase tracking-[0.28em] text-cyan/80">Booking cockpit</div>
+            <div className="mt-2 text-sm leading-6 text-bone/68">
+              Route, tier, add-ons, and shipping stay connected here while you move through the steps.
+            </div>
           </div>
           {q ? (
             <>
@@ -912,6 +961,21 @@ export function BookingFlow({
           ) : (
             <p className="text-bone/60 text-sm">Complete step 1 to see pricing.</p>
           )}
+          <div className="mt-6 space-y-3 border-t border-white/8 pt-5 text-sm text-bone/64">
+            <div className="flex items-start justify-between gap-3">
+              <span>Guest checkout</span>
+              <span className="text-bone">Enabled</span>
+            </div>
+            <div className="flex items-start justify-between gap-3">
+              <span>Mail-in route</span>
+              <span className="text-bone">Nationwide</span>
+            </div>
+            <div className="flex items-start justify-between gap-3">
+              <span>Service system</span>
+              <span className="text-bone">Basic / Pro / Elite</span>
+            </div>
+          </div>
+          </div>
         </div>
       </aside>
     </div>
@@ -920,10 +984,16 @@ export function BookingFlow({
 
 function Panel({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <div className="animate-slide-up rounded-[2rem] border border-ink/10 bg-white/82 p-5 shadow-[0_18px_44px_rgba(10,15,31,0.08)] backdrop-blur-xl md:p-8">
-      <h2 className="h-display text-4xl md:text-5xl mb-2">{title}</h2>
-      {subtitle && <p className="text-ink/60 mb-8">{subtitle}</p>}
-      {!subtitle && <div className="mb-8" />}
+    <div className="animate-slide-up rounded-[2rem] border border-ink/10 bg-white/84 p-5 shadow-[0_18px_44px_rgba(10,15,31,0.08)] backdrop-blur-xl md:p-8">
+      <div className="mb-6 flex items-start justify-between gap-4 border-b border-ink/8 pb-6">
+        <div>
+          <h2 className="h-display text-4xl md:text-5xl mb-2">{title}</h2>
+          {subtitle ? <p className="text-ink/60 max-w-2xl">{subtitle}</p> : null}
+        </div>
+        <div className="hidden rounded-full border border-ink/10 bg-bone-soft px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-ink/46 md:block">
+          Guided booking
+        </div>
+      </div>
       {children}
     </div>
   );
