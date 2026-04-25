@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { signInWithDemoEmail, signOut, signInWithGoogle } from '@/lib/session';
 import { ROLE_HOME } from '@/lib/rbac';
+import { sanitizeNextPath } from '@/lib/login-redirect';
 
 function getSiteOrigin(): string {
   const h = headers();
@@ -18,17 +19,18 @@ function getSiteOrigin(): string {
 
 export async function loginAction(formData: FormData) {
   const email = String(formData.get('email') ?? '').trim();
+  const nextPath = sanitizeNextPath(String(formData.get('next') ?? '').trim());
   const session = await signInWithDemoEmail(email);
   if (!session) {
-    redirect('/login?error=signin_failed');
+    redirect(nextPath ? `/login?error=signin_failed&next=${encodeURIComponent(nextPath)}` : '/login?error=signin_failed');
   }
-  redirect(ROLE_HOME[session.role]);
+  redirect(nextPath ?? ROLE_HOME[session.role]);
 }
 
-export async function loginAsAction(email: string) {
+export async function loginAsAction(email: string, nextPath?: string | null) {
   const session = await signInWithDemoEmail(email);
   if (!session) return;
-  redirect(ROLE_HOME[session.role]);
+  redirect(sanitizeNextPath(nextPath) ?? ROLE_HOME[session.role]);
 }
 
 export async function logoutAction() {
@@ -36,8 +38,9 @@ export async function logoutAction() {
   redirect('/');
 }
 
-export async function googleSignInAction() {
+export async function googleSignInAction(formData: FormData) {
   const origin = getSiteOrigin();
-  const url = await signInWithGoogle(origin);
+  const nextPath = sanitizeNextPath(String(formData.get('next') ?? '').trim());
+  const url = await signInWithGoogle(origin, nextPath ?? undefined);
   redirect(url);
 }

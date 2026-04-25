@@ -5,6 +5,7 @@ import { OrderPhotoGallery } from '@/components/OrderPhotoGallery';
 import { StatusPill } from '@/components/OrdersTable';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
+import { buildLoginHref } from '@/lib/login-redirect';
 import { STATUS_LABELS, progressPercent, flowFor } from '@/lib/status';
 import {
   extractPickupWindowFromNotes,
@@ -15,7 +16,7 @@ import { formatDate } from '@/lib/utils';
 
 export default async function CustomerOrderDetail({ params }: { params: { id: string } }) {
   const session = await getSession();
-  if (!session || session.role !== 'customer') redirect('/login');
+  if (!session || session.role !== 'customer') redirect(buildLoginHref(`/customer/orders/${params.id}`));
 
   const order = await db.orders.byId(params.id);
   if (!order) notFound();

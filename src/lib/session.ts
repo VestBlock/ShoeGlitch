@@ -92,12 +92,14 @@ export async function signInWithMagicLink(
   return { ok: true };
 }
 
-export async function signInWithGoogle(origin: string): Promise<string> {
+export async function signInWithGoogle(origin: string, nextPath?: string): Promise<string> {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: nextPath
+        ? `${origin}/auth/callback?next=${encodeURIComponent(nextPath)}`
+        : `${origin}/auth/callback`,
     },
   });
   if (error) throw error;

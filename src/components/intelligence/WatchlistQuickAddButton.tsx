@@ -39,7 +39,8 @@ export default function WatchlistQuickAddButton({ item, compact = false }: { ite
       const data = await response.json().catch(() => null);
 
       if (response.status === 401) {
-        window.location.href = `/login`;
+        const next = encodeURIComponent(`${window.location.pathname}${window.location.search}`);
+        window.location.href = `/login?next=${next}`;
         return;
       }
 

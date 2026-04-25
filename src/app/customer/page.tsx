@@ -8,6 +8,7 @@ import { getSneakerFeed } from '@/features/intelligence/service';
 import { getSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import { getWatchlistDashboard } from '@/features/intelligence/watchlist/service';
+import { buildLoginHref } from '@/lib/login-redirect';
 import {
   extractPickupWindowFromNotes,
   pickupWindowLabel,
@@ -72,11 +73,11 @@ function nextCustomerStep(order: Awaited<ReturnType<typeof db.orders.byCustomer>
 
 export default async function CustomerDashboard() {
   const session = await getSession();
-  if (!session) redirect('/login');
-  if (session.role !== 'customer') redirect('/login');
+  if (!session) redirect(buildLoginHref('/customer'));
+  if (session.role !== 'customer') redirect(buildLoginHref('/customer'));
 
   const customer = await db.customers.byUserId(session.userId);
-  if (!customer) redirect('/login');
+  if (!customer) redirect(buildLoginHref('/customer'));
 
   const orders = await db.orders.byCustomer(customer.id);
   const [cities, customers, intelligenceFeed] = await Promise.all([

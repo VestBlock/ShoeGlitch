@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { findOrProvisionAppUserForAuth } from '@/lib/auth-provisioning';
 import { sendAdminSystemAlert, sendCustomerWelcomeEmail } from '@/lib/email';
+import { sanitizeNextPath } from '@/lib/login-redirect';
 import { ROLE_HOME } from '@/lib/rbac';
 import type { Role } from '@/types';
 
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
   }
 
   const role = (provisioned.user.role ?? 'customer') as Role;
-  const destination = ROLE_HOME[role] ?? '/customer';
+  const destination = sanitizeNextPath(request.nextUrl.searchParams.get('next')) ?? ROLE_HOME[role] ?? '/customer';
 
   return NextResponse.redirect(new URL(destination, request.url));
 }

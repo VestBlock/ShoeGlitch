@@ -12,10 +12,11 @@ const DEMO_ROLES: Array<{ email: string; label: string; role: string; desc: stri
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { demo?: string; error?: string };
+  searchParams: { demo?: string; error?: string; next?: string };
 }) {
   const showDemo = searchParams?.demo === '1';
   const users = showDemo ? await db.users.all() : [];
+  const nextPath = searchParams?.next;
   const loginError = searchParams?.error === 'signin_failed'
     ? 'Could not sign in with that account. Use a seeded demo email or continue with Google.'
     : null;
@@ -28,7 +29,13 @@ export default async function LoginPage({
           <h1 className="h-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[0.9] mb-6">
             Welcome back.
           </h1>
+          {nextPath ? (
+            <p className="mb-5 text-sm leading-6 text-ink/58">
+              Sign in and we&rsquo;ll send you right back to what you were doing.
+            </p>
+          ) : null}
           <form action={loginAction} className="space-y-4">
+            <input type="hidden" name="next" value={nextPath ?? ''} />
             <div>
               <label className="label">Email</label>
               <input name="email" className="input" placeholder="you@example.com" required />
@@ -43,6 +50,7 @@ export default async function LoginPage({
 
           <div className="mt-6 pt-6 border-t border-ink/10">
             <form action={googleSignInAction}>
+              <input type="hidden" name="next" value={nextPath ?? ''} />
               <button type="submit" className="btn-outline w-full">
                 Continue with Google
               </button>
@@ -64,7 +72,7 @@ export default async function LoginPage({
               <p className="text-bone/60 mb-6">Click any demo account to sign in.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {DEMO_ROLES.map((d) => (
-                  <form key={d.email} action={async () => { 'use server'; await loginAsAction(d.email); }}>
+                  <form key={d.email} action={async () => { 'use server'; await loginAsAction(d.email, nextPath); }}>
                     <button className="w-full text-left p-4 rounded-xl border border-bone/15 hover:border-cyan hover:bg-bone/5 transition">
                       <div className="flex items-start justify-between mb-1">
                         <div className="font-semibold">{d.label}</div>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import { logoutAction } from '@/app/(public)/login/actions';
+import { buildLoginHref } from '@/lib/login-redirect';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui';
 import type { Role } from '@/types';
@@ -60,7 +61,7 @@ export default async function DashboardShell({
     return (
       <div className="container-x py-24">
         <h1 className="h-display text-4xl mb-4">Please sign in</h1>
-        <Link href="/login" className="btn-glitch">Sign in</Link>
+        <Link href={buildLoginHref(currentPath)} className="btn-glitch">Sign in</Link>
       </div>
     );
   }
