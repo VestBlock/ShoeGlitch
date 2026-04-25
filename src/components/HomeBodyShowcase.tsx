@@ -45,8 +45,8 @@ const journeySteps = [
   },
   {
     eyebrow: '03',
-    title: 'Track the clean',
-    detail: 'Intake notes, photos, and service status stay visible from start to finish.',
+    title: 'Follow the order',
+    detail: 'Photos, notes, and status updates stay visible from intake to return.',
   },
   {
     eyebrow: '04',
@@ -67,28 +67,13 @@ export default function HomeBodyShowcase({
   activeCityCount: number;
 }) {
   const rootRef = useRef<HTMLElement | null>(null);
-  const stickyRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
 
   useGSAP(
     () => {
       if (reduceMotion || !rootRef.current) return;
 
-      const mm = gsap.matchMedia();
       const root = rootRef.current;
-
-      mm.add('(min-width: 1024px)', () => {
-        if (!stickyRef.current) return;
-
-        ScrollTrigger.create({
-          trigger: root,
-          start: 'top top+=112',
-          end: 'bottom bottom-=140',
-          pin: stickyRef.current,
-          pinSpacing: false,
-          invalidateOnRefresh: true,
-        });
-      });
 
       ScrollTrigger.batch(gsap.utils.toArray<HTMLElement>('[data-tier-card]', root), {
         start: 'top 84%',
@@ -159,8 +144,6 @@ export default function HomeBodyShowcase({
             },
           ),
       });
-
-      return () => mm.revert();
     },
     { scope: rootRef, dependencies: [reduceMotion, services.length, cities.length] },
   );
@@ -168,15 +151,15 @@ export default function HomeBodyShowcase({
   return (
     <section ref={rootRef} className="container-x space-y-16 py-16 md:space-y-20 md:py-20">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
-        <div ref={stickyRef} className="section-shell p-7 md:p-8 lg:h-fit">
-          <div className="section-kicker">Pick your tier</div>
+        <div className="section-shell p-7 md:p-8 lg:h-fit">
+          <div className="section-kicker">Choose your service</div>
           <h2 className="h-display mt-5 text-[clamp(2.9rem,5vw,5.2rem)] leading-[0.88] text-ink">
-            A cleaner way
+            Pick the right
             <br />
-            from <em className="h-italic text-glitch">yes</em> to checkout.
+            level of <em className="h-italic text-glitch">care.</em>
           </h2>
           <p className="mt-5 max-w-xl text-sm leading-7 text-ink/65 md:text-base">
-            Choose the right level of care quickly, understand what each tier is for, and move into booking without digging through a long list of add-ons first.
+            Basic, Pro, and Elite make the choice easier. Start with what the pair needs, see the price clearly, and move into booking without a wall of options.
           </p>
 
           <div className="mt-8 grid gap-3">
@@ -210,13 +193,13 @@ export default function HomeBodyShowcase({
             const items = tierDetails[service.slug] ?? [
               'Service-specific care',
               'Photo intake included',
-              'Simple booking flow',
+              'Easy online booking',
             ];
 
             return (
               <motion.div
                 key={service.id}
-                whileHover={{ y: -8, rotateX: -1.5, rotateY: 2.5 }}
+                whileHover={{ y: -6 }}
                 className="group"
                 data-tier-card
               >
@@ -227,7 +210,7 @@ export default function HomeBodyShowcase({
                   <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_80%_26%,rgba(0,229,255,0.12),transparent_24%),radial-gradient(circle_at_20%_78%,rgba(255,77,109,0.10),transparent_28%)] opacity-90" />
                   <div className="relative">
                     <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-glitch/82">
-                      0{index + 1} · {service.name} tier
+                      0{index + 1} · {service.name}
                     </div>
                     <h3 className="h-display mt-4 text-[clamp(2.4rem,4vw,4rem)] leading-[0.9] text-ink transition group-hover:text-glitch">
                       {service.name}
@@ -277,7 +260,7 @@ export default function HomeBodyShowcase({
             <h2 className="h-display mt-5 text-[clamp(2.6rem,4.8vw,4.8rem)] leading-[0.9] text-bone">
               Local handoff
               <br />
-              <em className="h-italic text-cyan">meets</em> nationwide mail-in.
+              <em className="h-italic text-cyan">meets</em>{' '}nationwide mail-in.
             </h2>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -379,7 +362,7 @@ export default function HomeBodyShowcase({
 
             <div className="section-shell p-6" data-endcap-card>
               <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-glitch/80">Release alerts</div>
-              <h3 className="h-display mt-3 text-3xl leading-[0.92] text-ink">Track pairs before they sell through.</h3>
+              <h3 className="h-display mt-3 text-3xl leading-[0.92] text-ink">Follow pairs before they move.</h3>
               <p className="mt-3 text-sm leading-6 text-ink/62">
                 Save upcoming pairs, follow restocks, and come back when it is time to buy, clean, or restore.
               </p>

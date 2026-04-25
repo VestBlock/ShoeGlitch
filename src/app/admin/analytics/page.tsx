@@ -1,9 +1,42 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { ArrowUpRight, BarChart3, Bot, PackageSearch, Share2 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import DashboardShell from '@/components/DashboardShell';
 import { Badge, Card, StatusDot } from '@/components/ui';
 import { buildAdminAnalyticsSummary } from '@/features/admin/analytics-reporting';
 import { getSession } from '@/lib/session';
+
+function CommandLink({
+  href,
+  eyebrow,
+  title,
+  detail,
+  Icon,
+}: {
+  href: string;
+  eyebrow: string;
+  title: string;
+  detail: string;
+  Icon: LucideIcon;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group rounded-[1.2rem] border border-ink/10 bg-white px-5 py-4 transition hover:-translate-y-0.5 hover:border-glitch/25 hover:bg-bone-soft"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-glitch/10 text-glitch">
+          <Icon size={18} />
+        </div>
+        <ArrowUpRight size={17} className="text-ink/32 transition group-hover:text-glitch" />
+      </div>
+      <div className="mt-4 font-mono text-[11px] uppercase tracking-[0.24em] text-glitch/80">{eyebrow}</div>
+      <div className="mt-2 font-semibold text-ink">{title}</div>
+      <div className="mt-1 text-sm leading-6 text-ink/58">{detail}</div>
+    </Link>
+  );
+}
 
 export default async function AdminAnalyticsPage() {
   const session = await getSession();
@@ -17,30 +50,38 @@ export default async function AdminAnalyticsPage() {
         <Badge tone={summary.status === 'live' ? 'acid' : summary.status === 'empty' ? 'default' : 'glitch'}>
           <StatusDot tone={summary.status === 'live' ? 'ok' : summary.status === 'empty' ? 'warn' : 'error'} /> {summary.status}
         </Badge>
-        <Badge>{summary.totals.trackedRoutes} tracked routes</Badge>
+        <Badge>{summary.totals.trackedRoutes} active pages</Badge>
       </div>
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4 mb-10">
-        <Link href="/admin/automation" className="rounded-[1.2rem] border border-ink/10 bg-white px-5 py-4 transition hover:border-glitch/25 hover:bg-bone-soft">
-          <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-glitch/80">Run checks</div>
-          <div className="mt-2 font-semibold text-ink">Open automation control</div>
-          <div className="mt-1 text-sm text-ink/58">Refresh SEO, social, and watchlist jobs from one place.</div>
-        </Link>
-        <Link href="/admin/social" className="rounded-[1.2rem] border border-ink/10 bg-white px-5 py-4 transition hover:border-glitch/25 hover:bg-bone-soft">
-          <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-glitch/80">Traffic to content</div>
-          <div className="mt-2 font-semibold text-ink">Open social queue</div>
-          <div className="mt-1 text-sm text-ink/58">Turn feed and release momentum into queued posts.</div>
-        </Link>
-        <Link href="/admin/orders" className="rounded-[1.2rem] border border-ink/10 bg-white px-5 py-4 transition hover:border-glitch/25 hover:bg-bone-soft">
-          <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-glitch/80">Revenue follow-through</div>
-          <div className="mt-2 font-semibold text-ink">Open orders</div>
-          <div className="mt-1 text-sm text-ink/58">Check whether traffic is becoming paid work.</div>
-        </Link>
-        <Link href="/services" className="rounded-[1.2rem] border border-ink/10 bg-white px-5 py-4 transition hover:border-glitch/25 hover:bg-bone-soft">
-          <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-glitch/80">Public view</div>
-          <div className="mt-2 font-semibold text-ink">Open services page</div>
-          <div className="mt-1 text-sm text-ink/58">Compare the live customer-facing pricing and tier flow.</div>
-        </Link>
+        <CommandLink
+          href="/admin/automation"
+          eyebrow="Run checks"
+          title="Refresh site systems"
+          detail="Run SEO, route, release, watchlist, and social jobs from one place."
+          Icon={Bot}
+        />
+        <CommandLink
+          href="/admin/social"
+          eyebrow="Turn traffic into content"
+          title="Open social queue"
+          detail="Review drafts and send approved posts to Buffer when channels are ready."
+          Icon={Share2}
+        />
+        <CommandLink
+          href="/admin/orders"
+          eyebrow="Revenue follow-through"
+          title="Review orders"
+          detail="Check whether traffic is turning into booked cleaning and restoration work."
+          Icon={PackageSearch}
+        />
+        <CommandLink
+          href="/services"
+          eyebrow="Public view"
+          title="Audit the service page"
+          detail="Open the customer-facing tier flow and compare it against booking data."
+          Icon={BarChart3}
+        />
       </div>
 
       {summary.message ? (
@@ -63,7 +104,7 @@ export default async function AdminAnalyticsPage() {
           <div className="h-display text-4xl">{summary.totals.leads}</div>
         </Card>
         <Card className="card-ink">
-          <div className="font-mono text-xs text-bone/40 mb-1">Tracked routes</div>
+          <div className="font-mono text-xs text-bone/40 mb-1">Active pages</div>
           <div className="h-display text-4xl text-bone">{summary.totals.trackedRoutes}</div>
         </Card>
         <Card>
@@ -112,7 +153,7 @@ export default async function AdminAnalyticsPage() {
         </Card>
 
         <Card>
-          <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Coverage by family</div>
+          <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Performance by page type</div>
           <div className="mt-5 space-y-3">
             {summary.byFamily.length > 0 ? summary.byFamily.map((family) => (
               <div key={family.family} className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4">
@@ -125,31 +166,31 @@ export default async function AdminAnalyticsPage() {
               </div>
             )) : (
               <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm text-ink/62">
-                No analytics activity has been recorded yet on tracked routes.
+                No analytics activity has been recorded yet on active pages.
               </div>
             )}
           </div>
         </Card>
 
         <Card>
-          <div className="font-mono text-xs uppercase tracking-widest text-ink/45">What is tracked now</div>
+          <div className="font-mono text-xs uppercase tracking-widest text-ink/45">What this page measures</div>
           <div className="mt-5 space-y-3 text-sm leading-6 text-ink/66">
-            <p>Tracked by the current growth event system:</p>
+            <p>This view connects website attention to the actions that matter:</p>
             <ul className="list-disc pl-5">
-              <li>sitewide public page views, including homepage, services, booking, coverage, mail-in, operator, SEO, release, and intelligence pages</li>
+              <li>public page views across homepage, services, booking, coverage, mail-in, operator, release, and intelligence pages</li>
               <li>CTA clicks on tagged links and buttons</li>
               <li>lead captures from growth lead forms</li>
               <li>booking starts and completed checkouts</li>
               <li>watchlist saves and operator application interest</li>
             </ul>
-            <p className="pt-2">This dashboard is the main admin view for website traffic, lead capture, booking, watchlist, operator, and automation activity.</p>
+            <p className="pt-2">Use it to spot which pages deserve more social content, stronger proof, or a cleaner booking path.</p>
           </div>
         </Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
-          <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Top routes</div>
+          <div className="font-mono text-xs uppercase tracking-widest text-ink/45">Top pages</div>
           <div className="mt-5 space-y-3">
             {summary.topRoutes.length > 0 ? summary.topRoutes.map((route) => (
               <Link key={route.routePath} href={route.routePath} className="block rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4 transition hover:border-glitch/20 hover:bg-white">
@@ -166,7 +207,7 @@ export default async function AdminAnalyticsPage() {
               </Link>
             )) : (
               <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm text-ink/62">
-                Top routes will appear here as tracked traffic arrives.
+                Top pages will appear here as traffic arrives.
               </div>
             )}
           </div>
@@ -187,7 +228,7 @@ export default async function AdminAnalyticsPage() {
                 </div>
               )) : (
                 <div className="rounded-[1rem] border border-ink/10 bg-bone-soft px-4 py-4 text-sm text-ink/62">
-                  No recent growth events yet.
+                  No recent website actions yet.
                 </div>
               )}
             </div>

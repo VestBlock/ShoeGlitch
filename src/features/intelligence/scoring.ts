@@ -318,6 +318,7 @@ export function buildScoreRecord(input: ScoreInput, now: Date): ScoreRecord {
       restoration: restoration.reasons,
       flipPotential: flipPotential.reasons,
       urgency: releasePressure.reasons,
+      releasePressure: releasePressure.reasons,
       confidence: confidence.reasons,
       marketStrength: marketStrength.reasons,
       liquidity: liquidity.reasons,

@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-04-23T16:45:04.203Z",
-  "total": 53,
+  "generatedAt": "2026-04-25T15:47:24.400Z",
+  "total": 59,
   "byFamily": {
     "operator-hub": 2,
     "hub": 4,
-    "city": 12,
-    "operator-city": 6,
+    "city": 16,
+    "operator-city": 8,
     "area": 24,
     "near-me": 3,
     "operator-guide": 2
@@ -13,12 +13,12 @@
   "byKind": {
     "become-operator": 1,
     "locations-index": 1,
-    "city-hub": 3,
-    "operator-city": 3,
+    "city-hub": 4,
+    "operator-city": 4,
     "operators-index": 1,
     "service-hub": 3,
-    "pickup-operator-city": 3,
-    "service-city": 9,
+    "pickup-operator-city": 4,
+    "service-city": 12,
     "service-area": 24,
     "service-near-me": 3,
     "side-hustle-guide": 1,
@@ -64,6 +64,14 @@
       "city": "milwaukee"
     },
     {
+      "kind": "city-hub",
+      "family": "city",
+      "path": "/locations/toledo",
+      "title": "Shoe cleaning and restoration in Toledo, OH | Shoe Glitch",
+      "description": "Shoe Glitch in Toledo, OH. Explore local sneaker cleaning, shoe restoration, and pickup or drop-off options, then move into booking.",
+      "city": "toledo"
+    },
+    {
       "kind": "operator-city",
       "family": "operator-city",
       "path": "/operator-opportunities/atlanta",
@@ -88,6 +96,15 @@
       "title": "Become a ShoeGlitch operator in Milwaukee, WI | Sneaker cleaning opportunity",
       "description": "Become a ShoeGlitch operator in Milwaukee, WI. Learn what operators do, how the city opportunity works, and how to apply or express interest.",
       "city": "milwaukee",
+      "role": "cleaning"
+    },
+    {
+      "kind": "operator-city",
+      "family": "operator-city",
+      "path": "/operator-opportunities/toledo",
+      "title": "Become a ShoeGlitch operator in Toledo, OH | Sneaker cleaning opportunity",
+      "description": "Become a ShoeGlitch operator in Toledo, OH. Learn what operators do, how the city opportunity works, and how to apply or express interest.",
+      "city": "toledo",
       "role": "cleaning"
     },
     {
@@ -133,11 +150,20 @@
       "role": "pickup-dropoff"
     },
     {
+      "kind": "pickup-operator-city",
+      "family": "operator-city",
+      "path": "/pickup-dropoff-operator/toledo",
+      "title": "Pickup and drop-off operator in Toledo, OH | ShoeGlitch local route opportunity",
+      "description": "Pickup and drop-off operator opportunity in Toledo, OH. Learn what the local logistics role includes and how to apply with ShoeGlitch.",
+      "city": "toledo",
+      "role": "pickup-dropoff"
+    },
+    {
       "kind": "service-city",
       "family": "city",
       "path": "/pickup-dropoff/atlanta",
       "title": "Pickup & Drop-Off in Atlanta, GA | Shoe Glitch",
-      "description": "Pickup & Drop-Off in Atlanta, GA. coverage-driven fulfillment with less friction before booking Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "description": "Pickup & Drop-Off in Atlanta, GA. simple local handoff options and a cleaner path into booking Use Shoe Glitch to check coverage, compare services, and start your order.",
       "city": "atlanta",
       "service": "pickup-dropoff"
     },
@@ -166,7 +192,7 @@
       "family": "city",
       "path": "/pickup-dropoff/memphis",
       "title": "Pickup & Drop-Off in Memphis, TN | Shoe Glitch",
-      "description": "Pickup & Drop-Off in Memphis, TN. coverage-driven fulfillment with less friction before booking Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "description": "Pickup & Drop-Off in Memphis, TN. simple local handoff options and a cleaner path into booking Use Shoe Glitch to check coverage, compare services, and start your order.",
       "city": "memphis",
       "service": "pickup-dropoff"
     },
@@ -195,7 +221,7 @@
       "family": "city",
       "path": "/pickup-dropoff/milwaukee",
       "title": "Pickup & Drop-Off in Milwaukee, WI | Shoe Glitch",
-      "description": "Pickup & Drop-Off in Milwaukee, WI. coverage-driven fulfillment with less friction before booking Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "description": "Pickup & Drop-Off in Milwaukee, WI. simple local handoff options and a cleaner path into booking Use Shoe Glitch to check coverage, compare services, and start your order.",
       "city": "milwaukee",
       "service": "pickup-dropoff"
     },
@@ -248,6 +274,15 @@
       "service": "pickup-dropoff"
     },
     {
+      "kind": "service-city",
+      "family": "city",
+      "path": "/pickup-dropoff/toledo",
+      "title": "Pickup & Drop-Off in Toledo, OH | Shoe Glitch",
+      "description": "Pickup & Drop-Off in Toledo, OH. simple local handoff options and a cleaner path into booking Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "city": "toledo",
+      "service": "pickup-dropoff"
+    },
+    {
       "kind": "service-hub",
       "family": "hub",
       "path": "/shoe-restoration",
@@ -268,7 +303,7 @@
       "family": "city",
       "path": "/shoe-restoration/atlanta",
       "title": "Shoe Restoration in Atlanta, GA | Shoe Glitch",
-      "description": "Shoe Restoration in Atlanta, GA. restoration-first recommendations, steam-assisted deep cleaning, and booking-ready next steps Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "description": "Shoe Restoration in Atlanta, GA. restoration-first recommendations, clear service options, and a direct booking path Use Shoe Glitch to check coverage, compare services, and start your order.",
       "city": "atlanta",
       "service": "shoe-restoration"
     },
@@ -297,7 +332,7 @@
       "family": "city",
       "path": "/shoe-restoration/memphis",
       "title": "Shoe Restoration in Memphis, TN | Shoe Glitch",
-      "description": "Shoe Restoration in Memphis, TN. restoration-first recommendations, steam-assisted deep cleaning, and booking-ready next steps Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "description": "Shoe Restoration in Memphis, TN. restoration-first recommendations, clear service options, and a direct booking path Use Shoe Glitch to check coverage, compare services, and start your order.",
       "city": "memphis",
       "service": "shoe-restoration"
     },
@@ -326,7 +361,7 @@
       "family": "city",
       "path": "/shoe-restoration/milwaukee",
       "title": "Shoe Restoration in Milwaukee, WI | Shoe Glitch",
-      "description": "Shoe Restoration in Milwaukee, WI. restoration-first recommendations, steam-assisted deep cleaning, and booking-ready next steps Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "description": "Shoe Restoration in Milwaukee, WI. restoration-first recommendations, clear service options, and a direct booking path Use Shoe Glitch to check coverage, compare services, and start your order.",
       "city": "milwaukee",
       "service": "shoe-restoration"
     },
@@ -379,6 +414,15 @@
       "service": "shoe-restoration"
     },
     {
+      "kind": "service-city",
+      "family": "city",
+      "path": "/shoe-restoration/toledo",
+      "title": "Shoe Restoration in Toledo, OH | Shoe Glitch",
+      "description": "Shoe Restoration in Toledo, OH. restoration-first recommendations, clear service options, and a direct booking path Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "city": "toledo",
+      "service": "shoe-restoration"
+    },
+    {
       "kind": "service-hub",
       "family": "hub",
       "path": "/sneaker-cleaning",
@@ -391,7 +435,7 @@
       "family": "city",
       "path": "/sneaker-cleaning/atlanta",
       "title": "Sneaker Cleaning in Atlanta, GA | Shoe Glitch",
-      "description": "Sneaker Cleaning in Atlanta, GA. tracked intake, city coverage, steam-assisted cleaning above the entry tier, and a clear booking path Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "description": "Sneaker Cleaning in Atlanta, GA. clear pricing tiers, local availability, and a faster path into booking Use Shoe Glitch to check coverage, compare services, and start your order.",
       "city": "atlanta",
       "service": "sneaker-cleaning"
     },
@@ -420,7 +464,7 @@
       "family": "city",
       "path": "/sneaker-cleaning/memphis",
       "title": "Sneaker Cleaning in Memphis, TN | Shoe Glitch",
-      "description": "Sneaker Cleaning in Memphis, TN. tracked intake, city coverage, steam-assisted cleaning above the entry tier, and a clear booking path Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "description": "Sneaker Cleaning in Memphis, TN. clear pricing tiers, local availability, and a faster path into booking Use Shoe Glitch to check coverage, compare services, and start your order.",
       "city": "memphis",
       "service": "sneaker-cleaning"
     },
@@ -449,7 +493,7 @@
       "family": "city",
       "path": "/sneaker-cleaning/milwaukee",
       "title": "Sneaker Cleaning in Milwaukee, WI | Shoe Glitch",
-      "description": "Sneaker Cleaning in Milwaukee, WI. tracked intake, city coverage, steam-assisted cleaning above the entry tier, and a clear booking path Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "description": "Sneaker Cleaning in Milwaukee, WI. clear pricing tiers, local availability, and a faster path into booking Use Shoe Glitch to check coverage, compare services, and start your order.",
       "city": "milwaukee",
       "service": "sneaker-cleaning"
     },
@@ -499,6 +543,15 @@
       "path": "/sneaker-cleaning/near-me",
       "title": "Sneaker Cleaning near me | Shoe Glitch",
       "description": "Sneaker Cleaning near you with Shoe Glitch. Use city-aware coverage, service pages, and booking routes to find the best local path.",
+      "service": "sneaker-cleaning"
+    },
+    {
+      "kind": "service-city",
+      "family": "city",
+      "path": "/sneaker-cleaning/toledo",
+      "title": "Sneaker Cleaning in Toledo, OH | Shoe Glitch",
+      "description": "Sneaker Cleaning in Toledo, OH. clear pricing tiers, local availability, and a faster path into booking Use Shoe Glitch to check coverage, compare services, and start your order.",
+      "city": "toledo",
       "service": "sneaker-cleaning"
     },
     {

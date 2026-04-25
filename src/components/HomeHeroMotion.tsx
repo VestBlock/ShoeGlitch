@@ -192,7 +192,7 @@ export default function HomeHeroMotion({
               <div className="absolute left-4 top-4 z-10 md:left-6 md:top-6">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-ink/18 px-4 py-2 text-xs font-medium tracking-[0.16em] text-white shadow-[0_10px_30px_rgba(10,15,31,0.18)] backdrop-blur-sm md:text-sm">
                   <span className="h-2 w-2 rounded-full bg-cyan" />
-                  Real client work
+                  Actual restoration footage
                 </div>
               </div>
 

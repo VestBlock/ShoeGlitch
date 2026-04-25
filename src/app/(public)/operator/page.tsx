@@ -12,7 +12,7 @@ export default function OperatorPage() {
           <em className="h-italic text-glitch">We&rsquo;ll send the gear.</em>
         </h1>
         <p className="text-ink/70 max-w-2xl text-lg mb-10">
-          Join the Shoe Glitch network as a certified operator. Pick your tier, get a branded kit shipped to you, complete training, and build inside your city. Basic and Pro operators handle their own local marketing; Luxury operators qualify for ShoeGlitch-supported digital ad spend and exclusive territory review.
+          Apply as a Shoe Glitch operator, get your starter kit shipped to you, complete the training, and begin taking local orders in your city. Basic and Pro operators grow locally on their own, while Luxury operators can qualify for added marketing support and territory review.
         </p>
         <div className="flex flex-wrap gap-3 mb-12">
           <div className="px-4 py-2 bg-bone-soft rounded-full text-sm">Luxury: 5-10% platform fee</div>

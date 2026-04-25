@@ -4,7 +4,6 @@ import { db } from '@/lib/db';
 import OrbitalScene from '@/components/OrbitalScene';
 import { Badge, Card } from '@/components/ui';
 import TrustProofStrip from '@/components/TrustProofStrip';
-import ResultsProofGrid from '@/components/ResultsProofGrid';
 
 export const metadata: Metadata = {
   title: 'Basic, Pro, and Elite sneaker care | ShoeGlitch',
@@ -121,7 +120,7 @@ export default async function ServicesPage() {
               },
               {
                 label: 'Choose the handoff that fits',
-                detail: 'Pickup, drop-off, and mail-in stay in one booking flow so the handoff stays clear.',
+                detail: 'Pickup, drop-off, and mail-in stay on one booking page so the handoff stays easy to follow.',
               },
               {
                 label: 'Steam is standard',
@@ -168,8 +167,6 @@ export default async function ServicesPage() {
           </div>
         </div>
       </section>
-
-      <ResultsProofGrid showTestimonials={false} />
 
       <section className="container-x pb-16">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.16fr)_minmax(0,0.84fr)] lg:items-start">
@@ -246,7 +243,7 @@ export default async function ServicesPage() {
             <h2 className="h-display text-3xl">A cleaner menu, with clearer expectations.</h2>
           </div>
           <p className="max-w-xl text-sm leading-6 text-ink/60">
-            Less reading. Better decisions. The only real question is how far the pair needs to be pushed after the Steam Clean baseline.
+            Clear pricing, clear expectations, and one simple question: how far does the pair need to go after the Steam Clean baseline?
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">

@@ -61,6 +61,7 @@ export interface ScoreRecord {
     restoration: string[];
     flipPotential: string[];
     urgency: string[];
+    releasePressure: string[];
     confidence: string[];
     marketStrength: string[];
     liquidity: string[];

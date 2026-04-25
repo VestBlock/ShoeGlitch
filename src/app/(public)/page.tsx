@@ -19,7 +19,11 @@ export default async function HomePage() {
     db.cities.all().catch(() => []),
     db.services.primary().catch(() => []),
   ]);
-  const services = allServices.filter((service) => service.category !== 'luxury').slice(0, 6);
+  const serviceOrder = ['basic', 'pro', 'elite'];
+  const orderedServices = serviceOrder
+    .map((slug) => allServices.find((service) => service.slug === slug))
+    .filter((service): service is NonNullable<(typeof allServices)[number]> => Boolean(service));
+  const services = orderedServices.length > 0 ? orderedServices : allServices.slice(0, 3);
   const activeCityCount = cities.filter((city) => city.active).length;
   const trustItems = [
     {
@@ -27,12 +31,12 @@ export default async function HomePage() {
       detail: `${activeCityCount} active cities with pickup, drop-off, and nationwide mail-in when local service is not available.`,
     },
     {
-      label: 'Photo intake first',
-      detail: 'Upload your pair before checkout so we can see the condition before service begins.',
+      label: 'Photos before service',
+      detail: 'Upload your pair before checkout so the condition is clear before work begins.',
     },
     {
-      label: 'Tracked from start to finish',
-      detail: 'You can follow the order from intake to final return without guessing where your pair is.',
+      label: 'Track your order',
+      detail: 'Follow the pair from intake to final return without wondering where it is.',
     },
     {
       label: 'Steam in every tier',
@@ -101,18 +105,20 @@ export default async function HomePage() {
                   Watchlists and alerts
                 </div>
                 <h2 className="h-display mt-3 text-3xl leading-[0.95] text-ink md:text-5xl">
-                  Follow the pairs you care about before they move.
+                  Save the pair now.
+                  <br />
+                  Turn alerts on later.
                 </h2>
                 <p className="mt-4 text-sm leading-6 text-ink/65 md:text-base">
-                  Open the feed for release tracking, watchlists, and faster follow-up when a pair is worth saving.
+                  Build a free watchlist today, follow upcoming pairs, and come back when a release, restock, or alert actually matters.
                 </p>
               </div>
               <Link
                 href="/intelligence"
                 className="btn-intelligence group shrink-0"
-                data-growth-cta="Open intelligence feed"
+                data-growth-cta="Open release feed"
               >
-                <span className="relative z-10">Open intelligence feed</span>
+                <span className="relative z-10">Open release feed</span>
                 <span className="relative z-10 transition-transform group-hover:translate-x-1">→</span>
               </Link>
             </div>
