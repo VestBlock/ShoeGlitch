@@ -197,17 +197,16 @@ export default function HomeHeroMotion({
               </div>
 
               <div className="absolute inset-x-4 bottom-4 z-10 md:inset-x-6 md:bottom-6">
-                <div className="max-w-[34rem] rounded-[1.35rem] border border-white/12 bg-[linear-gradient(180deg,rgba(7,20,44,0.16),rgba(7,20,44,0.28))] px-5 py-4 shadow-[0_20px_50px_rgba(10,15,31,0.24)] backdrop-blur-sm">
+                <div className="max-w-[36rem] rounded-[1.35rem] border border-white/12 bg-[linear-gradient(180deg,rgba(7,20,44,0.16),rgba(7,20,44,0.28))] px-5 py-4 shadow-[0_20px_50px_rgba(10,15,31,0.24)] backdrop-blur-sm">
                   <div
-                    className="text-[clamp(1.85rem,3.3vw,3rem)] font-semibold uppercase leading-[0.92] tracking-[0.12em] text-white"
+                    className="max-w-[26rem] text-[clamp(1.7rem,3vw,2.7rem)] font-semibold uppercase leading-[0.94] tracking-[0.1em] text-white [text-wrap:balance]"
                     style={{
                       fontVariationSettings: '"wght" 700',
                       textShadow:
                         '0 1px 0 rgba(255,255,255,0.16), 0 2px 0 rgba(255,255,255,0.09), 0 14px 22px rgba(0,0,0,0.36), 0 22px 46px rgba(0,0,0,0.28)',
                     }}
                   >
-                    From worn out to
-                    <br />
+                    From worn out to{' '}
                     <span className="bg-[linear-gradient(90deg,#ffffff_0%,#bdf7ff_42%,#ffffff_100%)] bg-clip-text text-transparent">
                       box fresh again.
                     </span>
